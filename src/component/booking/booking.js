@@ -1,19 +1,79 @@
-import {React,useState} from "react";
+import { React, useEffect, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-
 import axios from "axios";
 
 export default function Booking() {
-    const [selectStyle, setSelectStyle] = useState(null);
+  //useState
+  const [data, setData] = useState();
+  const [selectBranch, setSelectBranch] = useState("");
+  const [dataStyle, setDataStyle] = useState();
+  const [dataSkinner, setDataSkinner] = useState();
+  const [workingTimeData, setWorkingTimeData] = useState();
+  const [selectStyle, setSelectStyle] = useState();
+  const [selectTime, setSelectTime] = useState();
+  const [selectDay, setSelectDay] = useState();
+  const [busyTime , setBusyTime ] = useState();
+
+  //useEffect
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/api/emp/booking/list-branch")
+      .then((res) => {
+        setData(res.data);
+      });
+
+    if (selectBranch !== "") {
+      axios
+        .get(
+          "http://localhost:8080/api/emp/booking/list-employee-of-branch?branchId=" +
+            selectBranch
+        )
+        .then((res) => {
+          setDataStyle(res.data.filter((item) => item.employee.type === "1"));
+          setDataSkinner(res.data.filter((item) => item.employee.type === "2"));
+        });
+      axios
+        .get("http://localhost:8080/api/emp/booking/working-time")
+        .then((res) => {
+          setWorkingTimeData(res.data);
+        });
+    }
+    setBusyTime([]);
+  }, [selectBranch]);
+
+  useEffect(() => {
+    if (selectStyle != null && selectDay != null) {
+      axios
+        .get(
+          "http://localhost:8080/api/emp/booking/busy-list?employeeId=" +
+            selectStyle.employee.employeeId +
+            "&day=" +
+            selectDay
+        )
+        .then((res) => {
+          setBusyTime(res.data);
+        });
+    }
+  }, [selectDay,selectStyle]);
+  //console log
+  // console.log(workingTimeData);
+  // console.log(selectStyle.employee.employeeId);
+  console.log(busyTime);
+
+  //const
   const styleImg = {
-    background: 'blue',
-    color:'white'
-  }
+    border: "4px solid #d19f68",
+    borderRadius: "100px",
+    height: "100px",
+    width: "100px",
+  };
   const styleImgUnselect = {
-    background: 'gray',
-    color:'black'
-  }
+    borderRadius: "50px",
+    height: "100px",
+    width: "100px",
+  };
+
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
@@ -32,20 +92,27 @@ export default function Booking() {
       items: 1,
     },
   };
-const workTime = ["08:00","08:00","08:00"]
 
-  const stylist = [
-    "stylist1",
-    "stylist2",
-    "stylist3",
-    "stylist4",
-    "stylist5",
-    "stylist6",
-    "stylist7",
-  ];
+  //function
+  const handleClickTime = (timeZone) => {
+    // setSelectTime(time);
+    if (selectTime === timeZone) {
+      setSelectTime(null);
+    } else {
+      setSelectTime(timeZone);
+    }
+  };
+
   const handleButtonClick = (style) => {
-  
     setSelectStyle(style);
+  };
+
+  const handleSelectBranch = (e) => {
+    setSelectBranch(e.value);
+  };
+
+  const handleSelectDay = (e) => {
+    setSelectDay(e);
   };
 
   return (
@@ -74,12 +141,19 @@ const workTime = ["08:00","08:00","08:00"]
                     <h1>Chọn chi nhánh</h1>
 
                     <div>
-                      <select className="form-select" id="default-select">
-                        <option value=" 1">Vui lòng chọn</option>
-                        <option value="1">Thanh khê</option>
-                        <option value="1">Hải Châu</option>
-                        <option value="1">Liên Chiểu</option>
-                        <option value="1">Sơn Trà</option>
+                      <select
+                        className="form-select"
+                        id="default-select"
+                        onChange={(event) => {
+                          handleSelectBranch(event.target);
+                        }}
+                      >
+                        <option value="">Vui lòng chọn</option>
+                        {data?.map((branch, index) => (
+                          <option key={index} value={branch.branchId}>
+                            {branch.name}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -112,203 +186,106 @@ const workTime = ["08:00","08:00","08:00"]
                     </span>
                   </div>
 
-                  <div className="mt-10">
-                    <h1>Chọn ngày, giờ & stylist</h1>
-                    <div className="container">
-                      <h2>Chọn stylist</h2>
-                      <div>
-                        <Carousel
-                          responsive={responsive}
-                          infinite={true}
-                          arrows={true}
-                        >
-                          {stylist.map((style, index) => (
-                            
-                            <div
-                              key={index}
-                              onClick={() => {
-                                handleButtonClick(style);
-                              }}
-                              style={
-                                selectStyle === style
-                                  ? styleImg 
-                                  : styleImgUnselect 
-                              }
+                  {selectBranch !== "" && (
+                    <div className="mt-10">
+                      <h1>Chọn ngày, giờ & stylist</h1>
+                      <div className="container">
+                        <h2>Chọn stylist</h2>
+                        <div>
+                          {dataStyle && (
+                            <Carousel
+                              responsive={responsive}
+                              infinite={true}
+                              arrows={true}
                             >
-                              {style}
-                            </div>
-                          ))}
-                        </Carousel>
-                      </div>
-                      <h2>Chọn ngày</h2>
-                      <input
-                        type="date"
-                        name="address"
-                        placeholder="Address"
-                        onfocus="this.placeholder = ''"
-                        onblur="this.placeholder = 'Address'"
-                        required
-                        className="single-input"
-                      />
-                      <h2>Chọn giờ</h2>
+                              {dataStyle?.map((style, index) => (
+                                <>
+                                  <img
+                                    key={index}
+                                    src={style.avatar}
+                                    onClick={() => {
+                                      handleButtonClick(style);
+                                    }}
+                                    alt="không hiển thị được ảnh"
+                                    style={
+                                      selectStyle === style
+                                        ? styleImg
+                                        : styleImgUnselect
+                                    }
+                                  />
+                                  <h6 key={index + 1}>{style.fullName}</h6>
+                                </>
+                              ))}
+                            </Carousel>
+                          )}
+                        </div>
+                        <h2>Chọn ngày</h2>
+                        <input
+                          type="date"
+                          name="address"
+                          placeholder="Address"
+                          required
+                          className="single-input"
+                          onChange={(event) => {
+                            handleSelectDay(event.target.value);
+                          }}
+                        />
+                        <h2>Chọn giờ</h2>
+                        <div className="d-flex justify-content-center row m-0">
+                          {workingTimeData?.map((time, index) => {
+                            const isBusy = busyTime.includes(time.timeZone.substring(0,5));
+                            const isSelected = selectTime === time.timeZone;
+                            const buttonStyle = {
+                              border: "1px solid",
+                              borderRadius: "5px",
+                              backgroundColor: isSelected ? "#d19f68" : (isBusy ? "#888888" : null) ,
+                             
+                            };
 
-                      <div className=" d-flex justify-content-center row m-0">
-                        <button
-                          type="button"
-                          className="genric-btn success-border col-2 time-select"
-                          style={{
-                            border: "1px solid",
-                            borderRadius: "5px",
-                          }}
-                          onClick="selectTime(event)"
-                        >
-                          08:00
-                        </button>
-                        <button
-                          type="button"
-                          className="genric-btn success-border col-2"
-                          style={{
-                            border: "1px solid",
-                            borderRadius: "5",
-                          }}
-                          onclick="selectTime(event)"
-                        >
-                          09:00
-                        </button>
-                        <button
-                          type="button"
-                          className="genric-btn success-border col-2"
-                          style={{
-                            border: "1px solid",
-                            borderRadius: "5",
-                          }}
-                          onclick="selectTime(event)"
-                        >
-                          10:00
-                        </button>
-                        <button
-                          type="button"
-                          className="genric-btn success-border col-2"
-                          style={{
-                            border: "1px solid",
-                            borderRadius: "5",
-                          }}
-                          onclick="selectTime(event)"
-                        >
-                          11:00
-                        </button>
-                        <button
-                          type="button"
-                          className="genric-btn success-border col-2"
-                          style={{
-                            border: "1px solid",
-                            borderRadius: "5",
-                          }}
-                          onclick="selectTime(event)"
-                        >
-                          12:00
-                        </button>
-                        <button
-                          type="button"
-                          className="genric-btn success-border col-2"
-                          style={{
-                            border: "1px solid",
-                            borderRadius: "5",
-                          }}
-                          onclick="selectTime(event)"
-                        >
-                          13:00
-                        </button>
-                        <button
-                          type="button"
-                          className="genric-btn success-border col-2"
-                          style={{
-                            border: "1px solid",
-                            borderRadius: "5",
-                          }}
-                          onclick="selectTime(event)"
-                        >
-                          14:00
-                        </button>
-                        <button
-                          type="button"
-                          disabled
-                          className="genric-btn success-border col-2"
-                          style={{
-                            border: "1px solid",
-                            borderRadius: "5",
-                          }}
-                        >
-                          15:00
-                        </button>
-                        <button
-                          type="button"
-                          className="genric-btn success-border col-2"
-                          style={{
-                            border: "1px solid",
-                            borderRadius: "5",
-                          }}
-                          onclick="selectTime(event)"
-                        >
-                          16:00
-                        </button>
-                        <button
-                          type="button"
-                          className="genric-btn success-border col-2"
-                          style={{
-                            border: "1px solid",
-                            borderRadius: "5",
-                          }}
-                          onclick="selectTime(event)"
-                        >
-                          17:00
-                        </button>
-                        <button
-                          type="button"
-                          className="genric-btn success-border col-2"
-                          style={{
-                            border: "1px solid",
-                            borderRadius: "5",
-                          }}
-                          onclick="selectTime(event)"
-                        >
-                          18:00
-                        </button>
-                        <button
-                          type="button"
-                          className="genric-btn success-border col-2"
-                          style={{
-                            border: "1px solid",
-                            borderRadius: "5",
-                          }}
-                          onclick="selectTime(event)"
-                        >
-                          19:00
-                        </button>
+                            return (
+                              <button
+                                key={index}
+                                type="button"
+                                className={`genric-btn col-2 time-select ${
+                                  isSelected ? "" : "success-border"
+                                }`}
+                                style={buttonStyle}
+                                onClick={() => handleClickTime(time.timeZone)}
+                                disabled={isBusy}
+                              >
+                                {time.timeZone}
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
 
-                  <div className="input-group-icon mt-10">
-                    <h1>Chọn skinner</h1>
+                  {selectBranch !== "" && (
+                    <div className="input-group-icon mt-10">
+                      <h1>Chọn skinner</h1>
 
-                    <div id="default-select">
-                      <select className="form-select">
-                        <option value=" 1">Vui lòng chọn</option>
-                        <option value="1">Thúy Vân</option>
-                        <option value="1">Thúy Kiều</option>
-                        <option value="1">Điêu Thuyền</option>
-                        <option value="1">Tiểu Kiều</option>
-                      </select>
+                      <div id="default-select">
+                        <select className="form-select">
+                          {selectBranch != "" &&
+                            dataSkinner?.map((skinner, index) => (
+                              <option
+                                key={index}
+                                value={skinner.employee.employeeId}
+                              >
+                                {skinner.fullName}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <div className="mt-10">
                     <h1>Ghi chú</h1>
                     <textarea
                       className="single-textarea"
                       placeholder="Ghi chú"
-                      onfocus="this.placeholder = ''"
-                      onblur="this.placeholder = 'Ghi chú'"
                       required
                     ></textarea>
                   </div>
