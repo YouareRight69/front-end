@@ -32,11 +32,17 @@ export default function Booking() {
         .then((res) => {
           setDataStyle(res.data.filter((item) => item.employee.type === "1"));
           setDataSkinner(res.data.filter((item) => item.employee.type === "2"));
+        }).catch(error => {
+          // Xử lý lỗi nếu có
+          console.error('Lỗi khi gửi yêu cầu:', error);
         });
       axios
         .get("http://localhost:8080/api/emp/booking/working-time")
         .then((res) => {
           setWorkingTimeData(res.data);
+        }).catch(error => {
+          // Xử lý lỗi nếu có
+          console.error('Lỗi khi gửi yêu cầu:', error);
         });
     }
     setBusyTime([]);
@@ -53,6 +59,9 @@ export default function Booking() {
         )
         .then((res) => {
           setBusyTime(res.data);
+        }).catch(error => {
+          // Xử lý lỗi nếu có
+          console.error('Lỗi khi gửi yêu cầu:', error);
         });
     }
   }, [selectDay,selectStyle]);
