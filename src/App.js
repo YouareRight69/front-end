@@ -7,6 +7,7 @@ import DetailBranch from "./component/branch/DetailBranch";
 import EditBranch from "./component/branch/EditBranch";
 import Invoice from "./component/invoice/Invoice";
 import InvoiceHistory from "./component/invoice/InvoiceHistory";
+import Payment from "./component/payment/Payment";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/branch-edit" element={<EditBranch />}></Route>
         <Route path="/invoice-history" element={<InvoiceHistory />}></Route>
         <Route path="/invoice" element={<Invoice />}></Route>
+        <Route path="/payment" element={<Payment />}></Route>
 
       </Routes>
     </BrowserRouter>

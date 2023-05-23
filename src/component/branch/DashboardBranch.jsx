@@ -1,12 +1,33 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Modal from "../common/Modal";
+import TableThien from "../common/TableThien";
 
 function DashboardBranch(props) {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const getBranch = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/api/admin/branch"
+        );
+        const branchList = response.data;
+        setData(branchList);
+        // Xử lý danh sách chi nhánh
+        // ...
+      } catch (error) {
+        // Xử lý lỗi (nếu có)
+      }
+    };
+
+    getBranch();
+  }, []);
+
   return (
     <div>
       {/* <PreLoader /> */}
-      <Modal />
+      {/* <Modal /> */}
       <main>
         {/* Hero Start */}
         <div className="slider-area2">
@@ -45,8 +66,12 @@ function DashboardBranch(props) {
                             type="text"
                             className="form-control"
                             placeholder="Nhập từ khoá cần tìm"
-                            onfocus="this.placeholder = ''"
-                            onblur="this.placeholder = 'Nhập từ khoá cần tìm'"
+                            onFocus={(e) => {
+                              e.target.placeholder = "";
+                            }}
+                            onBlur={(e) => {
+                              e.target.placeholder = "Nhập từ khoá cần tìm";
+                            }}
                           />
                           <div className="input-group-append">
                             <button className="btns" type="button">
@@ -92,81 +117,13 @@ function DashboardBranch(props) {
                             <th scope="col">STT</th>
                             <th scope="col">Tên chi nhánh</th>
                             <th scope="col">Địa chỉ</th>
-                            <th scope="col">Ngày thành lập</th>
                             <th scope="col">Chức năng</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr style={{ marginTop: "5px" }}>
-                            <th scope="row">01</th>
-                            <td>256 Nguyễn Văn Linh</td>
-                            <td>Hải Châu</td>
-                            <td>02/03/2015</td>
-                            <td>
-                              <button
-                                type="button"
-                                className="genric-btn danger radius"
-                                style={{ marginRight: "10px" }}
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModal"
-                              >
-                                <i className="far fa-trash-alt"></i>
-                              </button>
-
-                              <Link
-                                to="/branch-edit"
-                                style={{ marginRight: "10px" }}
-                              >
-                                <div className="genric-btn success radius">
-                                  <i className="fas fa-pencil-alt"></i>
-                                </div>
-                              </Link>
-
-                              <Link to="/branch-detail">
-                                <div className="genric-btn primary radius">
-                                  <i
-                                    className="fa fa-eye"
-                                    aria-hidden="true"
-                                  ></i>
-                                </div>
-                              </Link>
-                            </td>
-                          </tr>
-                          <tr style={{ marginTop: "5px" }}>
-                            <th scope="row">02</th>
-                            <td>16 Hồ Tùng Mậu</td>
-                            <td>Liên Chiểu</td>
-                            <td>08/09/2017</td>
-                            <td>
-                              <button
-                                type="button"
-                                className="genric-btn danger radius"
-                                style={{ marginRight: "10px" }}
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModal"
-                              >
-                                <i className="far fa-trash-alt"></i>
-                              </button>
-
-                              <Link
-                                to="/branch-edit"
-                                style={{ marginRight: "10px" }}
-                              >
-                                <div className="genric-btn success radius">
-                                  <i className="fas fa-pencil-alt"></i>
-                                </div>
-                              </Link>
-
-                              <Link to="/branch-detail">
-                                <div className="genric-btn primary radius">
-                                  <i
-                                    className="fa fa-eye"
-                                    aria-hidden="true"
-                                  ></i>
-                                </div>
-                              </Link>
-                            </td>
-                          </tr>
+                          {data.map((data, index) => (
+                            <TableThien id={index} value={data} key={index} />
+                          ))}
                         </tbody>
                       </table>
                     </div>
