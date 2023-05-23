@@ -1,12 +1,13 @@
 import React from "react";
 
-function Modal(props) {
+function Modal({ branch, index ,message}) {
+
+  console.log(index);
   return (
     <div>
-      {/* Modal */}
       <div
         class="modal fade"
-        id="exampleModal"
+        id={`${branch.branchId}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -15,17 +16,19 @@ function Modal(props) {
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="exampleModalLabel">
-                Xóa Nhân Viên
+                Xóa Chi Nhánh
               </h1>
-              <button
+              <div
                 type="button"
                 class="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
-              ></button>
+              >
+                <i class="fas fa-times"></i>
+              </div>
             </div>
             <div class="modal-body">
-              Bạn có chắc muốn xóa nhân viên này không ?
+            {message}
             </div>
             <div class="modal-footer">
               <button
