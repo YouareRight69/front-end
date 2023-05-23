@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Home from "./Controller/Home";
+import Booking from "./component/booking/booking";
 import AddNewBranch from "./component/branch/AddNewBranch";
 import Branch from "./component/branch/DashboardBranch";
 import DetailBranch from "./component/branch/DetailBranch";
@@ -23,6 +24,7 @@ function App() {
         <Route path="/invoice-history" element={<InvoiceHistory />}></Route>
         <Route path="/invoice" element={<Invoice />}></Route>
         <Route path="/payment" element={<Payment />}></Route>
+        <Route path="/booking" element={<Booking />}></Route>
 
       </Routes>
     </BrowserRouter>
