@@ -14,9 +14,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />}>
-          {/* <Route index element={<Home />} />       */}
-        </Route>
+        <Route path="/" element={<Home />}></Route>
         <Route path="/branch" element={<Branch />}></Route>
         <Route path="/branch-add" element={<AddNewBranch />}></Route>
         <Route path="/branch-detail" element={<DetailBranch />}></Route>
