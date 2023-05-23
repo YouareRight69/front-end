@@ -104,7 +104,7 @@ function CreateService() {
                             <form id="form" onSubmit={onSubmit} style={{ textAlign: "left", color: "black", width: "80%" }}>
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
-                                        <p className="mt-2">Mã dịch vụ</p>
+                                        <p className="mt-2">Mã dịch vụ {valid.serviceId && <span style={error}>{valid.serviceId}</span>}</p>
                                     </div>
                                     <div className="col-lg-9 col-md-4">
                                         <input
@@ -119,7 +119,7 @@ function CreateService() {
                                 </div>
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
-                                        <p className="mt-2">Tên dịch vụ</p>
+                                        <p className="mt-2">Tên dịch vụ {valid.name && <span style={error}>{valid.name}</span>}</p>
                                     </div>
                                     <div className="col-lg-9 col-md-4">
                                         <input
@@ -134,7 +134,7 @@ function CreateService() {
 
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
-                                        <p className="mt-2">Giá</p>
+                                        <p className="mt-2">Giá {valid.price && <span style={error}>{valid.price}</span>}</p>
                                     </div>
                                     <div className="col-lg-9 col-md-4">
                                         <input
@@ -150,7 +150,7 @@ function CreateService() {
 
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
-                                        <p className="mt-2">Mô tả</p>
+                                        <p className="mt-2">Mô tả {valid.description && <span style={error}>{valid.description}</span>}</p>
                                     </div>
                                     <div className="col-lg-9 col-md-4">
                                         <textarea
@@ -164,7 +164,7 @@ function CreateService() {
                                 </div>
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
-                                        <p className="mt-2">Loại dịch vụ</p>
+                                        <p className="mt-2">Loại dịch vụ {valid.type && <span style={error}>{valid.type}</span>}</p>
                                     </div>
                                     <div className="col-lg-9 col-md-4">
                                         <input

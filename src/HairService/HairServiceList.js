@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { Outlet, Link } from "react-router-dom";
+import Page from '../utils/Page';
 import '../assets/css/bootstrap.min.css'
 import '../assets/css/owl.carousel.min.css'
 import '../assets/css/slicknav.css'
@@ -115,10 +116,10 @@ function UserList() {
                                             )}
                                     </tbody>
                                 </table>
+
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div>
@@ -127,5 +128,27 @@ function UserList() {
         </div>
     )
 }
+<div className="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div className="modal-dialog" role="document">
+        <div className="modal-content">
+            <div className="modal-header">
+                <h2 className="modal-title" id="exampleModalLabel">
+                    XÁC NHẬN THÔNG TIN XÓA
+                </h2>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div className="modal-body">Xác nhận xóa dịch vụ <span style={{ 'color': 'red' }}>Cắt + Gội</span> ?</div>
+            <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-dismiss="modal">
+                    Hủy
+                </button>
+                <button type="button" className="btn btn-primary">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 export default UserList
