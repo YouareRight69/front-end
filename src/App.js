@@ -6,7 +6,7 @@ import UserCreate from "./User/UserCreate";
 import HairServiceList from "./HairService/HairServiceList";
 import Home from "./Controller/Home";
 import CreateService from "./HairService/CreateService";
-
+import Booking  from "./component/booking/booking"
 
 function App() {
   return (
@@ -17,6 +17,9 @@ function App() {
         <Route path="/createUser" element={<UserCreate/>} />
         <Route path="/listService" element={<HairServiceList/>} />
         <Route path="/createService" element={<CreateService/>} />
+        <Route path="/booking" element={<Booking />}>
+          {/* <Route index element={<Home />} />       */}
+        </Route>
       </Routes>
     </BrowserRouter>
   );

@@ -3,18 +3,6 @@ import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { Outlet, Link } from "react-router-dom";
 import Page from '../utils/Page';
-import '../assets/css/bootstrap.min.css'
-import '../assets/css/owl.carousel.min.css'
-import '../assets/css/slicknav.css'
-import '../assets/css/animate.min.css'
-import '../assets/css/magnific-popup.css'
-import '../assets/css/fontawesome-all.min.css'
-import '../assets/css/themify-icons.css'
-import '../assets/css/slick.css'
-import '../assets/css/nice-select.css'
-import '../assets/css/style.css'
-import '../assets/css/user.css'
-import '../assets/img/favicon.ico'
 
 function UserList() {
 
@@ -120,6 +108,7 @@ function UserList() {
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
             <div>
@@ -140,7 +129,7 @@ function UserList() {
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div className="modal-body">Xác nhận xóa dịch vụ <span style={{ 'color': 'red' }}>Cắt + Gội</span> ?</div>
+            <div className="modal-body">Xác nhận xóa dịch vụ <span style={{'color': 'red'}}>Cắt + Gội</span> ?</div>
             <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-dismiss="modal">
                     Hủy
