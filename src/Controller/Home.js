@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import ImageGallery from "../component/common/ImageGallery";
 
 function Home() {
   return <div>
@@ -12,6 +13,9 @@ function Home() {
           Branch
         </button>
       </Link>
+    </div>
+    <div>
+      <ImageGallery />
     </div>
   </div>;
 }
