@@ -42,8 +42,12 @@ function InvoiceHistory(props) {
                             type="text"
                             className="form-control"
                             placeholder="Nhập từ khoá cần tìm"
-                            onfocus="this.placeholder = ''"
-                            onblur="this.placeholder = 'Nhập từ khoá cần tìm'"
+                            onFocus={(e) => {
+                              e.target.placeholder = "";
+                            }}
+                            onBlur={(e) => {
+                              e.target.placeholder = "Nhập từ khoá cần tìm";
+                            }}
                           />
                           <div className="input-group-append">
                             <button className="btns" type="button">

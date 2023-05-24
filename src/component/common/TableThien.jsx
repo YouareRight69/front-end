@@ -1,19 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import Modal from "./Modal";
-// import { Button, Modal } from "react-bootstrap";
 
 function TableThien({ value, index }) {
-  const [currentBranchId, setCurrentBranchId] = useState("");
-
-  const handleDeleteClick = (index) => {
-    setCurrentBranchId(value.name);
-    console.log(currentBranchId);
-  };
-
-  useEffect(() => {
-    setCurrentBranchId(value.name);
-  }, []);
   return (
     <>
       <tr key={index} style={{ marginTop: "5px" }}>
@@ -27,7 +16,6 @@ function TableThien({ value, index }) {
             style={{ marginRight: "10px" }}
             data-bs-toggle="modal"
             data-bs-target={`#${value.branchId}`}
-            onClick={() => handleDeleteClick(index)}
           >
             <i className="far fa-trash-alt"></i>
           </button>
@@ -46,9 +34,9 @@ function TableThien({ value, index }) {
         </td>
       </tr>
       <Modal
+        title={"Xóa Chi Nhánh"}
         branch={value}
-        message={`Bạn có chắc muốn xóa chi nhánh có branchId: ${value.name} này không ?`}
-        indexModal={index}
+        message={`Bạn có chắc muốn xóa chi nhánh: ${value.name} không ?`}
       />
     </>
   );
