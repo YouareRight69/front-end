@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import ImageGallery from "../common/ImageGallery";
 
 function DetailBranch(props) {
   return (
@@ -36,16 +37,7 @@ function DetailBranch(props) {
                       style={{ paddingTop: "50px" }}
                     >
                       <div className="col-lg-12 col-md-6 col-sm-6">
-                        <div className="box snake thien_snake">
-                          <div className="gallery-img">
-                            <img
-                              className="thien_avatar"
-                              src="./assets/img/thien/1.jpg"
-                              alt="avatar"
-                            />
-                          </div>
-                          <div className="overlay"></div>
-                        </div>
+                        <ImageGallery />
                       </div>
                     </div>
                   </div>
@@ -70,7 +62,7 @@ function DetailBranch(props) {
                       </div>
                     </form>
                     <div className="mt-110" style={{ display: "flex" }}>
-                      <div className="col-lg-3 ms-10">
+                      <div className="col-lg-4 ms-10">
                         <Link to="/branch">
                           <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
                             Trở về
