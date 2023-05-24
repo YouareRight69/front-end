@@ -5,9 +5,9 @@ function Modal({ branch, title ,message}) {
   return (
     <div>
       <div
-        class="modal fade"
+        className="modal fade"
         id={`${branch.branchId}`}
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
@@ -19,27 +19,25 @@ function Modal({ branch, title ,message}) {
               </h1>
               <div
                 type="button"
-                class="btn-close"
+                className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               >
-                <i class="fas fa-times"></i>
+                <i className="fas fa-times"></i>
               </div>
             </div>
-            <div class="modal-body">
-            {message}
-            </div>
-            <div class="modal-footer">
+            <div className="modal-body">{message}</div>
+            <div className="modal-footer">
               <button
                 type="button"
-                class="btn btn-secondary"
+                className="btn btn-secondary"
                 data-bs-dismiss="modal"
               >
                 Không
               </button>
               <button
                 type="button"
-                class="btn btn-primary"
+                className="btn btn-primary"
                 data-bs-dismiss="modal"
               >
                 Có
