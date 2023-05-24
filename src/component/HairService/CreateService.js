@@ -58,7 +58,6 @@ function CreateService() {
         }
     }, [id]);
 
-
     const [imageSrc, setImageSrc] = useState("./assets/img/thien/1.jpg");
 
     const handleInputChange = (event) => {
@@ -107,7 +106,7 @@ function CreateService() {
                             </div>
                         </div>
                         <div className="col-lg-8 col-md-8">
-                            <h2 className="mb-30">THÊM MỚI DỊCH VỤ</h2>
+                            <h2 className="mb-30">DỊCH VỤ</h2>
                             <form id="form" onSubmit={onSubmit} style={{ textAlign: "left", color: "black", width: "80%" }}>
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">

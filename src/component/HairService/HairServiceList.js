@@ -5,6 +5,8 @@ import { Outlet, Link } from "react-router-dom";
 import Page from '../../utils/Page';
 import EditButton from '../../Button/EditButton';
 import DeleteButton from '../../Button/DeleteButton';
+import SearchForm from '../../Button/SearchForm';
+import DetailButton from '../../Button/DetailButton';
 
 function UserList() {
 
@@ -44,15 +46,13 @@ function UserList() {
                     <div className="blog_right_sidebar">
                         <aside className="single_sidebar_widget search_widget col-lg-12" style={{ 'display': 'flex' }}>
                             <div className="col-lg-1">
-
                             </div>
                             <form action="#" className="col-lg-6">
                                 <div className="form-group">
                                     <div className="input-group mb-3">
-                                        <input type="text" className="form-control" placeholder='Nhập từ khoá cần tìm' />
-                                        <div className="input-group-append">
-                                            <button className="btns" type="button"><i className="ti-search"></i></button>
-                                        </div>
+                                        <SearchForm
+                                            onSubmit={onSubmit}
+                                        />
                                     </div>
                                 </div>
                             </form>
@@ -91,9 +91,7 @@ function UserList() {
                                                     <td className='item'>
                                                         <DeleteButton url={url} id={item.serviceId} rerender={rerender} />
                                                         <EditButton url={'listService'} id={item.serviceId} />
-                                                        <button className="genric-btn primary radius" style={{ 'marginRight': '10px' }}><i
-                                                            className="fa fa-eye" aria-hidden="true"></i>
-                                                        </button>
+                                                        <DetailButton url={'detailService'} id={item.serviceId} />
                                                     </td>
                                                 </tr>
                                             )}
