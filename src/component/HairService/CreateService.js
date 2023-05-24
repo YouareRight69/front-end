@@ -27,7 +27,7 @@ function CreateService() {
                 navigate("/listService");
             }).catch(error => {
                 console.log(error)
-                setValid(error.response);
+                setValid(error.response.data);
                 
             })
         }
@@ -41,7 +41,7 @@ function CreateService() {
         }).catch(error => {
             console.log(error)
             setValid(error.response.data);
-            console.log(error)
+            console.log(setValid)
         })
     }
 
@@ -111,7 +111,8 @@ function CreateService() {
                             <form id="form" onSubmit={onSubmit} style={{ textAlign: "left", color: "black", width: "80%" }}>
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
-                                        <p className="mt-2">Tên dịch vụ {valid.name && <span style={{error}}>{valid.name}</span>}</p>
+                                        {/* <p className="mt-2">Tên dịch vụ {valid.name && <span style={{error}}>{valid.name}</span>}</p> */}
+                                        <label htmlFor="exampleInputPassword1" className="form-label">Tên dịch vụ {valid.name && <span style={{error}}>{valid.name}</span>}</label>
                                     </div>
                                     <div className="col-lg-9 col-md-4">
                                         <input
@@ -121,13 +122,14 @@ function CreateService() {
                                             name='name'
                                             className="single-input"
                                             onChange={handleChange} 
-                                            id="name"/>
+                                            id="exampleInputPassword1"/>
                                     </div>
                                 </div>
 
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
-                                        <p className="mt-2">Giá {valid.price && <span style={{error}}>{valid.price}</span>}</p>
+                                        {/* <p className="mt-2">Giá {valid.price && <span style={{error}}>{valid.price}</span>}</p> */}
+                                        <label htmlFor="exampleInputPassword1" className="form-label">Giá {valid.price && <span style={{error}}>{valid.price}</span>}</label>
                                     </div>
                                     <div className="col-lg-9 col-md-4">
                                         <input
@@ -143,7 +145,8 @@ function CreateService() {
 
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
-                                        <p className="mt-2">Mô tả {valid.description && <span style={{error}}>{valid.description}</span>}</p>
+                                        {/* <p className="mt-2">Mô tả {valid.description && <span style={{error}}>{valid.description}</span>}</p> */}
+                                        <label htmlFor="exampleInputPassword1" className="form-label">Mô tả {valid.description && <span style={{error}}>{valid.description}</span>}</label>
                                     </div>
                                     <div className="col-lg-9 col-md-4">
                                         <textarea
@@ -158,7 +161,8 @@ function CreateService() {
                                 </div>
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
-                                        <p className="mt-2">Loại dịch vụ {valid.type && <span style={{error}}>{valid.type}</span>}</p>
+                                        {/* <p className="mt-2">Loại dịch vụ {valid.type && <span style={{error}}>{valid.type}</span>}</p> */}
+                                        <label htmlFor="exampleInputPassword1" className="form-label">Loại dịch vụ {valid.type && <span style={{error}}>{valid.type}</span>}</label>
                                     </div>
                                     <div className="col-lg-9 col-md-4">
                                         <input

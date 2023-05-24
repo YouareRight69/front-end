@@ -1,4 +1,3 @@
-
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Home from "./Controller/Home";
@@ -36,6 +35,14 @@ function App() {
         <Route path="/listService" element={<HairServiceList/>} />
         <Route path="/createService" element={<CreateService/>} />
         <Route path='/listService/:id' element={<CreateService />} />
+        <Route path="/branch" element={<Branch />}></Route>
+        <Route path="/branch-add" element={<AddNewBranch />}></Route>
+        <Route path="/branch-detail" element={<DetailBranch />}></Route>
+        <Route path="/branch-edit" element={<EditBranch />}></Route>
+        <Route path="/invoice-history" element={<InvoiceHistory />}></Route>
+        <Route path="/invoice" element={<Invoice />}></Route>
+        <Route path="/payment" element={<Payment />}></Route>
+        <Route path="/booking" element={<Booking />}></Route>
       </Routes>
     </BrowserRouter>
   );

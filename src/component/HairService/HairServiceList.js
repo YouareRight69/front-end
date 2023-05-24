@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Outlet, Link } from "react-router-dom";
 import Page from '../../utils/Page';
 import EditButton from '../../Button/EditButton';
+import DeleteButton from '../../Button/DeleteButton';
 
 function UserList() {
 
@@ -48,7 +49,7 @@ function UserList() {
                             <form action="#" className="col-lg-6">
                                 <div className="form-group">
                                     <div className="input-group mb-3">
-                                        <input type="text" className="form-control" placeholder='Nhập từ khoá cần tìm'/>
+                                        <input type="text" className="form-control" placeholder='Nhập từ khoá cần tìm' />
                                         <div className="input-group-append">
                                             <button className="btns" type="button"><i className="ti-search"></i></button>
                                         </div>
@@ -88,11 +89,8 @@ function UserList() {
                                                     <td>{item.price}</td>
                                                     <td><div className='long-text'>{item.description}</div></td>
                                                     <td className='item'>
-                                                        <button className="genric-btn danger radius" data-toggle="modal"
-                                                            data-target="#exampleModal">
-                                                            <i className="far fa-trash-alt"></i>
-                                                        </button>
-                                                         <EditButton url={'listService'} id={item.serviceId} />
+                                                        <DeleteButton url={url} id={item.serviceId} rerender={rerender} />
+                                                        <EditButton url={'listService'} id={item.serviceId} />
                                                         <button className="genric-btn primary radius" style={{ 'marginRight': '10px' }}><i
                                                             className="fa fa-eye" aria-hidden="true"></i>
                                                         </button>
@@ -111,30 +109,15 @@ function UserList() {
             <div>
                 <Outlet />
             </div>
+            <Page
+                totalPages={list.data.totalPages}
+                number={list.data.number}
+                condition={condition}
+                handleClick={handleClick}
+            />
         </div>
     )
 }
-<div className="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div className="modal-dialog" role="document">
-        <div className="modal-content">
-            <div className="modal-header">
-                <h2 className="modal-title" id="exampleModalLabel">
-                    XÁC NHẬN THÔNG TIN XÓA
-                </h2>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div className="modal-body">Xác nhận xóa dịch vụ <span style={{'color': 'red'}}>Cắt + Gội</span> ?</div>
-            <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-dismiss="modal">
-                    Hủy
-                </button>
-                <button type="button" className="btn btn-primary">Xác nhận</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-export default UserList
+
+export default UserList;

@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 
 export default function EditButton(props) {
     const handleClick = () => <CreateService id={props.id} url={props.url} />
-console.log(props.url);
     return (
         <div>
             <Link as={Link} className="dropdown-item" to={`/${props.url}/${props.id}`}>

@@ -5,11 +5,11 @@ export default function DeleteButton(props) {
 
     const deleteItem = () => {
         if (props.id) {
-            axios.put(`${props.url}/${props.id}`)
+            axios.delete(`${props.url}/${props.id}`)
                 .then(resp => props.rerender())
             return;
         }
-        axios.put(`${props.url}/delete`, props.item, {
+        axios.delete(`${props.url}/delete`, props.item, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -18,10 +18,10 @@ export default function DeleteButton(props) {
 
     return (
         <React.Fragment>
-            <button className='btn btn-danger' style={{ width: "40px" }} data-bs-toggle="modal" data-bs-target={`#modal-${props.id}`} >
-                <i className="fa-solid fa-eraser"></i>
+            <button className='genric-btn danger radius' data-bs-toggle="modal" data-bs-target={`#modal-${props.id}`} >
+                <i className="far fa-trash-alt"></i>
             </button>
-            <div className="modal fade" id={`modal-${props.id}`} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            {/* <div className="modal fade" id={`modal-${props.id}`} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-sm">
                     <div className="modal-content">
                         <div className="modal-header">
@@ -37,7 +37,51 @@ export default function DeleteButton(props) {
                         </div>
                     </div>
                 </div>
+            </div> */}
+            <div
+        class="modal fade"
+        id={`modal-${props.id}`}
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+              Xóa dịch vụ
+              </h1>
+              <div
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              >
+                <i class="fas fa-times"></i>
+              </div>
             </div>
+            <div class="modal-body">
+            Bạn có chắc muốn xóa dịch vụ {`${props.id}`}
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Không
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-bs-dismiss="modal"
+              >
+                Có
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
         </React.Fragment>
     )
 }
