@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import ImageGallery from '../common/ImageGallery';
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
+import { storage } from "../firebase/index.js";
 
 function CreateService() {
     const service = "http://localhost:8080/api/hairService"
     const { id } = useParams();
     const [target, setTarget] = useState({});
-    const [valid, setValid] = useState({name:"", price:"",description: "",type:""});
+    const [valid, setValid] = useState({ name: "", price: "", description: "", type: "" });
 
     const error = { color: "red" };
 
@@ -28,7 +32,7 @@ function CreateService() {
             }).catch(error => {
                 console.log(error)
                 setValid(error.response.data);
-                
+
             })
         }
         axios.post(service, target, {
@@ -45,6 +49,10 @@ function CreateService() {
         })
     }
 
+    const handleReset = () => {
+        setTarget({})
+    }
+
     const handleChange = (element) => {
         setTarget({ ...target, [element.target.name]: element.target.value })
     }
@@ -58,17 +66,29 @@ function CreateService() {
         }
     }, [id]);
 
-    const [imageSrc, setImageSrc] = useState("./assets/img/thien/1.jpg");
+    const [imagesArray, setImagesArray] = useState([]);
+    const [urls, setUrls] = useState("");
+    const [progress, setProgress] = useState(0);
 
-    const handleInputChange = (event) => {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-        reader.onload = () => {
-            setImageSrc(reader.result);
-        };
-
-        reader.readAsDataURL(file);
+    const handleDataFromImageGallery = (data) => {
+        setImagesArray(data);
     };
+
+    const handleUploadMultiImage = () => {
+
+        imagesArray.map((image) => {
+            const imageref = ref(storage, `images/${image.name + v4()}`);
+            uploadBytes(imageref, image).then((snaphsot) => {
+                getDownloadURL(snaphsot.ref).then((urls) => {
+                    setUrls((prevState) => [...prevState, urls]);
+                });
+            });
+        });
+    };
+
+    console.log(urls);
+
+    // console.log(imagesArray);
 
     return (
         <div>
@@ -82,27 +102,19 @@ function CreateService() {
                         <div className="col-xl-4 col-lg-4 col-md-6">
                             <div className="gallery-area" style={{ 'padding-top': '60px' }}>
                                 <div className="col-lg-12 col-md-6 col-sm-6">
-                                    <div className="box snake thien_snake">
-                                        <label htmlFor="file-input">
-                                            <div className="gallery-img">
-                                                <img
-                                                    className="thien_avatar"
-                                                    src={imageSrc}
-                                                    alt="avatar"
-                                                />
-                                            </div>
-                                            <div className="overlay"></div>
-                                            <input
-                                                style={{ display: "none" }}
-                                                id="file-input"
-                                                type="file"
-                                                name="myfile"
-                                                multiple
-                                                onChange={handleInputChange}
-                                            />
-                                        </label>
-                                    </div>
+                                    <ImageGallery
+                                        sendDataToParent={handleDataFromImageGallery}
+                                    />
                                 </div>
+                                <p>ANHR</p>
+                                <input
+                                value = {urls}
+                                type = "text"
+                                name= "media"
+                                onChange={handleUploadMultiImage}
+                                >
+                                
+                                </input>
                             </div>
                         </div>
                         <div className="col-lg-8 col-md-8">
@@ -111,7 +123,7 @@ function CreateService() {
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
                                         {/* <p className="mt-2">Tên dịch vụ {valid.name && <span style={{error}}>{valid.name}</span>}</p> */}
-                                        <label htmlFor="exampleInputPassword1" className="form-label">Tên dịch vụ {valid.name && <span style={{error}}>{valid.name}</span>}</label>
+                                        <label htmlFor="exampleInputPassword1" className="form-label">Tên dịch vụ {valid.name && <span style={{ error }}>{valid.name}</span>}</label>
                                     </div>
                                     <div className="col-lg-9 col-md-4">
                                         <input
@@ -120,15 +132,15 @@ function CreateService() {
                                             type="text"
                                             name='name'
                                             className="single-input"
-                                            onChange={handleChange} 
-                                            id="exampleInputPassword1"/>
+                                            onChange={handleChange}
+                                            id="exampleInputPassword1" />
                                     </div>
                                 </div>
 
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
                                         {/* <p className="mt-2">Giá {valid.price && <span style={{error}}>{valid.price}</span>}</p> */}
-                                        <label htmlFor="exampleInputPassword1" className="form-label">Giá {valid.price && <span style={{error}}>{valid.price}</span>}</label>
+                                        <label htmlFor="exampleInputPassword1" className="form-label">Giá {valid.price && <span style={{ error }}>{valid.price}</span>}</label>
                                     </div>
                                     <div className="col-lg-9 col-md-4">
                                         <input
@@ -145,14 +157,14 @@ function CreateService() {
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
                                         {/* <p className="mt-2">Mô tả {valid.description && <span style={{error}}>{valid.description}</span>}</p> */}
-                                        <label htmlFor="exampleInputPassword1" className="form-label">Mô tả {valid.description && <span style={{error}}>{valid.description}</span>}</label>
+                                        <label htmlFor="exampleInputPassword1" className="form-label">Mô tả {valid.description && <span style={{ error }}>{valid.description}</span>}</label>
                                     </div>
                                     <div className="col-lg-9 col-md-4">
                                         <textarea
                                             type="text"
                                             placeholder="Mô tả"
                                             className="single-input"
-                                            value={target.description} 
+                                            value={target.description}
                                             name='description'
                                             onChange={handleChange}
                                             id="description" />
@@ -161,7 +173,7 @@ function CreateService() {
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
                                         {/* <p className="mt-2">Loại dịch vụ {valid.type && <span style={{error}}>{valid.type}</span>}</p> */}
-                                        <label htmlFor="exampleInputPassword1" className="form-label">Loại dịch vụ {valid.type && <span style={{error}}>{valid.type}</span>}</label>
+                                        <label htmlFor="exampleInputPassword1" className="form-label">Loại dịch vụ {valid.type && <span style={{ error }}>{valid.type}</span>}</label>
                                     </div>
                                     <div className="col-lg-9 col-md-4">
                                         <input
@@ -174,6 +186,7 @@ function CreateService() {
                                             id="type" />
                                     </div>
                                 </div>
+                                
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-4">
                                         <Link to="/listService">
@@ -182,11 +195,11 @@ function CreateService() {
                                     </div>
                                     <div className="col-lg-4">
                                         <button className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                                            type="reset">Làm mới</button>
+                                            type="reset" onClick={handleReset}>Làm mới </button>
                                     </div>
                                     <div className="col-lg-4">
                                         <button className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                                            type="submit">Thêm mới</button>
+                                            type="submit" onClick={handleUploadMultiImage}>Thêm mới</button>
                                     </div>
                                 </div>
                             </form>

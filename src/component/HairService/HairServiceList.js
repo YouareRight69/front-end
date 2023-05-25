@@ -23,6 +23,7 @@ function UserList() {
 
     const onSubmit = (data) => {
         setCondition(data);
+        console.log(setCondition);
     }
 
     const rerender = () => {
@@ -47,7 +48,6 @@ function UserList() {
                         <aside className="single_sidebar_widget search_widget col-lg-12" style={{ 'display': 'flex' }}>
                             <div className="col-lg-1">
                             </div>
-                            <form action="#" className="col-lg-6">
                                 <div className="form-group">
                                     <div className="input-group mb-3">
                                         <SearchForm
@@ -55,7 +55,7 @@ function UserList() {
                                         />
                                     </div>
                                 </div>
-                            </form>
+                            
                         </aside>
                     </div>
                     <div className="mt-10" style={{ 'display': 'flex' }}>

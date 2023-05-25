@@ -7,9 +7,6 @@ function DetailService() {
     const service = "http://localhost:8080/api/hairService"
     const { id } = useParams();
     const [target, setTarget] = useState({});
-    const [valid, setValid] = useState({ name: "", price: "", description: "", type: "" });
-
-    const error = { color: "red" };
 
     const navigate = useNavigate();
 
@@ -25,15 +22,8 @@ function DetailService() {
                 }
             }).then(resp => {
                 navigate("/listService");
-            }).catch(error => {
-                console.log(error)
-                setValid(error.response.data);
             })
         }
-    }
-
-    const handleChange = (element) => {
-        setTarget({ ...target, [element.target.name]: element.target.value })
     }
 
     useEffect(() => {
@@ -95,30 +85,29 @@ function DetailService() {
                         <div className="col-lg-8 col-md-8">
                             <h2 className="mb-30">XEM CHI TIẾT DỊCH VỤ</h2>
                             <form id="form" onSubmit={onSubmit} style={{ textAlign: "left", color: "black", width: "80%" }}>
-                                <div className="mt-10" style={{ 'display': 'flex' }}>
-                                    <div className="col-lg-3 col-md-4">
-                                        <p className="mt-2">Tên dịch vụ: {target.name}</p>
-                                    </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Mã dịch vụ: <span>{target.serviceId}</span></label>
                                 </div>
-                                <div className="mt-10" style={{ 'display': 'flex' }}>
-                                    <div className="col-lg-3 col-md-4">
-                                        <p className="mt-2">Giá: {target.price}</p>
-
-                                    </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Tên dịch vụ: <span>{target.name}</span></label>
                                 </div>
-                                <div className="mt-10" style={{ 'display': 'flex' }}>
-                                    <div className="col-lg-3 col-md-4">
-                                        <p className="mt-2">Mô tả: {target.description}</p>
-                                    </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Giá: <span>{target.price}</span></label>
                                 </div>
-                                <div className="mt-10" style={{ 'display': 'flex' }}>
-                                    <div className="col-lg-3 col-md-4">
-                                        <p className="mt-2">Loại dịch vụ: {target.type}</p>
-                                    </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Mô tả: <span>{target.description}</span></label>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Loại dịch vụ: <span>{target.type}</span></label>
                                 </div>
                             </form>
                         </div>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <Link to="/listService">
+                        <button className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">Trở về</button>
+                    </Link>
                 </div>
             </section>
         </div>

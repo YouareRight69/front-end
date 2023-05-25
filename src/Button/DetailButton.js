@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams, useLocation } from 'react-router-dom';
 import DetailService from '../component/HairService/DetailService'
 
 export default function DetailButton(props) {
