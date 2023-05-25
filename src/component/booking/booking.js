@@ -1,7 +1,9 @@
 import { React, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import axios from "axios";
+
 
 export default function Booking() {
   //useState
@@ -11,6 +13,7 @@ export default function Booking() {
   const [dataSkinner, setDataSkinner] = useState();
   const [workingTimeData, setWorkingTimeData] = useState();
   const [selectStyle, setSelectStyle] = useState();
+  const [selectSkinner, setSelectSkinner] = useState();
   const [selectTime, setSelectTime] = useState();
   const [selectDay, setSelectDay] = useState();
   const [busyTime , setBusyTime ] = useState();
@@ -66,9 +69,10 @@ export default function Booking() {
     }
   }, [selectDay,selectStyle]);
   //console log
-  // console.log(workingTimeData);
-  // console.log(selectStyle.employee.employeeId);
-  console.log(busyTime);
+  console.log(workingTimeData);
+  console.log(selectStyle);
+console.log(selectTime)
+console.log(selectSkinner);
 
   //const
   const styleImg = {
@@ -103,17 +107,18 @@ export default function Booking() {
   };
 
   //function
-  const handleClickTime = (timeZone) => {
+  const handleClickTime = (time) => {
     // setSelectTime(time);
-    if (selectTime === timeZone) {
+    if (selectTime === time.timeZone) {
       setSelectTime(null);
     } else {
-      setSelectTime(timeZone);
+      setSelectTime(time.timeZone);
     }
   };
 
   const handleButtonClick = (style) => {
     setSelectStyle(style);
+  
   };
 
   const handleSelectBranch = (e) => {
@@ -122,7 +127,11 @@ export default function Booking() {
 
   const handleSelectDay = (e) => {
     setSelectDay(e);
+    
   };
+  const handleSelectSkinner =  (e)=> {
+setSelectSkinner(e)
+  }
 
   return (
     <>
@@ -169,14 +178,14 @@ export default function Booking() {
                   <div className="input-group-icon mt-10">
                     <h1>Chọn dịch vụ</h1>
                     <div>
-                      <a
-                        href="./hairservice.html"
+                      <Link
+                        to="/select-service"
                         className="btn header-btn"
                         style={{ width: "100%" }}
                       >
                         <i className="fas fa-cut fa-rotate-270"></i> Chọn dịch
                         vụ
-                      </a>
+                      </Link>
                     </div>
 
                     <div className="m-3">Dịch vụ đã chọn</div>
@@ -259,7 +268,7 @@ export default function Booking() {
                                   isSelected ? "" : "success-border"
                                 }`}
                                 style={buttonStyle}
-                                onClick={() => handleClickTime(time.timeZone)}
+                                onClick={() => handleClickTime(time)}
                                 disabled={isBusy}
                               >
                                 {time.timeZone}
@@ -276,7 +285,9 @@ export default function Booking() {
                       <h1>Chọn skinner</h1>
 
                       <div id="default-select">
-                        <select className="form-select">
+                        <select className="form-select"
+                         onChange={(event)=>{handleSelectSkinner(event.target.value)}}
+                        >
                           {selectBranch != "" &&
                             dataSkinner?.map((skinner, index) => (
                               <option

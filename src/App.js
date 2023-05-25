@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Home from "./Controller/Home";
 import Booking from "./component/booking/booking";
 import AddNewBranch from "./component/branch/AddNewBranch";
 import Branch from "./component/branch/DashboardBranch";
@@ -9,14 +8,13 @@ import EditBranch from "./component/branch/EditBranch";
 import Invoice from "./component/invoice/Invoice";
 import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
+import Selectservice from "./component/booking/selectservice";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />}>
-          {/* <Route index element={<Home />} />       */}
-        </Route>
+        
         <Route path="/branch" element={<Branch />}></Route>
         <Route path="/branch-add" element={<AddNewBranch />}></Route>
         <Route path="/branch-detail" element={<DetailBranch />}></Route>
@@ -25,6 +23,7 @@ function App() {
         <Route path="/invoice" element={<Invoice />}></Route>
         <Route path="/payment" element={<Payment />}></Route>
         <Route path="/booking" element={<Booking />}></Route>
+        <Route path="/select-service" element={<Selectservice />}></Route>
 
       </Routes>
     </BrowserRouter>
