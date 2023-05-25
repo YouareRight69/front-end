@@ -1,11 +1,12 @@
-import React from 'react'
+import React from "react";
+import Header from "./register/common/Header";
 
-function Home(){
+function Home() {
   return (
     <div>
-      Welcome to VietNam
+      <Header />
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;
