@@ -8,14 +8,36 @@ import { storage } from "../firebase/index.js";
 function AddNewBranch(props) {
   const [imagesArray, setImagesArray] = useState([]);
   const [urls, setUrls] = useState("");
-  const [progress, setProgress] = useState(0);
+  const [branch, setBranch] = useState({
+    userID: "",
+    accountID: "",
+    address: "",
+    dateOfBirth: "",
+    email: "",
+    fullName: "",
+    gender: "",
+    phone: "",
+    status: "",
+    avata: "",
+  });
+  const {
+    userID,
+    accountID,
+    address,
+    dateOfBirth,
+    email,
+    fullName,
+    gender,
+    phone,
+    status,
+    avata,
+  } = branch;
 
   const handleDataFromImageGallery = (data) => {
     setImagesArray(data);
   };
 
   const handleUploadMultiImage = () => {
-    
     imagesArray.map((image) => {
       const imageref = ref(storage, `images/${image.name + v4()}`);
       uploadBytes(imageref, image).then((snaphsot) => {
