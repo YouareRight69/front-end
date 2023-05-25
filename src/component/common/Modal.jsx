@@ -1,6 +1,7 @@
 import React from "react";
 
-function Modal({ branch, message, title }) {
+function Modal({ branch, title ,message}) {
+
   return (
     <div>
       <div
@@ -10,11 +11,11 @@ function Modal({ branch, message, title }) {
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">
-                {title}
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+              {title}
               </h1>
               <div
                 type="button"

@@ -1,9 +1,9 @@
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
-import ImageGallery from "../common/ImageGallery";
 import { storage } from "../firebase/index.js";
+import ImageGallery from "../common/ImageGallery";
 
 function AddNewBranch(props) {
   const [imagesArray, setImagesArray] = useState([]);
