@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import ImageGallery from '../common/ImageGallery';
@@ -7,7 +7,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../firebase/index.js";
 
-function CreateService() {
+function EditService() {
     const service = "http://localhost:8080/api/hairService"
     const { id } = useParams();
     const [target, setTarget] = useState({
@@ -16,10 +16,9 @@ function CreateService() {
         description: "",
         type: "",
         media: []
-    });
-    const [uploading, setUploading] = useState(false);
+      });
     const [valid, setValid] = useState({ name: "", price: "", description: "", type: "" });
-    const [imagesArray, setImagesArray] = useState([]);
+
     const error = { color: "red" };
 
     const navigate = useNavigate();
@@ -67,40 +66,45 @@ function CreateService() {
 
     useEffect(() => {
         if (id) {
-            axios.get(`${service}/${id}`).then((resp) => {
-                setTarget(resp.data);
-            });
+          axios.get(`${service}/${id}`).then((resp) => {
+            const { name, price, description, type, media } = resp.data;
+            setTarget({ name, price, description, type, media: media.map((item) => item.url) });
+          });
         }
-    }, [id]);
+      }, [id]);
+
+    const [imagesArray, setImagesArray] = useState([]);
 
     const handleDataFromImageGallery = (data) => {
         setImagesArray(data);
     };
 
     const handleUploadMultiImage = () => {
-        setUploading(true);
         const updatedTarget = { ...target };
+        
         imagesArray.forEach((image) => {
-            const imageref = ref(storage, `images/${v4() + image.name}`);
-            uploadBytes(imageref, image).then((snapshot) => {
-                getDownloadURL(snapshot.ref).then((url) => {
-                    updatedTarget.media.push(url);
-
-                    // Kiểm tra xem đã tải lên tất cả các hình ảnh hay chưa
-                    if (updatedTarget.media.length === imagesArray.length) {
-                        setTarget(updatedTarget);
-                        saveTargetToDatabase(updatedTarget); // Gọi hàm lưu target vào cơ sở dữ liệu
-                    }
-                });
+          const imageref = ref(storage, `images/${image.name + v4()}`);
+          uploadBytes(imageref, image).then((snapshot) => {
+            getDownloadURL(snapshot.ref).then((url) => {
+              updatedTarget.media.push(url);
+              
+              // Kiểm tra xem đã tải lên tất cả các hình ảnh hay chưa
+              if (updatedTarget.media.length === imagesArray.length) {
+                setTarget(updatedTarget);
+                saveTargetToDatabase(updatedTarget); // Gọi hàm lưu target vào cơ sở dữ liệu
+              }
             });
+          });
         });
-    };
+      };
 
-    const saveTargetToDatabase = (target) => {
+      const saveTargetToDatabase = (target) => {
+        // Gọi API hoặc thực hiện các xử lý lưu trữ vào cơ sở dữ liệu ở đây
         console.log(target);
-        setUploading(false);
         onSubmit();
     };
+
+    // console.log(imagesArray);
 
     return (
         <div>
@@ -121,7 +125,7 @@ function CreateService() {
                             </div>
                         </div>
                         <div className="col-lg-8 col-md-8">
-                            <h2 className="mb-30">THÊM MỚI DỊCH VỤ</h2>
+                            <h2 className="mb-30">CHỈNH SỬA DỊCH VỤ</h2>
                             <form id="form" style={{ textAlign: "left", color: "black", width: "80%" }}>
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
@@ -202,7 +206,7 @@ function CreateService() {
                                     </div>
                                     <div className="col-lg-4">
                                         <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                                            onClick={handleUploadMultiImage}>Thêm mới</div>
+                                            onClick={handleUploadMultiImage}>Cập nhật</div>
                                     </div>
                                 </div>
                             </form>
@@ -215,4 +219,4 @@ function CreateService() {
     )
 }
 
-export default CreateService;
+export default EditService;

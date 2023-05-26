@@ -97,7 +97,6 @@ function UserList() {
                                             )}
                                     </tbody>
                                 </table>
-
                             </div>
                         </div>
                     </div>
