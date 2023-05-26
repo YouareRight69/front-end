@@ -10,16 +10,22 @@ import { storage } from "../firebase/index.js";
 function CreateService() {
     const service = "http://localhost:8080/api/hairService"
     const { id } = useParams();
-    const [target, setTarget] = useState({});
+    const [target, setTarget] = useState({
+        name: "",
+        price: 0,
+        description: "",
+        type: "",
+        media: []
+      });
     const [valid, setValid] = useState({ name: "", price: "", description: "", type: "" });
 
     const error = { color: "red" };
 
     const navigate = useNavigate();
 
-    const onSubmit = (e) => {
+    const onSubmit = () => {
         console.log(target)
-        e.preventDefault();
+        // e.preventDefault();
         if (id) {
             axios.patch(`${service}/${id}`, target, {
                 headers: {
@@ -55,6 +61,7 @@ function CreateService() {
 
     const handleChange = (element) => {
         setTarget({ ...target, [element.target.name]: element.target.value })
+        // console.log(`Target: ${target}`)
     }
 
     useEffect(() => {
@@ -67,26 +74,47 @@ function CreateService() {
     }, [id]);
 
     const [imagesArray, setImagesArray] = useState([]);
-    const [urls, setUrls] = useState("");
-    const [progress, setProgress] = useState(0);
 
     const handleDataFromImageGallery = (data) => {
         setImagesArray(data);
     };
 
+    // const handleUploadMultiImage = () => {
+
+    //     imagesArray.map((image) => {
+    //         const imageref = ref(storage, `images/${image.name + v4()}`);
+    //         uploadBytes(imageref, image).then((snaphsot) => {
+    //             getDownloadURL(snaphsot.ref).then((urls) => {
+    //                 setUrls((prevState) => [...prevState, urls]);
+    //             });
+    //         });
+    //     });
+    // };
+
     const handleUploadMultiImage = () => {
-
-        imagesArray.map((image) => {
-            const imageref = ref(storage, `images/${image.name + v4()}`);
-            uploadBytes(imageref, image).then((snaphsot) => {
-                getDownloadURL(snaphsot.ref).then((urls) => {
-                    setUrls((prevState) => [...prevState, urls]);
-                });
+        const updatedTarget = { ...target };
+        
+        imagesArray.forEach((image) => {
+          const imageref = ref(storage, `images/${image.name + v4()}`);
+          uploadBytes(imageref, image).then((snapshot) => {
+            getDownloadURL(snapshot.ref).then((url) => {
+              updatedTarget.media.push(url);
+              
+              // Kiểm tra xem đã tải lên tất cả các hình ảnh hay chưa
+              if (updatedTarget.media.length === imagesArray.length) {
+                setTarget(updatedTarget);
+                saveTargetToDatabase(updatedTarget); // Gọi hàm lưu target vào cơ sở dữ liệu
+              }
             });
+          });
         });
-    };
+      };
 
-    console.log(urls);
+      const saveTargetToDatabase = (target) => {
+        // Gọi API hoặc thực hiện các xử lý lưu trữ vào cơ sở dữ liệu ở đây
+        console.log(target);
+        onSubmit();
+    };
 
     // console.log(imagesArray);
 
@@ -106,20 +134,11 @@ function CreateService() {
                                         sendDataToParent={handleDataFromImageGallery}
                                     />
                                 </div>
-                                <p>ANHR</p>
-                                <input
-                                value = {urls}
-                                type = "text"
-                                name= "media"
-                                onChange={handleUploadMultiImage}
-                                >
-                                
-                                </input>
                             </div>
                         </div>
                         <div className="col-lg-8 col-md-8">
                             <h2 className="mb-30">DỊCH VỤ</h2>
-                            <form id="form" onSubmit={onSubmit} style={{ textAlign: "left", color: "black", width: "80%" }}>
+                            <form id="form" style={{ textAlign: "left", color: "black", width: "80%" }}>
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
                                         {/* <p className="mt-2">Tên dịch vụ {valid.name && <span style={{error}}>{valid.name}</span>}</p> */}
@@ -186,7 +205,7 @@ function CreateService() {
                                             id="type" />
                                     </div>
                                 </div>
-                                
+
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-4">
                                         <Link to="/listService">
@@ -198,8 +217,8 @@ function CreateService() {
                                             type="reset" onClick={handleReset}>Làm mới </button>
                                     </div>
                                     <div className="col-lg-4">
-                                        <button className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                                            type="submit" onClick={handleUploadMultiImage}>Thêm mới</button>
+                                        <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
+                                            onClick={handleUploadMultiImage}>Thêm mới</div>
                                     </div>
                                 </div>
                             </form>
