@@ -1,8 +1,49 @@
-import React from "react";
+import React, { useState, useEffect }  from "react";
 import { Link } from "react-router-dom";
+import { storage } from "../firebase/Firebase";
+import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
+
+
 
 function EditEmployee(props) {
+
+  const avatar = "./assets/img/avatar/hinh-avatar-cute-nu.jpg";
+
+
+  const [img, setImg] = useState(null);
+  const [imgUpload, setImgUpload] = useState("");
+  const [inputImg, setInputImg] = useState("assets/img/logo/avatar.png");
+
+  useEffect(() => {
+    if (avatar) {
+      setInputImg(avatar);
+    }
+  }, [avatar]);
+
+  const [imgList, setImgList] = useState([]);
+
+  const imgListRef = ref(storage, "avatars/");
+
+  const uploadImg = (event) => {
+    setImg(event.target.files[0]);
+    console.log(img);
+  };
+
+  useEffect(() => {
+    if (img == null) {
+      return;
+    }
+    const imgRef = ref(storage, `avatars/"my"+${v4()}`);
+    uploadBytes(imgRef, img).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        setImgUpload(url);
+      });
+    });
+  }, [img]);
+
   return (
+    
     <div>
       <main>
         {/* Hero Start */}
@@ -39,11 +80,20 @@ function EditEmployee(props) {
                         <div className="box snake thien_snake">
                           <label for="file-input">
                             <div className="gallery-img">
-                              <img
+                              {img != null ? (
+                                <img
                                 className="thien_avatar"
-                                src="./assets/img/avatar/hinh-avatar-cute-nu.jpg"
+                                src={imgUpload}
                                 alt="avatar"
                               />
+                              ) : (
+                                <img
+                                className="thien_avatar"
+                                src={inputImg}
+                                alt="avatar"
+                              />
+                              )}
+                              
                             </div>
                             <div className="overlay"></div>
                             <input
@@ -52,6 +102,9 @@ function EditEmployee(props) {
                               type="file"
                               name="myfile"
                               multiple
+                              onChange={(event) => {
+                                uploadImg(event);
+                              }}
                             />
                           </label>
                         </div>

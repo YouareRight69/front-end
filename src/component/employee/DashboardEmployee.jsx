@@ -1,8 +1,42 @@
-import React from "react";
-import { Link } from "react-router-dom";
-// import Modal from "../common/Modal";
+import React, { useEffect, useState} from "react";
+import { Outlet, Link } from "react-router-dom";
+import Page from '../../utils/Page';
+import EditButton from '../../Button/EditButton';
+import DeleteButton from '../../Button/DeleteButton';
+import SearchForm from '../../Button/SearchForm';
+import DetailButton from '../../Button/DetailButton';
+import axios from 'axios';
 
 function DashboardEmployee(props) {
+  const url = "http://localhost:8080/listAllEmp";
+  const [list, setList] = useState({ data: { content: [] } });
+  const [condition, setCondition] = useState("");
+  const [display, setDisplay] = useState(true);
+
+  function handleClick(page) {
+    axios.get(`${url}?p=${page}&c=${condition}`).then(res => {
+        setList(res);
+    })
+  }
+
+  const onSubmit = (data) => {
+    setCondition(data);
+    console.log(setCondition);
+  }
+
+  const rerender = () => {
+      setDisplay(!display);
+  }
+
+  useEffect(() => {
+    axios.get(`${url}?c=${condition}`).then(res => {
+      console.log("data",res.data);
+        setList(res.data.content);
+    })
+  }, [ ])
+
+  console.log(list);
+
   return (
     <div>
       {/* <PreLoader /> */}
@@ -41,18 +75,7 @@ function DashboardEmployee(props) {
                     <form action="#" className="col-lg-6">
                       <div className="form-group">
                         <div className="input-group mb-3">
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Nhập từ khoá cần tìm"
-                            onfocus="this.placeholder = ''"
-                            onblur="this.placeholder = 'Nhập từ khoá cần tìm'"
-                          />
-                          <div className="input-group-append">
-                            <button className="btns" type="button">
-                              <i className="ti-search"></i>
-                            </button>
-                          </div>
+                          <SearchForm onSubmit={onSubmit}/>
                         </div>
                       </div>
                     </form>
@@ -109,15 +132,17 @@ function DashboardEmployee(props) {
                           </tr>
                         </thead>
                         <tbody>
-                          <tr style={{ marginTop: "5px" }}>
-                          <th scope="row">01</th>
-                            <td>Nguyễn Văn A</td>
-                            <td>12/12/2000</td>
-                            <td>0245321014</td>
-                            <td>nguyenvana@gmail.com</td>
-                            <td>Nam</td>
-                            <td>Nguyễn Văn Linh</td>
-                            <td>
+                          {list.length > 0 &&
+                            list.map((item) => 
+                              <tr style={{ marginTop: "5px" }} key={item.employeeId}>
+                                <th scope="row">{item.employeeId}</th>
+                                <td>{item.user.fullName}</td>
+                                <td>{item.user.dateOfBirth}</td>
+                                <td>{item.user.phoneNumber}</td>
+                                <td>{item.user.account.email}</td>
+                                <td>{item.user.gender}</td>
+                                <td>{item.branch.name}</td>
+                                <td>
                               <button
                                 type="button"
                                 className="genric-btn danger radius"
@@ -146,90 +171,20 @@ function DashboardEmployee(props) {
                                 </div>
                               </Link>
                             </td>
-                          </tr>
-                          <tr style={{ marginTop: "5px" }}>
-                            <th scope="row">01</th>
-                            <td>Nguyễn Văn A</td>
-                            <td>12/12/2000</td>
-                            <td>0245321014</td>
-                            <td>nguyenvana@gmail.com</td>
-                            <td>Nam</td>
-                            <td>Nguyễn Văn Linh</td>
-                            <td>
-                              <button
-                                type="button"
-                                className="genric-btn danger radius"
-                                style={{ marginRight: "10px" }}
-                                data-bs-toggle="modal"
-                                data-bs-target="#deleteModal"
-                              >
-                                <i className="far fa-trash-alt"></i>
-                              </button>
-
-                              <Link
-                                to="/employee-edit"
-                                style={{ marginRight: "10px" }}
-                              >
-                                <div className="genric-btn success radius">
-                                  <i className="fas fa-pencil-alt"></i>
-                                </div>
-                              </Link>
-
-                              <Link to="/employee-detail">
-                                <div className="genric-btn primary radius">
-                                  <i
-                                    className="fa fa-eye"
-                                    aria-hidden="true"
-                                  ></i>
-                                </div>
-                              </Link>
-                            </td>
-                          </tr>
+                              </tr>
+                          )}
+                        
                         </tbody>
                       </table>
                     </div>
                   </div>
                 </div>
-                <section
-                  className="blog_area"
-                  style={{ paddingBottom: "80px" }}
-                >
-                  <div className="col-lg-12 mb-5 mb-lg-0">
-                    <nav className="blog-pagination1 justify-content-center d-flex">
-                      <ul className="pagination">
-                        <li className="page-item">
-                          <a
-                            href="#"
-                            className="page-link"
-                            aria-label="Previous"
-                          >
-                            <i className="ti-angle-left"></i>
-                          </a>
-                        </li>
-                        <li className="page-item">
-                          <a href="#" className="page-link">
-                            1
-                          </a>
-                        </li>
-                        <li className="page-item active">
-                          <a href="#" className="page-link">
-                            2
-                          </a>
-                        </li>
-                        <li className="page-item active">
-                          <a href="#" className="page-link">
-                            3
-                          </a>
-                        </li>
-                        <li className="page-item">
-                          <a href="#" className="page-link" aria-label="Next">
-                            <i className="ti-angle-right"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
-                </section>
+                <Page 
+                  totalPages={list.totalPages}
+                  number={list.number}
+                  condition={condition}
+                  handleClick={handleClick}
+                />
                 <div style={{ display: "flex" }}>
                   <div className="col-lg-10 ms-10 mb-50"></div>
                   <div className="col-lg-2 ms-10 mb-50">
