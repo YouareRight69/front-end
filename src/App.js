@@ -2,6 +2,15 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Home from "./Controller/Home";
+
+import Login from "./Controller/login/Login";
+import Register from "./Controller/register/Register";
+import ForgotPassword from "./Controller/register/ForgotPassword";
+import ConfirmOtp from "./Controller/register/ConfirmOtp";
+import ForgotChangePassword from "./Controller/register/ForgotChangePassword";
+import ChangePassword from "./Controller/register/ChangePassword";
+import UpdateInfo from "./Controller/register/UpdateInfo";
+
 import Booking from "./component/booking/booking";
 import AddNewBranch from "./component/branch/AddNewBranch";
 import Branch from "./component/branch/DashboardBranch";
@@ -22,6 +31,7 @@ import HistoryEmployeeA from "./component/employee/history/historyAdmin";
 import HistoryEmployee from "./component/employee/history/historyEmployee";
 import DashboardBranch from "./component/employee/DashboardEmployee";
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -29,6 +39,17 @@ function App() {
         <Route path="/" element={<Home />}>
           {/* <Route index element={<Home />} />       */}
         </Route>
+
+        <Route path="/login" element={<Login />}></Route>
+        <Route path="/register" element={<Register />}></Route>
+        <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
+        <Route path="/confirm-otp" element={<ConfirmOtp />}></Route>
+        <Route
+          path="/forgot-changePassword"
+          element={<ForgotChangePassword />}
+        ></Route>
+        <Route path="/changePassword" element={<ChangePassword />}></Route>
+        <Route path="/updateInfo" element={<UpdateInfo />}></Route>
         <Route path="/branch" element={<Branch />}></Route>
         <Route path="/branch-add" element={<AddNewBranch />}></Route>
         <Route path="/branch-detail" element={<DetailBranch />}></Route>
