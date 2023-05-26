@@ -1,6 +1,7 @@
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
+
 import Home from "./Controller/Home";
 
 import Login from "./Controller/login/Login";
@@ -10,6 +11,7 @@ import ConfirmOtp from "./Controller/register/ConfirmOtp";
 import ForgotChangePassword from "./Controller/register/ForgotChangePassword";
 import ChangePassword from "./Controller/register/ChangePassword";
 import UpdateInfo from "./Controller/register/UpdateInfo";
+
 
 import Booking from "./component/booking/booking";
 import AddNewBranch from "./component/branch/AddNewBranch";
@@ -30,16 +32,19 @@ import DetailEmployee from "./component/employee/DetailEmployee";
 import HistoryEmployeeA from "./component/employee/history/historyAdmin";
 import HistoryEmployee from "./component/employee/history/historyEmployee";
 import DashboardBranch from "./component/employee/DashboardEmployee";
+import Selectservice from "./component/booking/selectservice";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
   return (
+    <>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />}>
           {/* <Route index element={<Home />} />       */}
         </Route>
-
         <Route path="/login" element={<Login />}></Route>
         <Route path="/register" element={<Register />}></Route>
         <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
@@ -50,6 +55,7 @@ function App() {
         ></Route>
         <Route path="/changePassword" element={<ChangePassword />}></Route>
         <Route path="/updateInfo" element={<UpdateInfo />}></Route>
+
         <Route path="/branch" element={<Branch />}></Route>
         <Route path="/branch-add" element={<AddNewBranch />}></Route>
         <Route path="/branch-detail" element={<DetailBranch />}></Route>
@@ -58,6 +64,7 @@ function App() {
         <Route path="/invoice" element={<Invoice />}></Route>
         <Route path="/payment" element={<Payment />}></Route>
         <Route path="/booking" element={<Booking />}></Route>
+        <Route path="/select-service" element={<Selectservice />}></Route>
         <Route path="/listUser" element={<UserList/>} />
         <Route path="/createUser" element={<UserCreate/>} />
         <Route path="/listService" element={<HairServiceList/>} />
@@ -80,6 +87,19 @@ function App() {
         <Route path="/history-employee" element={ <HistoryEmployee/> }></Route>
       </Routes>
     </BrowserRouter>
+    <ToastContainer
+        position="top-center"
+        autoClose={3}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </>
   );
 }
 
