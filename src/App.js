@@ -36,6 +36,7 @@ import HistoryEmployee from "./component/employee/history/historyEmployee";
 import Invoice from "./component/invoice/Invoice";
 import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
+import BookingManagement from "./component/booking/BookingManagement";
 
 
 function App() {
@@ -86,6 +87,7 @@ function App() {
           <Route path="/employee-detail" element={<DetailEmployee />}></Route>
           <Route path="/history-admin" element={<HistoryEmployeeA />}></Route>
           <Route path="/history-employee" element={<HistoryEmployee />}></Route>
+          <Route path="/booking-management" element={<BookingManagement />}></Route>
         </Routes>
       </BrowserRouter>
       <ToastContainer
