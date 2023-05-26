@@ -240,7 +240,7 @@ export default function Booking() {
             theme: "light",
           });
 
-          navigate("/branch", {
+          navigate("/", {
             state: null,
           });
         })

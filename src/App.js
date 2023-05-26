@@ -2,15 +2,15 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 
-import Home from "./Controller/Home";
+import Home from "./controller/Home";
 
-import Login from "./Controller/login/Login";
-import Register from "./Controller/register/Register";
-import ForgotPassword from "./Controller/register/ForgotPassword";
-import ConfirmOtp from "./Controller/register/ConfirmOtp";
-import ForgotChangePassword from "./Controller/register/ForgotChangePassword";
-import ChangePassword from "./Controller/register/ChangePassword";
-import UpdateInfo from "./Controller/register/UpdateInfo";
+import Login from "./controller/login/Login.js";
+import Register from "./controller/register/Register";
+import ForgotPassword from "./controller/register/ForgotPassword";
+import ConfirmOtp from "./controller/register/ConfirmOtp";
+import ForgotChangePassword from "./controller/register/ForgotChangePassword";
+import ChangePassword from "./controller/register/ChangePassword";
+import UpdateInfo from "./controller/register/UpdateInfo";
 
 
 import Booking from "./component/booking/booking";
