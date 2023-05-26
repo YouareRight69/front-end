@@ -17,6 +17,7 @@ import UserList from "./component//User/UserList";
 import CreateService from "./component/HairService/CreateService";
 import DetailService from "./component/HairService/DetailService";
 import HairServiceList from "./component/HairService/HairServiceList";
+import EditService from "./component/HairService/EditService";
 import UserCreate from "./component/User/UserCreate";
 import Booking from "./component/booking/booking";
 import Selectservice from "./component/booking/selectservice";
@@ -33,6 +34,8 @@ import HistoryEmployee from "./component/employee/history/historyEmployee";
 import Invoice from "./component/invoice/Invoice";
 import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
+
+import BookingManagement from "./component/booking/BookingManagement";
 
 function App() {
   return (
@@ -67,7 +70,11 @@ function App() {
           <Route path="/listService" element={<HairServiceList />} />
           <Route path="/createService" element={<CreateService />} />
           <Route path="/detailService/:id" element={<DetailService />} />
-          <Route path="/listService/:id" element={<CreateService />} />
+
+          {/* <Route path="/listService/:id" element={<CreateService />} /> */}
+
+          <Route path="/listService/:id" element={<EditService />} />
+
           <Route path="/branch" element={<Branch />}></Route>
           <Route path="/branch-add" element={<AddNewBranch />}></Route>
           <Route path="/branch-detail" element={<DetailBranch />}></Route>
@@ -82,6 +89,10 @@ function App() {
           <Route path="/employee-detail" element={<DetailEmployee />}></Route>
           <Route path="/history-admin" element={<HistoryEmployeeA />}></Route>
           <Route path="/history-employee" element={<HistoryEmployee />}></Route>
+          <Route
+            path="/booking-management"
+            element={<BookingManagement />}
+          ></Route>
         </Routes>
       </BrowserRouter>
 

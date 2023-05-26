@@ -6,6 +6,7 @@ export default function DeleteButton(props) {
     if (props.id) {
       axios.delete(`${props.url}/${props.id}`)
         .then(resp => props.rerender())
+        console.log(props.url)
       return;
     }
     axios.delete(`${props.url}/delete`, props.item, {
