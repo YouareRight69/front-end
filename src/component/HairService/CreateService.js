@@ -206,7 +206,7 @@ function CreateService() {
                                     </div>
                                 </div>
                             </form>
-
+                            {uploading && <div className="progress-bar"></div>}
                         </div>
                     </div>
                 </div>
