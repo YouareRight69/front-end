@@ -1,9 +1,9 @@
 import React from 'react'
-import CreateService from '../component/HairService/CreateService'
+import EditService from '../component/HairService/EditService'
 import { Link } from 'react-router-dom'
 
 export default function EditButton(props) {
-    const handleClick = () => <CreateService id={props.id} url={props.url} />
+    const handleClick = () => <EditService id={props.id} url={props.url} />
     return (
         <div>
             <Link as={Link} className="dropdown-item" to={`/${props.url}/${props.id}`}>
