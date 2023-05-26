@@ -115,7 +115,7 @@ function ForgotChangePassword() {
                         <button
                           style={{ width: "100%" }}
                           type="button"
-                          className="button boxed-btn"
+                          className="button boxed-btn namnb6_2"
                           onClick={changePassword}
                         >
                           {" "}

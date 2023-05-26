@@ -304,7 +304,7 @@ function UpdateInfo() {
                         <button
                           style={{ width: "100%" }}
                           type="submit"
-                          className="button boxed-btn namnb6"
+                          className="button boxed-btn namnb6_1"
                           onClick={exit}
                         >
                           {" "}
@@ -315,7 +315,7 @@ function UpdateInfo() {
                         <button
                           style={{ width: "100%" }}
                           type="button"
-                          className="button boxed-btn"
+                          className="button boxed-btn namnb6_2"
                           onClick={updateInfo}
                         >
                           {" "}

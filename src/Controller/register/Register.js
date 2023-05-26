@@ -100,12 +100,10 @@ function Register() {
           navigate("/login");
         })
         .catch((error) => {
-          alert(error.message);
-          console.log(error.message); // Log the error message sent from the backend
+          alert(error.message); // Log the error message sent from the backend
         });
     } catch (error) {
-      console.log(formValues.password);
-      console.log(error.errors);
+      alert(error.errors);
     }
   };
 
@@ -243,7 +241,7 @@ function Register() {
                         <button
                           style={{ width: "70%" }}
                           type="button"
-                          className="button boxed-btn namnb6"
+                          className="button boxed-btn namnb6_1"
                           onClick={exitRegister}
                         >
                           Hủy
@@ -256,7 +254,7 @@ function Register() {
                         <button
                           style={{ width: "70%" }}
                           type="button"
-                          className="button boxed-btn"
+                          className="button boxed-btn namnb6_2"
                           onClick={register}
                         >
                           Đăng ký
