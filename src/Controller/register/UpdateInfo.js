@@ -5,7 +5,7 @@ import { storage } from "./common/Firebase";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 
-function ChangePassword() {
+function UpdateInfo() {
   const location = useLocation();
   const result = location.state?.result;
   const navigate = useNavigate();
@@ -334,4 +334,4 @@ function ChangePassword() {
   );
 }
 
-export default ChangePassword;
+export default UpdateInfo;
