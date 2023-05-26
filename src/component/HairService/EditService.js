@@ -7,7 +7,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../firebase/index.js";
 
-function CreateService() {
+function EditService() {
     const service = "http://localhost:8080/api/hairService"
     const { id } = useParams();
     const [target, setTarget] = useState({
@@ -125,7 +125,7 @@ function CreateService() {
                             </div>
                         </div>
                         <div className="col-lg-8 col-md-8">
-                            <h2 className="mb-30">THÊM MỚI DỊCH VỤ</h2>
+                            <h2 className="mb-30">CHỈNH SỬA DỊCH VỤ</h2>
                             <form id="form" style={{ textAlign: "left", color: "black", width: "80%" }}>
                                 <div className="mt-10" style={{ 'display': 'flex' }}>
                                     <div className="col-lg-3 col-md-4">
@@ -206,7 +206,7 @@ function CreateService() {
                                     </div>
                                     <div className="col-lg-4">
                                         <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                                            onClick={handleUploadMultiImage}>Thêm mới</div>
+                                            onClick={handleUploadMultiImage}>Cập nhật</div>
                                     </div>
                                 </div>
                             </form>
@@ -219,4 +219,4 @@ function CreateService() {
     )
 }
 
-export default CreateService;
+export default EditService;

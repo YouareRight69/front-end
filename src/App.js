@@ -21,6 +21,7 @@ import DetailEmployee from "./component/employee/DetailEmployee";
 import HistoryEmployeeA from "./component/employee/history/historyAdmin";
 import HistoryEmployee from "./component/employee/history/historyEmployee";
 import DashboardBranch from "./component/employee/DashboardEmployee";
+import EditService from "./component/HairService/EditService";
 
 function App() {
   return (
@@ -42,7 +43,7 @@ function App() {
         <Route path="/listService" element={<HairServiceList/>} />
         <Route path="/createService" element={<CreateService/>} />
         <Route path="/detailService/:id" element={<DetailService/>} />
-        <Route path='/listService/:id' element={<CreateService />} />
+        <Route path='/listService/:id' element={<EditService />} />
         <Route path="/branch" element={<Branch />}></Route>
         <Route path="/branch-add" element={<AddNewBranch />}></Route>
         <Route path="/branch-detail" element={<DetailBranch />}></Route>
