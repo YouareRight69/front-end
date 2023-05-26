@@ -1,18 +1,35 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
+import { storage } from "../firebase/index.js";
+import ImageGallery from "../common/ImageGallery";
 
 function AddNewBranch(props) {
-  const [imageSrc, setImageSrc] = useState("./assets/img/thien/1.jpg");
+  const [imagesArray, setImagesArray] = useState([]);
+  const [urls, setUrls] = useState("");
+  const [progress, setProgress] = useState(0);
 
-  const handleInputChange = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImageSrc(reader.result);
-    };
-
-    reader.readAsDataURL(file);
+  const handleDataFromImageGallery = (data) => {
+    setImagesArray(data);
   };
+
+  const handleUploadMultiImage = () => {
+    
+    imagesArray.map((image) => {
+      const imageref = ref(storage, `images/${image.name + v4()}`);
+      uploadBytes(imageref, image).then((snaphsot) => {
+        getDownloadURL(snaphsot.ref).then((urls) => {
+          setUrls((prevState) => [...prevState, urls]);
+        });
+      });
+    });
+  };
+
+  console.log(urls);
+
+  console.log(imagesArray);
+
   return (
     <>
       <main>
@@ -47,26 +64,9 @@ function AddNewBranch(props) {
                       style={{ paddingTop: "50px" }}
                     >
                       <div className="col-lg-12 col-md-6 col-sm-6">
-                        <div className="box snake thien_snake">
-                          <label for="file-input">
-                            <div className="gallery-img">
-                              <img
-                                className="thien_avatar"
-                                src={imageSrc}
-                                alt="avatar"
-                              />
-                            </div>
-                            <div className="overlay"></div>
-                            <input
-                              style={{ display: "none" }}
-                              id="file-input"
-                              type="file"
-                              name="myfile"
-                              multiple
-                              onChange={handleInputChange}
-                            />
-                          </label>
-                        </div>
+                        <ImageGallery
+                          sendDataToParent={handleDataFromImageGallery}
+                        />
                       </div>
                     </div>
                   </div>
@@ -82,8 +82,12 @@ function AddNewBranch(props) {
                             type="text"
                             name="name"
                             placeholder="Tên chi nhánh"
-                            onfocus="this.placeholder = ''"
-                            onblur="this.placeholder = 'Tên chi nhánh'"
+                            onFocus={(e) => {
+                              e.target.placeholder = "";
+                            }}
+                            onBlur={(e) => {
+                              e.target.placeholder = "Tên chi nhánh";
+                            }}
                             required
                             className="single-input"
                           />
@@ -98,8 +102,12 @@ function AddNewBranch(props) {
                             type="text"
                             name="phone"
                             placeholder="Địa chỉ"
-                            onfocus="this.placeholder = ''"
-                            onblur="this.placeholder = 'Địa chỉ'"
+                            onFocus={(e) => {
+                              e.target.placeholder = "";
+                            }}
+                            onBlur={(e) => {
+                              e.target.placeholder = "Địa chỉ";
+                            }}
                             required
                             className="single-input"
                           />
@@ -107,7 +115,7 @@ function AddNewBranch(props) {
                       </div>
                     </form>
                     <div className="mt-110" style={{ display: "flex" }}>
-                      <div className="col-lg-3 ms-10">
+                      <div className="col-lg-4 ms-10">
                         <Link to="/branch">
                           <div className="button rounded-0 primary-bg w-100 btn_1 boxed-btn">
                             Trở về
@@ -123,13 +131,13 @@ function AddNewBranch(props) {
                         </button>
                       </div>
                       <div className="col-lg-4">
-                        <a
-                          href="./dashboard.html"
+                        <button
                           className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
                           type="submit"
+                          onClick={handleUploadMultiImage}
                         >
                           Thêm mới
-                        </a>
+                        </button>
                       </div>
                     </div>
                   </div>

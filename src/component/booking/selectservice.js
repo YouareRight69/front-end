@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 export default function Selectservice() {
@@ -12,9 +12,22 @@ export default function Selectservice() {
 
   const [selectedArr, setSelectedArr] = useState([]);
   const [serviceData, setServiceData] = useState();
-  console.log(selectedArr);
+  const [oldSelect, setOldSelect] = useState([]);
+  const [idArr, setIdArr] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
+    const data = location.state.selectService;
+    setOldSelect(location.state.selectService);
+    if (location.state.selectService) {
+      setSelectedArr([...data]);
+      data.forEach((e) => {
+        setIdArr((prev) => [...prev, e.serviceId]);
+      });
+    }
+
+    location.state.selectService = [];
     axios
       .get("http://localhost:8080/api/hairService/list")
       .then((res) => {
@@ -22,22 +35,32 @@ export default function Selectservice() {
       })
       .catch((err) => console.log(err));
   }, []);
+
   console.log(serviceData);
 
   const handleSelectButton = (item) => {
-    // let filt = selectedArr.find((e) => e.serviceId == item.serviceId);
-    // if (!filt) {
-    //   setSelectedArr([...selectedArr, item]);
-    // }
-    // console.log(selectedArr.includes(item));
-    if (selectedArr.includes(item)) {
+    if (idArr.includes(item.serviceId)) {
       setSelectedArr(selectedArr.filter((e) => e.serviceId != item.serviceId));
+      setIdArr(idArr.filter((e) => e != item.serviceId));
     } else {
       setSelectedArr([...selectedArr, item]);
+      setIdArr([...idArr, item.serviceId]);
     }
   };
 
+  const handleFinish = () => {
+    navigate("/booking", {
+      state: {selectService:selectedArr, formData: location.state.formData}
+    });
+  };
+
+  const handleBack = () => {
+    navigate("/booking", {
+      state: {selectService:oldSelect, formData: location.state.formData}
+    });
+  };
   console.log(selectedArr);
+  
   return (
     <>
       <section className="service-area p-3">
@@ -47,17 +70,17 @@ export default function Selectservice() {
               <form action="#">
                 <div className="input-group-icon mt-10">
                   <div>
-                    <Link to="/booking">
-                      <span
-                        className="btn header-btn px-2"
-                        style={{ width: "5%" }}
-                      >
-                        <i
-                          className="fas fa-chevron-left"
-                          style={{ color: "black" }}
-                        ></i>
-                      </span>
-                    </Link>
+                    <span
+                      className="btn header-btn px-2"
+                      style={{ width: "5%" }}
+                      onClick={handleBack}
+                    >
+                      <i
+                        className="fas fa-chevron-left"
+                        style={{ color: "black" }}
+                      ></i>
+                    </span>
+
                     <button
                       disabled
                       className="btn header-btn"
@@ -74,7 +97,11 @@ export default function Selectservice() {
                   )}
                   <div>
                     {selectedArr?.map((item, index) => (
-                      <span className="p-2 m-3" style={selectedService}>
+                      <span
+                        key={index}
+                        className="p-2 m-3"
+                        style={selectedService}
+                      >
                         {item.name}
                       </span>
                     ))}
@@ -110,7 +137,7 @@ export default function Selectservice() {
                                     {item.description}
                                   </p>
                                 </div>
-                                {selectedArr.includes(item) ? (
+                                {idArr.includes(item.serviceId) ? (
                                   <div
                                     className="genric-btn primary-border button-cus"
                                     onClick={() => handleSelectButton(item)}
@@ -162,7 +189,8 @@ export default function Selectservice() {
                                     {item.description}
                                   </p>
                                 </div>
-                                {selectedArr.includes(item) ? (
+
+                                {idArr.includes(item.serviceId) ? (
                                   <div
                                     className="genric-btn primary-border "
                                     onClick={() => handleSelectButton(item)}
@@ -184,7 +212,10 @@ export default function Selectservice() {
                         ))}
                   </div>
                   <div>
-                    <button className="btn header-btn w-100">
+                    <button
+                      className="btn header-btn w-100"
+                      onClick={handleFinish}
+                    >
                       <i className="fas fa-cut fa-rotate-270"></i> OK
                     </button>
                   </div>

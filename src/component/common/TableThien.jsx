@@ -1,15 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-// import Modal from "./Modal";
-import { Button, Modal } from "react-bootstrap";
+import Modal from "./Modal";
 
 function TableThien({ value, index }) {
-  const [show, setShow] = useState(false);
-
-  const handleShow = () => {
-    setShow(!show);
-  };
-
   return (
     <>
       <tr key={index} style={{ marginTop: "5px" }}>
@@ -21,8 +14,8 @@ function TableThien({ value, index }) {
             type="button"
             className="genric-btn danger radius"
             style={{ marginRight: "10px" }}
-            variant="primary"
-            onClick={handleShow}
+            data-bs-toggle="modal"
+            data-bs-target={`#${value.branchId}`}
           >
             <i className="far fa-trash-alt"></i>
           </button>
@@ -40,29 +33,11 @@ function TableThien({ value, index }) {
           </Link>
         </td>
       </tr>
-      <Modal show={show} onHide={handleShow}>
-        <Modal.Header closeButton onClick={handleShow}>
-          <Modal.Title>Xóa Chi Nhánh</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <>
-            <p>
-              Bạn có chắc muốn xóa chi nhánh{" "}
-              <span style={{ color: "red" }}>{value.name}</span> không?
-            </p>
-            {/* <p>Tên chi nhánh: {value.name}</p>
-            <p>Địa chỉ: {value.address}</p> */}
-          </>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleShow}>
-            Không
-          </Button>
-          <Button variant="secondary" onClick={handleShow}>
-            Có
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <Modal
+        title={"Xóa Chi Nhánh"}
+        branch={value}
+        message={`Bạn có chắc muốn xóa chi nhánh: ${value.name} không ?`}
+      />
     </>
   );
 }

@@ -122,7 +122,11 @@ function DashboardBranch(props) {
                         </thead>
                         <tbody>
                           {data.map((data, index) => (
-                            <TableThien id={index} value={data} key={index} />
+                            <TableThien
+                              id={data.branchId}
+                              value={data}
+                              key={index}
+                            />
                           ))}
                         </tbody>
                       </table>
