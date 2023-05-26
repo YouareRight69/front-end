@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import SearchForm from "../../Button/SearchForm";
 import DeleteButton from "../button/DeleteButton";
 import DetailButton from "../button/DetailButton";
 import EditButton from "../button/EditButton";
@@ -59,16 +60,16 @@ function DashboardBranch(props) {
 
           <div className="col-lg-10">
             <div className="whole-wrap">
-              <div className="container box_1170">
+              <div className="container-fluid box_1170">
                 <div className="blog_right_sidebar">
                   <aside
                     className="single_sidebar_widget search_widget col-lg-12"
                     style={{ display: "flex" }}
                   >
                     <div className="col-lg-1"></div>
-                    <form action="#" className="col-lg-6">
+
                       <div className="form-group">
-                        <div className="input-group mb-3">
+                        {/* <div className="input-group mb-3">
                           <input
                             type="text"
                             className="form-control"
@@ -85,9 +86,10 @@ function DashboardBranch(props) {
                               <i className="ti-search"></i>
                             </button>
                           </div>
-                        </div>
+                        </div> */}
+                        <SearchForm onSubmit={onSubmit} />
                       </div>
-                    </form>
+                   
                     <div className="col-lg-1"></div>
                     <div className="col-lg-3 col-md-4 mt-10">
                       <div className="input-group-icon">
@@ -121,10 +123,18 @@ function DashboardBranch(props) {
                       <table className="table table-hover" id="table">
                         <thead>
                           <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Tên chi nhánh</th>
-                            <th scope="col">Địa chỉ</th>
-                            <th scope="col">Chức năng</th>
+                            <th scope="col" style={{ width: "20%" }}>
+                              STT
+                            </th>
+                            <th scope="col" style={{ width: "20%" }}>
+                              Tên chi nhánh
+                            </th>
+                            <th scope="col" style={{ width: "33%" }}>
+                              Địa chỉ
+                            </th>
+                            <th scope="col" style={{ width: "27%" }}>
+                              Chức năng
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
