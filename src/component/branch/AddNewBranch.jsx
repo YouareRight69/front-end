@@ -1,57 +1,111 @@
+import axios from "axios";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { v4 } from "uuid";
 import ImageGallery from "../common/ImageGallery";
 import { storage } from "../firebase/index.js";
 
 function AddNewBranch(props) {
-  const [imagesArray, setImagesArray] = useState([]);
-  const [urls, setUrls] = useState("");
-  const [branch, setBranch] = useState({
-    userID: "",
-    accountID: "",
+  const url = "http://localhost:8080/api/admin/branch";
+  const { id } = useParams();
+  const [target, setTarget] = useState({
+    name: "",
     address: "",
-    dateOfBirth: "",
-    email: "",
-    fullName: "",
-    gender: "",
-    phone: "",
-    status: "",
-    avata: "",
+    media: [],
   });
-  const {
-    userID,
-    accountID,
-    address,
-    dateOfBirth,
-    email,
-    fullName,
-    gender,
-    phone,
-    status,
-    avata,
-  } = branch;
+  const [uploading, setUploading] = useState(false);
+
+  //Validation
+  const [valid, setValid] = useState({ name: "", address: "" });
+
+  const [imagesArray, setImagesArray] = useState([]);
+
+  const error = { color: "red" };
+
+  const navigate = useNavigate();
+
+  const onSubmit = () => {
+    console.log(target);
+    if (id) {
+      axios
+        .patch(`${url}/${id}`, target, {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods": "PATCH",
+            "Access-Control-Allow-Credentials": "true",
+          },
+        })
+        .then((resp) => {
+          navigate("/branch");
+        })
+        .catch((error) => {
+          console.log(error);
+          setValid(error.response.data);
+        });
+    }
+    axios
+      .post(url, target, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods": "POST",
+        },
+      })
+      .then((resp) => {
+        navigate("/branch");
+      })
+      .catch((error) => {
+        console.log(error);
+        setValid(error.response.data);
+        console.log(setValid);
+      });
+  };
+
+  // Refresh
+  const handleReset = () => {
+    setTarget({});
+  };
+
+  const handleChange = (element) => {
+    setTarget({ ...target, [element.target.name]: element.target.value });
+  };
+
+  useEffect(() => {
+    if (id) {
+      axios.get(`${url}/${id}`).then((resp) => {
+        setTarget(resp.data);
+      });
+    }
+  }, [id]);
 
   const handleDataFromImageGallery = (data) => {
     setImagesArray(data);
   };
-
+  
   const handleUploadMultiImage = () => {
-    imagesArray.map((image) => {
-      const imageref = ref(storage, `images/${image.name + v4()}`);
-      uploadBytes(imageref, image).then((snaphsot) => {
-        getDownloadURL(snaphsot.ref).then((urls) => {
-          setUrls((prevState) => [...prevState, urls]);
+    setUploading(true);
+    const updatedTarget = { ...target };
+    imagesArray.forEach((image) => {
+      const imageref = ref(storage, `images/${v4() + image.name}`);
+      uploadBytes(imageref, image).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((url) => {
+          updatedTarget.media.push(url);
+
+          // Kiểm tra xem đã tải lên tất cả các hình ảnh hay chưa
+          if (updatedTarget.media.length === imagesArray.length) {
+            setTarget(updatedTarget);
+            saveTargetToDatabase(updatedTarget); // Gọi hàm lưu target vào cơ sở dữ liệu
+          }
         });
       });
     });
   };
 
-  console.log(urls);
-
-  console.log(imagesArray);
-
+  const saveTargetToDatabase = (target) => {
+    console.log(target);
+    setUploading(false);
+    onSubmit();
+  };
   return (
     <>
       <main>
@@ -102,7 +156,6 @@ function AddNewBranch(props) {
                         <div className="col-lg-9 col-md-4">
                           <input
                             type="text"
-                            name="name"
                             placeholder="Tên chi nhánh"
                             onFocus={(e) => {
                               e.target.placeholder = "";
@@ -112,6 +165,9 @@ function AddNewBranch(props) {
                             }}
                             required
                             className="single-input"
+                            name="name"
+                            value={target.name}
+                            onChange={handleChange}
                           />
                         </div>
                       </div>
@@ -122,7 +178,6 @@ function AddNewBranch(props) {
                         <div className="col-lg-9 col-md-4">
                           <input
                             type="text"
-                            name="phone"
                             placeholder="Địa chỉ"
                             onFocus={(e) => {
                               e.target.placeholder = "";
@@ -132,6 +187,9 @@ function AddNewBranch(props) {
                             }}
                             required
                             className="single-input"
+                            name="address"
+                            value={target.address}
+                            onChange={handleChange}
                           />
                         </div>
                       </div>
@@ -147,7 +205,8 @@ function AddNewBranch(props) {
                       <div className="col-lg-4 ms-10">
                         <button
                           className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                          type="submit"
+                          type="reset"
+                          onClick={handleReset}
                         >
                           Làm mới
                         </button>
@@ -163,6 +222,7 @@ function AddNewBranch(props) {
                       </div>
                     </div>
                   </div>
+                  {uploading && <div className="progress-bar"></div>}
                 </div>
               </div>
             </section>
