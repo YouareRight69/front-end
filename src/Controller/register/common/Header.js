@@ -47,6 +47,13 @@ function Header() {
     navigate("/login");
   };
 
+  const home = () => {
+    navigate("/");
+  };
+  const service = () => {};
+  const trend = () => {};
+  const contact = () => {};
+
   const logout = () => {
     localStorage.removeItem("accessToken");
     navigate("/login");
@@ -62,7 +69,7 @@ function Header() {
                 {/* <!-- Logo --> */}
                 <div className="col-xl-2 col-lg-2 col-md-1">
                   <div className="logo">
-                    <a href="index.html">
+                    <a onClick={home}>
                       <img src="assets/img/logo/loder.png" alt="" />
                     </a>
                   </div>
@@ -74,27 +81,17 @@ function Header() {
                       <nav style={{ marginRight: "15px" }}>
                         <ul id="navigation">
                           <li className="active">
-                            <a href="index.html">Home</a>
+                            <a onClick={home}>Trang chủ</a>
                           </li>
                           <li>
-                            <a href="about.html">About</a>
+                            <a onClick={service}>Dịch vụ</a>
+                          </li>
+
+                          <li>
+                            <a onClick={trend}>Xu hướng</a>
                           </li>
                           <li>
-                            <a href="services.html">Services</a>
-                          </li>
-                          <li>
-                            <a href="blog.html">Blog</a>
-                            <ul className="submenu">
-                              <li>
-                                <a href="blog.html">Blog</a>
-                              </li>
-                              <li>
-                                <a href="blog_details.html">Blog Details</a>
-                              </li>
-                              <li>
-                                <a href="elements.html">Element</a>
-                              </li>
-                            </ul>
+                            <a onClick={contact}>Liên hệ</a>
                           </li>
                           {accessToken != null ? (
                             <li>
@@ -147,15 +144,6 @@ function Header() {
         </div>
         {/* <!-- Header End --> */}
       </header>
-      <main>
-        {/* <!--? slider Area Start--> */}
-        <div className="slider-area position-relative fix">
-          <div className="slider-active">
-            {/* <!-- Single Slider --> */}
-            <div className="single-slider slider-height d-flex align-items-center"></div>
-          </div>
-        </div>
-      </main>
     </>
   );
 }

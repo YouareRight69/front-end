@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LeftSideNamNB from "./common/LeftSideNamNB";
+import { toast } from "react-toastify";
 
 function ForgotPassword() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+
+  const [show, setShow] = useState(false);
 
   const setParams = (event) => {
     const { name, value } = event.target;
@@ -18,6 +21,7 @@ function ForgotPassword() {
   };
 
   const sendEmail = () => {
+    setShow(true);
     var myHeaders = new Headers();
 
     var raw = "";
@@ -40,7 +44,8 @@ function ForgotPassword() {
         navigate("/confirm-otp", { state: { email } });
       })
       .catch((error) => {
-        alert("Email chưa tồn tại!");
+        toast.error("Email này chưa được đăng ký!");
+        setShow(false);
       });
   };
 
@@ -51,6 +56,18 @@ function ForgotPassword() {
         backgroundSize: "cover",
       }}
     >
+      {show && (
+        <div id="preloader-active">
+          <div className="preloader d-flex align-items-center justify-content-center">
+            <div className="preloader-inner position-relative">
+              <div className="preloader-circle"></div>
+              <div className="preloader-img pere-text">
+                <img src="assets/img/logo/loder.png" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="whole-wrap">
         <div className="container box_1170">
           <div className="section-top-border" style={{ height: "100vh" }}>

@@ -4,6 +4,8 @@ import jwt_decode from "jwt-decode";
 import { storage } from "./common/Firebase";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
+import { toast } from "react-toastify";
+import Header from "./common/Header";
 
 function UpdateInfo() {
   const location = useLocation();
@@ -133,16 +135,19 @@ function UpdateInfo() {
         throw Error(response.status);
       })
       .then((result) => {
-        alert("Cập nhật thông tin thành công!");
+        toast.success("Cập nhật thông tin thành công!");
         navigate("/");
       })
       .catch((error) => {
-        alert(error);
+        toast.error(error);
       });
   };
 
   return (
     <main>
+      <div>
+        <Header />
+      </div>
       <div className="slider-area2">
         <div className="slider-height2 d-flex align-items-center">
           <div className="container">

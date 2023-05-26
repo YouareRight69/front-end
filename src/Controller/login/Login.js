@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import LeftSideNamNB from "../register/common/LeftSideNamNB";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+import { toast } from "react-toastify";
 // import { useCookies } from "react-cookie";
 
 function Login() {
@@ -67,7 +68,7 @@ function Login() {
         }
       })
       .catch((error) => {
-        alert("Tên đăng nhập hoặc mật khẩu không đúng!");
+        toast.error("Tên đăng nhập hoặc mật khẩu không đúng!");
       });
   };
   return (

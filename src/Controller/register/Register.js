@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import LeftSideNamNB from "./common/LeftSideNamNB";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { toast } from "react-toastify";
 
 function Register() {
   const navigate = useNavigate();
@@ -26,6 +27,14 @@ function Register() {
       /^[0-9]{10,11}$/,
       "Số điện thoại phải có từ 10 đến 11 ký tự"
     ),
+  });
+
+  const [errors, setErrors] = useState({
+    username: "",
+    password: "",
+    confirmPassword: "",
+    email: "",
+    phoneNumber: "",
   });
 
   const [formValues, setFormValues] = useState({
@@ -59,6 +68,26 @@ function Register() {
       ...formValues,
       [e.target.name]: e.target.value,
     });
+
+    // Clear username error when input changes
+    if (errors.username) {
+      setErrors((prevErrors) => ({ ...prevErrors, username: "" }));
+    }
+    if (errors.password) {
+      setErrors((prevErrors) => ({ ...prevErrors, password: "" }));
+    }
+    if (errors.confirmPassword) {
+      setErrors((prevErrors) => ({ ...prevErrors, confirmPassword: "" }));
+    }
+    if (errors.fullname) {
+      setErrors((prevErrors) => ({ ...prevErrors, fullname: "" }));
+    }
+    if (errors.email) {
+      setErrors((prevErrors) => ({ ...prevErrors, email: "" }));
+    }
+    if (errors.phoneNumber) {
+      setErrors((prevErrors) => ({ ...prevErrors, phoneNumber: "" }));
+    }
   };
 
   const register = async () => {
@@ -96,14 +125,19 @@ function Register() {
           return response.text();
         })
         .then((result) => {
-          alert("Đăng ký tài khoản thành công!");
+          toast.success("Đăng ký tài khoản thành công!");
+          // alert("Đăng ký tài khoản thành công!");
           navigate("/login");
         })
         .catch((error) => {
-          alert(error.message); // Log the error message sent from the backend
+          toast.error(error.message); // Log the error message sent from the backend
         });
     } catch (error) {
-      alert(error.errors);
+      const fieldErrors = {};
+      error.inner.forEach((fieldError) => {
+        fieldErrors[fieldError.path] = fieldError.message;
+      });
+      setErrors(fieldErrors);
     }
   };
 
@@ -147,6 +181,9 @@ function Register() {
                           className="single-input-namnb6"
                           onChange={setParams}
                         />
+                        {errors.username && (
+                          <p style={{ color: "red" }}>{errors.username}</p>
+                        )}
                       </div>
                       <div className="mt-10">
                         <input
@@ -163,6 +200,9 @@ function Register() {
                           className="single-input-namnb6"
                           onChange={setParams}
                         />
+                        {errors.password && (
+                          <p style={{ color: "red" }}>{errors.password}</p>
+                        )}
                       </div>
                       <div className="mt-10">
                         <input
@@ -179,6 +219,11 @@ function Register() {
                           className="single-input-namnb6"
                           onChange={setParams}
                         />
+                        {errors.confirmPassword && (
+                          <p style={{ color: "red" }}>
+                            {errors.confirmPassword}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="col-lg-6 col-md-6">
@@ -197,6 +242,9 @@ function Register() {
                           className="single-input-namnb6"
                           onChange={setParams}
                         />
+                        {errors.fullname && (
+                          <p style={{ color: "red" }}>{errors.fullname}</p>
+                        )}
                       </div>
                       <div className="mt-10">
                         <input
@@ -213,6 +261,9 @@ function Register() {
                           className="single-input-namnb6"
                           onChange={setParams}
                         />
+                        {errors.email && (
+                          <p style={{ color: "red" }}>{errors.email}</p>
+                        )}
                       </div>
                       <div className="mt-10">
                         <input
@@ -229,6 +280,9 @@ function Register() {
                           className="single-input-namnb6"
                           onChange={setParams}
                         />
+                        {errors.phoneNumber && (
+                          <p style={{ color: "red" }}>{errors.phoneNumber}</p>
+                        )}
                       </div>
                     </div>
                   </div>

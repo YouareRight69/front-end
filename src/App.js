@@ -3,7 +3,6 @@ import "./App.css";
 
 import Home from "./controller/Home";
 
-
 import Login from "./controller/login/Login.js";
 import Register from "./controller/register/Register";
 import ForgotPassword from "./controller/register/ForgotPassword";
@@ -12,10 +11,8 @@ import ForgotChangePassword from "./controller/register/ForgotChangePassword";
 import ChangePassword from "./controller/register/ChangePassword";
 import UpdateInfo from "./controller/register/UpdateInfo";
 
-
-
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import UserList from "./component//User/UserList";
 import CreateService from "./component/HairService/CreateService";
 import DetailService from "./component/HairService/DetailService";
@@ -36,7 +33,6 @@ import HistoryEmployee from "./component/employee/history/historyEmployee";
 import Invoice from "./component/invoice/Invoice";
 import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
-
 
 function App() {
   return (
@@ -71,7 +67,7 @@ function App() {
           <Route path="/listService" element={<HairServiceList />} />
           <Route path="/createService" element={<CreateService />} />
           <Route path="/detailService/:id" element={<DetailService />} />
-          <Route path='/listService/:id' element={<CreateService />} />
+          <Route path="/listService/:id" element={<CreateService />} />
           <Route path="/branch" element={<Branch />}></Route>
           <Route path="/branch-add" element={<AddNewBranch />}></Route>
           <Route path="/branch-detail" element={<DetailBranch />}></Route>
@@ -88,9 +84,10 @@ function App() {
           <Route path="/history-employee" element={<HistoryEmployee />}></Route>
         </Routes>
       </BrowserRouter>
+
       <ToastContainer
-        position="top-center"
-        autoClose={3}
+        position="top-right"
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
