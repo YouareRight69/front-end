@@ -1,33 +1,40 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import TableThien from "../common/TableThien";
+import DeleteButton from "../button/DeleteButton";
+import DetailButton from "../button/DetailButton";
+import EditButton from "../button/EditButton";
+import Page from "../common/Page";
 
 function DashboardBranch(props) {
-  const [data, setData] = useState([]);
+  const [list, setList] = useState({ data: { content: [] } });
+  const url = "http://localhost:8080/api/admin/branch";
+  const [condition, setCondition] = useState("");
+  const [display, setDisplay] = useState(true);
+
+  function handleClick(page) {
+    axios.get(`${url}?p=${page}&c=${condition}`).then((res) => {
+      setList(res);
+    });
+  }
+
+  const onSubmit = (data) => {
+    setCondition(data);
+    console.log(setCondition);
+  };
+
+  const rerender = () => {
+    setDisplay(!display);
+  };
 
   useEffect(() => {
-    const getBranch = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/api/admin/branch"
-        );
-        const branchList = response.data;
-        setData(branchList);
-        // Xử lý danh sách chi nhánh
-        // ...
-      } catch (error) {
-        // Xử lý lỗi (nếu có)
-      }
-    };
-
-    getBranch();
-  }, []);
+    axios.get(`${url}?c=${condition}`).then((res) => {
+      setList(res);
+    });
+  }, [condition, display]);
 
   return (
     <div>
-      {/* <PreLoader /> */}
-      {/* <Modal /> */}
       <main>
         {/* Hero Start */}
         <div className="slider-area2">
@@ -111,7 +118,7 @@ function DashboardBranch(props) {
                       className="progress-table"
                       style={{ textAlign: "center" }}
                     >
-                      <table className="table table-hover">
+                      <table className="table table-hover" id="table">
                         <thead>
                           <tr>
                             <th scope="col">STT</th>
@@ -121,19 +128,39 @@ function DashboardBranch(props) {
                           </tr>
                         </thead>
                         <tbody>
-                          {data.map((data, index) => (
-                            <TableThien
-                              id={data.branchId}
-                              value={data}
-                              key={index}
-                            />
-                          ))}
+                          {list.data.content.length > 0 &&
+                            list.data.content.map((item) => (
+                              <tr
+                                style={{ marginTop: "5px" }}
+                                key={item.branchId}
+                              >
+                                <td>{item.branchId}</td>
+                                <td>{item.name}</td>
+                                <td>{item.address}</td>
+                                <td className="item">
+                                  <DeleteButton
+                                    url={url}
+                                    id={item.branchId}
+                                    nameBranch={item.name}
+                                    rerender={rerender}
+                                  />
+                                  <EditButton
+                                    url={"branch-edit"}
+                                    id={item.branchId}
+                                  />
+                                  <DetailButton
+                                    url={"branch-detail"}
+                                    id={item.branchId}
+                                  />
+                                </td>
+                              </tr>
+                            ))}
                         </tbody>
                       </table>
                     </div>
                   </div>
                 </div>
-                <section
+                {/* <section
                   className="blog_area"
                   style={{ paddingBottom: "80px" }}
                 >
@@ -172,7 +199,13 @@ function DashboardBranch(props) {
                       </ul>
                     </nav>
                   </div>
-                </section>
+                </section> */}
+                <Page
+                  totalPages={list.data.totalPages}
+                  number={list.data.number}
+                  condition={condition}
+                  handleClick={handleClick}
+                />
                 <div style={{ display: "flex" }}>
                   <div className="col-lg-10 ms-10 mb-50"></div>
                   <div className="col-lg-2 ms-10 mb-50">

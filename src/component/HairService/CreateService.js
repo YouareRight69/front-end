@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams, useLocation } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import ImageGallery from '../common/ImageGallery';
@@ -16,9 +16,10 @@ function CreateService() {
         description: "",
         type: "",
         media: []
-      });
+    });
+    const [uploading, setUploading] = useState(false);
     const [valid, setValid] = useState({ name: "", price: "", description: "", type: "" });
-
+    const [imagesArray, setImagesArray] = useState([]);
     const error = { color: "red" };
 
     const navigate = useNavigate();
@@ -66,45 +67,40 @@ function CreateService() {
 
     useEffect(() => {
         if (id) {
-          axios.get(`${service}/${id}`).then((resp) => {
-            const { name, price, description, type, media } = resp.data;
-            setTarget({ name, price, description, type, media: media.map((item) => item.url) });
-          });
+            axios.get(`${service}/${id}`).then((resp) => {
+                setTarget(resp.data);
+            });
         }
-      }, [id]);
-
-    const [imagesArray, setImagesArray] = useState([]);
+    }, [id]);
 
     const handleDataFromImageGallery = (data) => {
         setImagesArray(data);
     };
 
     const handleUploadMultiImage = () => {
+        setUploading(true);
         const updatedTarget = { ...target };
-        
         imagesArray.forEach((image) => {
-          const imageref = ref(storage, `images/${image.name + v4()}`);
-          uploadBytes(imageref, image).then((snapshot) => {
-            getDownloadURL(snapshot.ref).then((url) => {
-              updatedTarget.media.push(url);
-              
-              // Kiểm tra xem đã tải lên tất cả các hình ảnh hay chưa
-              if (updatedTarget.media.length === imagesArray.length) {
-                setTarget(updatedTarget);
-                saveTargetToDatabase(updatedTarget); // Gọi hàm lưu target vào cơ sở dữ liệu
-              }
-            });
-          });
-        });
-      };
+            const imageref = ref(storage, `images/${v4() + image.name}`);
+            uploadBytes(imageref, image).then((snapshot) => {
+                getDownloadURL(snapshot.ref).then((url) => {
+                    updatedTarget.media.push(url);
 
-      const saveTargetToDatabase = (target) => {
-        // Gọi API hoặc thực hiện các xử lý lưu trữ vào cơ sở dữ liệu ở đây
-        console.log(target);
-        onSubmit();
+                    // Kiểm tra xem đã tải lên tất cả các hình ảnh hay chưa
+                    if (updatedTarget.media.length === imagesArray.length) {
+                        setTarget(updatedTarget);
+                        saveTargetToDatabase(updatedTarget); // Gọi hàm lưu target vào cơ sở dữ liệu
+                    }
+                });
+            });
+        });
     };
 
-    // console.log(imagesArray);
+    const saveTargetToDatabase = (target) => {
+        console.log(target);
+        setUploading(false);
+        onSubmit();
+    };
 
     return (
         <div>

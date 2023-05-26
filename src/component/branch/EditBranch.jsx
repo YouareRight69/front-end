@@ -1,10 +1,69 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ImageGallery from "../common/ImageGallery";
 
 function EditBranch(props) {
+  const url = "http://localhost:8080/api/admin/branch";
+  const { id } = useParams();
+  const [target, setTarget] = useState({});
+  const [dataView, setDataView] = useState([]);
+  const [imagesArray, setImagesArray] = useState([]);
+
+  const handleDataFromImageGallery = (data) => {
+    setImagesArray(data);
+  };
+
+  const navigate = useNavigate();
+
+  const onSubmit = (e) => {
+    console.log(target);
+    e.preventDefault();
+    if (id) {
+      axios
+        .get(`${url}/${id}`, target, {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Credentials": "true",
+          },
+        })
+        .then((resp) => {
+          navigate("/branch");
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      axios.get(`${url}/${id}`).then((resp) => {
+        setTarget(resp.data);
+      });
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (target && target.media) {
+      const urlArray = target.media.map((item) => item.url);
+      setDataView(urlArray);
+    }
+  }, [target]);
+
+  const handleChange = (element) => {
+    setTarget({ ...target, [element.target.name]: element.target.value });
+  };
+
+  // Refresh
+  const handleReset = () => {
+    setTarget({});
+  };
+
+  console.log("dataView");
+  console.log(dataView);
+
   return (
     <div>
+      <form id="form" onSubmit={onSubmit}></form>
       <main>
         {/* Hero Start */}
         <div className="slider-area2">
@@ -37,7 +96,10 @@ function EditBranch(props) {
                       style={{ paddingTop: "50px" }}
                     >
                       <div className="col-lg-12 col-md-6 col-sm-6">
-                        <ImageGallery />
+                        <ImageGallery
+                          data={dataView}
+                          sendDataToParent={handleDataFromImageGallery}
+                        />
                       </div>
                     </div>
                   </div>
@@ -61,6 +123,8 @@ function EditBranch(props) {
                             }}
                             required
                             className="single-input"
+                            value={target.name}
+                            onChange={handleChange}
                           />
                         </div>
                       </div>
@@ -81,6 +145,8 @@ function EditBranch(props) {
                             }}
                             required
                             className="single-input"
+                            value={target.address}
+                            onChange={handleChange}
                           />
                         </div>
                       </div>
@@ -96,7 +162,8 @@ function EditBranch(props) {
                       <div className="col-lg-4 ms-10">
                         <button
                           className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                          type="submit"
+                          type="reset"
+                          onClick={handleReset}
                         >
                           Làm mới
                         </button>

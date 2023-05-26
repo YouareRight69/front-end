@@ -1,0 +1,55 @@
+.single-input-namnb6 {
+    display: block;
+    width: 100%;
+    line-height: 50px;
+    border: none;
+    outline: none;
+    background: #f9f9ff;
+    padding: 0 20px
+}
+
+.genric-btn.link-border.namnb6 {
+    color: #415094;
+    border: 1px solid #fff;
+    background: #fff;
+    text-decoration: underline;
+}
+
+.genric-btn.link-border.namnb6:hover {
+    color: #415094;
+    background: #d19f68;
+    border: 1px solid #d19f68;
+}
+
+.boxed-btn.namnb6 {
+    background: #fff;
+    color: #f7f31b !important;
+    display: inline-block;
+    padding: 18px 44px;
+    font-family: "Oswald", sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    border: 0;
+    border: 1px solid #f7f31b;
+    letter-spacing: 3px;
+    text-align: center;
+    color: #f7f31b;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.boxed-btn.namnb6:hover {
+    background: #f7f31b;
+    color: #fff !important;
+    border: 1px solid #f7f31b;
+}
+
+.section-top-border.namnb6 {
+    height: 100vh;
+    border-top: 1px dotted #eee;
+}
+
+.logo-namnb6 {
+    display: flex;
+    justify-content: center;
+}
