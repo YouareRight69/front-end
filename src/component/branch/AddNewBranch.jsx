@@ -81,7 +81,7 @@ function AddNewBranch(props) {
   const handleDataFromImageGallery = (data) => {
     setImagesArray(data);
   };
-  
+
   const handleUploadMultiImage = () => {
     setUploading(true);
     const updatedTarget = { ...target };
