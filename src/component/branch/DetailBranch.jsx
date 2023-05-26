@@ -1,11 +1,53 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import ImageGallery from "../common/ImageGallery";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import ImageGalleryEdit from "../common/ImageGalleryEdit";
 
 function DetailBranch(props) {
+  const url = "http://localhost:8080/api/admin/branch";
+  const { id } = useParams();
+  const [target, setTarget] = useState({});
+  const [dataView, setDataView] = useState([]);
+
+  const navigate = useNavigate();
+
+  const onSubmit = (e) => {
+    console.log(target);
+    e.preventDefault();
+    if (id) {
+      axios
+        .get(`${url}/${id}`, target, {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Credentials": "true",
+          },
+        })
+        .then((resp) => {
+          navigate("/branch");
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      axios.get(`${url}/${id}`).then((resp) => {
+        setTarget(resp.data);
+      });
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (target && target.media) {
+      const urlArray = target.media.map((item) => item.url);
+      setDataView(urlArray);
+    }
+  }, [target]);
+
   return (
     <div>
       <main>
+        <form id="form" onSubmit={onSubmit}></form>
         {/* Hero Start */}
         <div className="slider-area2">
           <div className="slider-height2 d-flex align-items-center">
@@ -37,7 +79,9 @@ function DetailBranch(props) {
                       style={{ paddingTop: "50px" }}
                     >
                       <div className="col-lg-12 col-md-6 col-sm-6">
-                        <ImageGallery />
+                        {dataView !== undefined && dataView !== null && (
+                          <ImageGalleryEdit data={dataView} />
+                        )}
                       </div>
                     </div>
                   </div>
@@ -49,7 +93,7 @@ function DetailBranch(props) {
                           <p className="mt-2">Tên Chi Nhánh: </p>
                         </div>
                         <div className="col-lg-9 col-md-4">
-                          <p className="mt-2">256 Nguyễn Văn Linh</p>
+                          <p className="mt-2">{target.name}</p>
                         </div>
                       </div>
                       <div className="mt-80" style={{ display: "flex" }}>
@@ -57,7 +101,7 @@ function DetailBranch(props) {
                           <p className="mt-2">Địa chỉ: </p>
                         </div>
                         <div className="col-lg-9 col-md-4">
-                          <p className="mt-2">Hải Châu</p>
+                          <p className="mt-2">{target.address}</p>
                         </div>
                       </div>
                     </form>

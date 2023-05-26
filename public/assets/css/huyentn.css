@@ -1,0 +1,36 @@
+.long-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#table{
+    table-layout: fixed;
+    width: 100%;
+}
+
+td.item {
+    display: flex;
+}
+
+.ti-angle-left:before {
+    content: "\e64a";
+    color: black;
+    font-size: 0.75em;
+}
+
+.ti-angle-right:before {
+    content: "\e649";
+    color: black;
+    font-size: 0.75em;
+}
+
+.page-link:not(:disabled):not(.disabled) {
+    cursor: pointer;
+    color: #d19f68;
+    font-size: 1.25em;
+}
+
+.mt-10 {
+    margin-top: 56px;
+  }
