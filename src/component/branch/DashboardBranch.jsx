@@ -68,31 +68,13 @@ function DashboardBranch(props) {
                   >
                     <div className="col-lg-1"></div>
 
-                      <div className="form-group">
-                        {/* <div className="input-group mb-3">
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Nhập từ khoá cần tìm"
-                            onFocus={(e) => {
-                              e.target.placeholder = "";
-                            }}
-                            onBlur={(e) => {
-                              e.target.placeholder = "Nhập từ khoá cần tìm";
-                            }}
-                          />
-                          <div className="input-group-append">
-                            <button className="btns" type="button">
-                              <i className="ti-search"></i>
-                            </button>
-                          </div>
-                        </div> */}
-                        <SearchForm onSubmit={onSubmit} />
-                      </div>
-                   
+                    <div className="form-group">
+                      <SearchForm onSubmit={onSubmit} />
+                    </div>
+
                     <div className="col-lg-1"></div>
                     <div className="col-lg-3 col-md-4 mt-10">
-                      <div className="input-group-icon">
+                      {/* <div className="input-group-icon">
                         <div>
                           <select className="form-select" id="default-select">
                             <option value=" 1">Sắp xếp</option>
@@ -102,7 +84,12 @@ function DashboardBranch(props) {
                             <option value="1">Srilanka</option>
                           </select>
                         </div>
-                      </div>
+                      </div> */}
+                      <Link to="/branch-add">
+                        <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
+                          Thêm mới
+                        </div>
+                      </Link>
                     </div>
                   </aside>
                   <div className="col-lg-3">
