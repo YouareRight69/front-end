@@ -106,6 +106,7 @@ function AddNewBranch(props) {
     setUploading(false);
     onSubmit();
   };
+  console.log(imagesArray);
   return (
     <>
       <main>

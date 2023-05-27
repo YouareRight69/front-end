@@ -85,20 +85,13 @@ function DashboardBranch(props) {
                           </select>
                         </div>
                       </div> */}
-                      <Link to="/branch-add">
-                        <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
-                          Thêm mới
-                        </div>
-                      </Link>
                     </div>
-                  </aside>
-                  <div className="col-lg-3">
                     <Link to="/branch-add">
                       <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
                         Thêm mới
                       </div>
                     </Link>
-                  </div>
+                  </aside>
                 </div>
                 <div className="section-top-border">
                   <h3 className="mb-30">Danh sách chi nhánh</h3>
