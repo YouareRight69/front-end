@@ -34,7 +34,7 @@ function EditEmployee(props) {
     if (img == null) {
       return;
     }
-    const imgRef = ref(storage, `avatars/"my"+${v4()}`);
+    const imgRef = ref(storage, `avatars/"mytestEdit"+${v4()}`);
     uploadBytes(imgRef, img).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
         setImgUpload(url);

@@ -153,14 +153,15 @@ function DashboardEmployee(props) {
                                 <i className="far fa-trash-alt"></i>
                               </button>
 
-                              <Link
+                              {/* <Link
                                 to="/employee-edit"
                                 style={{ marginRight: "10px" }}
                               >
                                 <div className="genric-btn success radius">
                                   <i className="fas fa-pencil-alt"></i>
                                 </div>
-                              </Link>
+                              </Link> */}
+                              <EditButton url={'employee'} id={ item.employeeId } />
 
                               <Link to="/employee-detail">
                                 <div className="genric-btn primary radius">
