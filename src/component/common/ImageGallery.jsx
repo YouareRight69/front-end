@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { v4 } from "uuid";
 
-const ImageGallery = ({ sendDataToParent, data }) => {
+const ImageGallery = ({ sendDataToParent, data, sendStatus }) => {
   const [imageSrc, setImageSrc] = useState("./assets/img/thien/1.jpg");
   const [imagesArray, setImagesArray] = useState([]);
+  const [status, setStatus] = useState(false);
   const [dataFirebase, setDataFirebase] = useState([]);
 
   const setFirstImage = () => {
@@ -81,6 +82,7 @@ const ImageGallery = ({ sendDataToParent, data }) => {
     const newImagesArray = [...selectedImages];
     setImagesArray(newImagesArray);
     sendDataToParent(newImagesArray);
+    setStatus(true);
 
     if (newImagesArray.length > 0) {
       const firstImage = newImagesArray[0];
@@ -112,6 +114,9 @@ const ImageGallery = ({ sendDataToParent, data }) => {
   const renderImages = () => {
     // console.log("dataUserArray");
     // console.log(imagesArray);
+    console.log("Status trong gallery: ");
+    console.log(status);
+    sendStatus(status);
     return imagesArray.map((image, index) => (
       <div className="image" key={index}>
         <img
