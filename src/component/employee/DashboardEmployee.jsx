@@ -8,34 +8,33 @@ import DetailButton from '../../Button/DetailButton';
 import axios from 'axios';
 
 function DashboardEmployee(props) {
-  const url = "http://localhost:8080/listAllEmp";
+  const url = "http://localhost:8080/api/employee/listAllEmp";
   const [list, setList] = useState({ data: { content: [] } });
   const [condition, setCondition] = useState("");
   const [display, setDisplay] = useState(true);
 
-  function handleClick(page) {
-    axios.get(`${url}?p=${page}&c=${condition}`).then(res => {
-        setList(res);
-    })
-  }
+    function handleClick(page) {
+      axios.get(`${url}?p=${page}&c=${condition}`).then(res => {
+          setList(res);
+      })
+    }
 
-  const onSubmit = (data) => {
-    setCondition(data);
-    console.log(setCondition);
-  }
+    const onSubmit = (data) => {
+      setCondition(data);
+      console.log(setCondition);
+    }
 
-  const rerender = () => {
+    const rerender = () => {
       setDisplay(!display);
-  }
+    }
 
-  useEffect(() => {
-    axios.get(`${url}?c=${condition}`).then(res => {
-      console.log("data",res.data);
-        setList(res.data.content);
-    })
-  }, [ ])
-
-  console.log(list);
+    useEffect(() => {
+      axios.get(`${url}?c=${condition}`).then(res => {
+          setList(res);
+      })
+    }, [condition, display])
+    
+    console.log(list);
 
   return (
     <div>
@@ -72,13 +71,13 @@ function DashboardEmployee(props) {
                     style={{ display: "flex" }}
                   >
                     <div className="col-lg-1"></div>
-                    <form action="#" className="col-lg-6">
-                      <div className="form-group">
-                        <div className="input-group mb-3">
-                          <SearchForm onSubmit={onSubmit}/>
-                        </div>
+                    <div className="form-group">
+                      <div className="input-group mb-3">
+                        <SearchForm
+                            onSubmit={onSubmit}
+                        />
                       </div>
-                    </form>
+                    </div>
                     <div className="col-lg-1"></div>
                     <div className="col-lg-3 col-md-4 mt-10">
                       <div className="input-group-icon">
@@ -132,8 +131,8 @@ function DashboardEmployee(props) {
                           </tr>
                         </thead>
                         <tbody>
-                          {list.length > 0 &&
-                            list.map((item) => 
+                          {list.data.content.length > 0 &&
+                            list.data.content.map((item) => 
                               <tr style={{ marginTop: "5px" }} key={item.employeeId}>
                                 <th scope="row">{item.employeeId}</th>
                                 <td>{item.user.fullName}</td>
@@ -142,7 +141,7 @@ function DashboardEmployee(props) {
                                 <td>{item.user.account.email}</td>
                                 <td>{item.user.gender}</td>
                                 <td>{item.branch.name}</td>
-                                <td>
+                                <td style={{ display: "flex"}}>
                               <button
                                 type="button"
                                 className="genric-btn danger radius"
@@ -181,8 +180,8 @@ function DashboardEmployee(props) {
                   </div>
                 </div>
                 <Page 
-                  totalPages={list.totalPages}
-                  number={list.number}
+                  totalPages={list.data.totalPages}
+                  number={list.data.number}
                   condition={condition}
                   handleClick={handleClick}
                 />
