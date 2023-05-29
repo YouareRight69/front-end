@@ -84,12 +84,15 @@ const handleInputChange = (event) => {
 
   useMemo(() => {
     axios.get("http://localhost:8080/api/admin/branch").then((resp) => {
-      setBranch(resp.data);
+      setBranch(resp.data.content);
+      console.log(resp.data);
     });
     axios.get("http://localhost:8080/api/user/findAll").then((resp) => {
       setPeople(resp.data.content);
+      console.log(resp.data.content);
     });
   }, []);
+
 
   return (
     <React.Fragment>
@@ -216,6 +219,7 @@ const handleInputChange = (event) => {
                                   type="radio"
                                   id="confirm-radio"
                                   name="gender"
+                                  value="Nam"
                                   // checked
                                 />
                                 <label for="confirm-radio"></label>
@@ -233,6 +237,7 @@ const handleInputChange = (event) => {
                                   type="radio"
                                   id="primary-radio"
                                   name="gender"
+                                  value="Nữ"
                                   // checked
                                 />
                                 <label for="primary-radio"></label>
@@ -288,8 +293,8 @@ const handleInputChange = (event) => {
                               <option value="" disabled>
                                 Kiểu phục vụ
                               </option>
-                              <option value="Tóc">Tóc</option>
-                              <option value="Da">Da</option>
+                              <option value="1">Tóc</option>
+                              <option value="2">Da</option>
                             </select>
                           </div>
                         </div>

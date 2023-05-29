@@ -85,6 +85,8 @@ function CreateService() {
         setUploading(false);
         onSubmit();
     };
+    
+  const handleStatusFromGallery = (data) => {};
 
     return (
         <div>
@@ -114,6 +116,7 @@ function CreateService() {
                                         <div className="col-lg-12 col-md-6 col-sm-6">
                                             <ImageGallery
                                                 sendDataToParent={handleDataFromImageGallery}
+                                                sendStatus={handleStatusFromGallery}
                                             />
                                         </div>
                                     </div>

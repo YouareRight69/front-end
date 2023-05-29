@@ -68,47 +68,27 @@ function DashboardEmployee(props) {
                 <div className="blog_right_sidebar">
                   <aside
                     className="single_sidebar_widget search_widget col-lg-12"
-                    style={{ display: "flex" }}
+                    style={{ display: "flex"}}
                   >
-                    <div className="col-lg-1"></div>
-                    <div className="form-group">
-                      <div className="input-group mb-3">
+                    <div className="col-lg-2"></div>
+                    <div className="form-group col-8">
+                      {/* <div className="input-group mb-3"> */}
                         <SearchForm
                             onSubmit={onSubmit}
                         />
-                      </div>
-                    </div>
-                    <div className="col-lg-1"></div>
-                    <div className="col-lg-3 col-md-4 mt-10">
-                      <div className="input-group-icon">
-                        <div>
-                          <select className="form-select" id="default-select">
-                            <option value=" 1">Sắp xếp</option>
-                            <option value="1">Bangladesh</option>
-                            <option value="1">India</option>
-                            <option value="1">England</option>
-                            <option value="1">Srilanka</option>
-                          </select>
-                        </div>
-                      </div>
+                      {/* </div> */}
                     </div>
                   </aside>
                 </div>
-                <div class="mt-10" style={{display: "flex" }}>
-                  <div class="col-lg-3 ms-10">
+                <div class="mt-10 col-lg-4">
+               
                     <Link to="/employee-add">
                       <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
                         Thêm mới
                       </div>
                     </Link>
-                  </div>
-                  <div class="col-lg-3 ms-10">
-                    <Link to="/history-admin"> 
-                      <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
-                        Lịch sử làm việc
-                      </div>
-                    </Link>
-                  </div>
+                 
+                  
                 </div>
                 <div className="section-top-border">
                   <h3 className="mb-30">Danh sách nhân viên</h3>
