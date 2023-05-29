@@ -15,6 +15,7 @@ function AddNewBranch(props) {
     media: [],
   });
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0); // State lưu trữ giá trị phần trăm tải lên
 
   //Validation
   const [valid, setValid] = useState({ name: "", address: "" });

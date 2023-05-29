@@ -10,7 +10,6 @@ const ImageGallery = ({ sendDataToParent, data, sendStatus }) => {
   const setFirstImage = () => {
     if (dataFirebase.length > 0) {
       const firstImage = dataFirebase[0];
-      console.log(firstImage);
       setImageSrc(firstImage);
     }
   };
@@ -112,10 +111,6 @@ const ImageGallery = ({ sendDataToParent, data, sendStatus }) => {
   };
 
   const renderImages = () => {
-    // console.log("dataUserArray");
-    // console.log(imagesArray);
-    console.log("Status trong gallery: ");
-    console.log(status);
     sendStatus(status);
     return imagesArray.map((image, index) => (
       <div className="image" key={index}>

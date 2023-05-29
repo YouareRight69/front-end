@@ -73,10 +73,6 @@ function App() {
           <Route path="/createService" element={<CreateService />} />
           <Route path="/detailService/:id" element={<DetailService />} />
           <Route path='/listService/:id' element={<EditService />} />
-          <Route path="/branch" element={<Branch />}></Route>
-          <Route path="/branch-add" element={<AddNewBranch />}></Route>
-          <Route path="/branch-detail" element={<DetailBranch />}></Route>
-          <Route path="/branch-edit" element={<EditBranch />}></Route>
           <Route path="/invoice-history" element={<InvoiceHistory />}></Route>
           <Route path="/invoice" element={<Invoice />}></Route>
           <Route path="/payment" element={<Payment />}></Route>
