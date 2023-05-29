@@ -25,11 +25,11 @@ function AddNewBranch(props) {
 
   const navigate = useNavigate();
 
-  const onSubmit = () => {
-    console.log(target);
+  const onSubmit = (data) => {
+    console.log(data);
     if (id) {
       axios
-        .patch(`${url}/${id}`, target, {
+        .patch(`${url}/${id}`, data, {
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Methods": "PATCH",
@@ -45,7 +45,7 @@ function AddNewBranch(props) {
         });
     }
     axios
-      .post(url, target, {
+      .post(url, data, {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Methods": "POST",
@@ -60,6 +60,8 @@ function AddNewBranch(props) {
         console.log(setValid);
       });
   };
+
+  const handleStatusFromGallery = (data) => {};
 
   // Refresh
   const handleReset = () => {
@@ -82,30 +84,25 @@ function AddNewBranch(props) {
     setImagesArray(data);
   };
 
-  const handleUploadMultiImage = () => {
-    setUploading(true);
-    const updatedTarget = { ...target };
-    imagesArray.forEach((image) => {
-      const imageref = ref(storage, `images/${v4() + image.name}`);
-      uploadBytes(imageref, image).then((snapshot) => {
-        getDownloadURL(snapshot.ref).then((url) => {
-          updatedTarget.media.push(url);
+  const handleUploadMultiImage = async () => {
+    try {
+      setUploading(true);
+      const updatedData = { ...target };
+      await Promise.all(
+        imagesArray.map(async (image) => {
+          const imageref = ref(storage, `images/${v4() + image.name}`);
+          const snapshot = await uploadBytes(imageref, image);
+          const url = await getDownloadURL(snapshot.ref);
+          updatedData.media.push(url);
+        })
+      );
 
-          // Kiểm tra xem đã tải lên tất cả các hình ảnh hay chưa
-          if (updatedTarget.media.length === imagesArray.length) {
-            setTarget(updatedTarget);
-            saveTargetToDatabase(updatedTarget); // Gọi hàm lưu target vào cơ sở dữ liệu
-          }
-        });
-      });
-    });
+      onSubmit(updatedData);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const saveTargetToDatabase = (target) => {
-    console.log(target);
-    setUploading(false);
-    onSubmit();
-  };
   return (
     <>
       <main>
@@ -142,6 +139,7 @@ function AddNewBranch(props) {
                       <div className="col-lg-12 col-md-6 col-sm-6">
                         <ImageGallery
                           sendDataToParent={handleDataFromImageGallery}
+                          sendStatus={handleStatusFromGallery}
                         />
                       </div>
                     </div>
