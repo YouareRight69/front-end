@@ -6,6 +6,7 @@ import DeleteButton from "../button/DeleteButton";
 import Page from "../common/Page";
 import SearchForm from "../../Button/SearchForm";
 import DetailInfoButton from "./DetailButton";
+import jwt_decode from "jwt-decode";
 
 export default function BookingManagement() {
   const [list, setList] = useState({ data: { content: [] } });
@@ -14,24 +15,43 @@ export default function BookingManagement() {
   const [display, setDisplay] = useState(true);
   const navigate = useNavigate();
 
+  const accessToken = localStorage.getItem("accessToken");
+
   function handleClick(page) {
-    axios.get(`${url}?p=${page}&c=${condition}`).then((res) => {
+    axios.get(`${url}?p=${page}&c=${condition}`,  {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Methods":
+          "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+        "Authorization": "Bearer " + accessToken,
+      },
+    }).then((res) => {
       console.log(res);
       setList(res);
     });
   }
+  console.log(list)
 
   const onSubmit = (data) => {
     setCondition(data);
   };
-  console.log(condition);
+ 
+
   const rerender = () => {
     setDisplay(!display);
   };
 
   const handleEditBooking = (id) => {
     axios
-      .get("http://localhost:8080/api/emp/booking/get-booking?bookingId=" + id)
+      .get("http://localhost:8080/api/emp/booking/get-booking?bookingId=" + id,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods":
+            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          "Authorization": "Bearer " + accessToken,
+        },
+      })
       .then((res) => {
         navigate("/booking/"+id, {
           state: {selectService:res.data.serviceList, formData: res.data },
@@ -40,7 +60,11 @@ export default function BookingManagement() {
   };
 
   useEffect(() => {
-    axios.get(`${url}?c=${condition}`).then((res) => {
+    axios.get(`${url}?c=${condition}`,{
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+      },
+    }).then((res) => {
       setList(res);
       console.log(res);
     });
@@ -123,7 +147,7 @@ export default function BookingManagement() {
                               >
                                 <td>{index + 1 +list.data.number * list.data.size}</td>
                                 <td>{item.bookingId}</td>
-                                <td>{item.bookingDetailList[0]?.name}</td>
+                                <td>{item.name}</td>
                                 <td>{item.branch.name}</td>
                                 <td>{item.bookingDate}</td>
                                 <td>
