@@ -38,7 +38,7 @@ import HistoryEmployee from "./component/employee/history/historyEmployee";
 import Invoice from "./component/invoice/Invoice";
 import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
-import BookingManagement from "./component/booking/BookingManagement";
+
 
 
 function App() {
