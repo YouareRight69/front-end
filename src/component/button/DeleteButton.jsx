@@ -29,8 +29,8 @@ export default function DeleteButton(props) {
 
       <Modal
         id={props.id}
-        title={"Xóa chi nhánh"}
-        message={`Bạn có chắc muốn xóa chi nhánh ${props.nameBranch}`}
+        title={`Xóa ${props.type}`}
+        message={`Bạn có chắc muốn xóa ${props.type} ${props.nameBranch}`}
         deleteItem={deleteItem}
       />
     </React.Fragment>
