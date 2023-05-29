@@ -1,11 +1,20 @@
 import axios from "axios";
 import React from "react";
 import Modal from "../common/Modal";
+import jwt_decode from "jwt-decode";
 
 export default function DeleteButton(props) {
+   const accessToken = localStorage.getItem("accessToken");
   const deleteItem = () => {
     if (props.id) {
-      axios.delete(`${props.url}/${props.id}`).then((resp) => props.rerender());
+      axios.delete(`${props.url}/${props.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods":
+            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          "Authorization": "Bearer " + accessToken,
+        },
+      }).then((resp) => props.rerender());
       return;
     }
     axios
