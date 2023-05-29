@@ -71,10 +71,9 @@ function UserList() {
                                             <th scope="col">Id</th>
                                             <th scope="col">Họ tên</th>
                                             <th scope="col">Giới tính</th>
-                                            {/* <th scope="col">Địa chỉ</th> */}
+                                            <th scope="col">Địa chỉ</th>
                                             <th scope="col">Ngày sinh</th>
                                             <th scope="col">Số điện thoại</th>
-                                            <th scope="col">Email</th>
                                             {/* <th scope="col">Account</th> */}
                                             <th scope="col">Chức năng</th>
                                         </tr>
@@ -86,10 +85,9 @@ function UserList() {
                                                     <td>{item.userId}</td>
                                                     <td>{item.fullName}</td>
                                                     <td>{item.gender}</td>
-                                                    {/* <td>{item.address}</td> */}
+                                                    <td>{item.address}</td>
                                                     <td>{item.dateOfBirth}</td>
                                                     <td>{item.phoneNumber}</td>
-                                                    <td>{item.email}</td>
                                                     {/* <td>{item.account.accountId}</td> */}
                                                     <td>
                                                         <button className="genric-btn danger radius" data-toggle="modal"

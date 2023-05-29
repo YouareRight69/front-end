@@ -1,4 +1,4 @@
-.long-text {
+.long-text-huyen {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -13,19 +13,19 @@ td.item {
     display: flex;
 }
 
-.ti-angle-left:before {
+.ti-angle-left:before.huyen {
     content: "\e64a";
     color: black;
     font-size: 0.75em;
 }
 
-.ti-angle-right:before {
+.ti-angle-right:before.huyen {
     content: "\e649";
     color: black;
     font-size: 0.75em;
 }
 
-.page-link:not(:disabled):not(.disabled) {
+.page-link:not(:disabled):not(.disabled).huyen {
     cursor: pointer;
     color: #d19f68;
     font-size: 1.25em;
@@ -34,3 +34,15 @@ td.item {
 .mt-10-huyentn {
     margin-top: 56px;
   }
+
+.span-huyentn {
+    color: red;
+}
+
+select#type {
+    height: 40px;
+}
+
+textarea#description {
+    height: 130px;
+}

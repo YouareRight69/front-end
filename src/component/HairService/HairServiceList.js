@@ -101,7 +101,7 @@ function UserList() {
                                                             <td>{item.serviceId}</td>
                                                             <td>{item.name}</td>
                                                             <td>{item.price}</td>
-                                                            <td><div className='long-text'>{item.description}</div></td>
+                                                            <td><div className='long-text-huyen'>{item.description}</div></td>
                                                             <td className='item'>
                                                                 <DeleteButton url={url} id={item.serviceId} rerender={rerender} />
                                                                 <EditButton url={'listService'} id={item.serviceId} />
