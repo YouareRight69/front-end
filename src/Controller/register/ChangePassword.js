@@ -56,6 +56,11 @@ function ChangePassword() {
         navigate("/login");
       })
       .catch((error) => {
+        if (error == "Error: 401") {
+          localStorage.removeItem("accessToken");
+          navigate("/login");
+          toast.error("Hết phiên đăng nhập!");
+        }
         toast.error(error);
       });
   };

@@ -8,21 +8,21 @@ import { toast } from "react-toastify";
 import Header from "./common/Header";
 
 function UpdateInfo() {
-  const location = useLocation();
-  const result = location.state?.result;
-  const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
-  const [fullname, setFullname] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [dob, setDob] = useState("");
-  const [address, setAddress] = useState("");
-
   useEffect(() => {
     if (accessToken == null) {
       navigate("/login");
     }
   }, []);
+  const location = useLocation();
+  const result = location.state?.result;
+  const navigate = useNavigate();
+
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [dob, setDob] = useState("");
+  const [address, setAddress] = useState("");
 
   useEffect(() => {
     const propertyMap = {
@@ -34,16 +34,16 @@ function UpdateInfo() {
     };
 
     for (const property in propertyMap) {
-      if (result[property]) {
+      if (result && result[property]) {
         propertyMap[property](result[property]);
       }
     }
   }, [
-    result.fullname,
-    result.email,
-    result.phoneNumber,
-    result.dob,
-    result.address,
+    result && result.fullname, // Add null check for `result` and its properties
+    result && result.email,
+    result && result.phoneNumber,
+    result && result.dob,
+    result && result.address,
   ]);
 
   const setParams = (event) => {
@@ -63,13 +63,25 @@ function UpdateInfo() {
 
   const [img, setImg] = useState(null);
   const [imgUpload, setImgUpload] = useState("");
+
   const [inputImg, setInputImg] = useState("assets/img/logo/avatar.png");
 
   useEffect(() => {
-    if (result.avatar) {
+    if (result && result.avatar) {
       setInputImg(result.avatar);
     }
-  }, [result.avatar]);
+  }, [result && result.avatar]);
+
+  const [avatar, setAvatar] = useState("");
+  useEffect(() => {
+    if (imgUpload !== "") {
+      setAvatar(imgUpload);
+    } else {
+      if (result && result.avatar) {
+        setAvatar(result.avatar);
+      }
+    }
+  }, [imgUpload]);
 
   const [imgList, setImgList] = useState([]);
 
@@ -77,7 +89,6 @@ function UpdateInfo() {
 
   const uploadImg = (event) => {
     setImg(event.target.files[0]);
-    console.log(img);
   };
 
   useEffect(() => {
@@ -116,7 +127,7 @@ function UpdateInfo() {
       fullName: fullname,
       phoneNumber: phoneNumber,
       address: address,
-      avatar: imgUpload,
+      avatar: avatar,
       dob: dob,
     });
 
@@ -139,6 +150,11 @@ function UpdateInfo() {
         navigate("/");
       })
       .catch((error) => {
+        if (error == "Error: 401") {
+          localStorage.removeItem("accessToken");
+          navigate("/login");
+          toast.error("Hết phiên đăng nhập!");
+        }
         toast.error(error);
       });
   };
