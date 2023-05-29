@@ -153,3 +153,4 @@ const ImageGallery = ({ sendDataToParent, data, sendStatus }) => {
 };
 
 export default ImageGallery;
+
