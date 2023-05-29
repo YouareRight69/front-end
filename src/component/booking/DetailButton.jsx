@@ -1,7 +1,6 @@
-import axios from "axios";
-import React from "react";
-import { useState } from "react";
 import accounting from "accounting";
+import axios from "axios";
+import React, { useState } from "react";
 import ModalDetail from "./ModalDetail";
 
 export default function DetailInfoButton(props) {
@@ -15,10 +14,8 @@ export default function DetailInfoButton(props) {
         },
       })
       .then((resp) => {
-       
         setDetailInfo(resp.data);
-        setListService(resp.data.service)
-        
+        setListService(resp.data.service);
       });
   };
 
@@ -33,20 +30,29 @@ export default function DetailInfoButton(props) {
         <i className="fa fa-eye" aria-hidden="true"></i>
       </button>
 
-      <ModalDetail id={props.id} data={detailInfo} listService={listService?.map((item,index) => <tr key={index}>
-                   <td>{index + 1}</td>
-                  <td>{item.serviceName}</td>
-                   <td>{item.employeeName}</td>
-                   <td>{accounting.formatMoney(item.price, {
-                        symbol: "",
-                        format: "%v vnđ",
-                        precision: 0
-                      })}</td>
-                  </tr>)}  total ={accounting.formatMoney(detailInfo.total, {
-                        symbol: "",
-                        format: "%v vnđ",
-                        precision: 0
-                      })}/> 
+      <ModalDetail
+        id={props.id}
+        data={detailInfo}
+        listService={listService?.map((item, index) => (
+          <tr key={index}>
+            <td>{index + 1}</td>
+            <td>{item.serviceName}</td>
+            <td>{item.employeeName}</td>
+            <td>
+              {accounting.formatMoney(item.price, {
+                symbol: "",
+                format: "%v vnđ",
+                precision: 0,
+              })}
+            </td>
+          </tr>
+        ))}
+        total={accounting.formatMoney(detailInfo.total, {
+          symbol: "",
+          format: "%v vnđ",
+          precision: 0,
+        })}
+      />
     </React.Fragment>
   );
 }

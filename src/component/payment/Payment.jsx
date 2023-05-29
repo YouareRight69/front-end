@@ -34,9 +34,7 @@ function Payment() {
   useEffect(() => {
     if (list && list.length > 0) {
       list.forEach((item) => {
-        const bookingId = item.booking.bookingId;
-        const bookingDate = item.booking.bookingDate;
-        console.log(bookingId);
+        console.log("useEffect", item.booking);
       });
     }
   }, [list]);
