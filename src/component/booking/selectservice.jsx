@@ -14,12 +14,14 @@ export default function Selectservice() {
   const [serviceData, setServiceData] = useState();
   const [oldSelect, setOldSelect] = useState([]);
   const [idArr, setIdArr] = useState([]);
+  const [id, setId]= useState();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     const data = location.state.selectService;
     setOldSelect(location.state.selectService);
+    setId(location.state.id)
     if (location.state.selectService) {
       setSelectedArr([...data]);
       data.forEach((e) => {
@@ -49,9 +51,16 @@ export default function Selectservice() {
   };
 
   const handleFinish = () => {
-    navigate("/booking", {
-      state: {selectService:selectedArr, formData: location.state.formData}
-    });
+    if(id) {
+      navigate("/booking/"+id, {
+        state: {selectService:selectedArr, formData: location.state.formData}
+      });
+    }else {
+      navigate("/booking", {
+        state: {selectService:selectedArr, formData: location.state.formData}
+      });
+    }
+   
   };
 
   const handleBack = () => {

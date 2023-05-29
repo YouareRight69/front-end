@@ -11,6 +11,7 @@ import "react-multi-carousel/lib/styles.css";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import jwt_decode from "jwt-decode";
 
 export default function Booking() {
   //useState
@@ -34,7 +35,10 @@ export default function Booking() {
   const { id } = useParams();
   const [title, setTitle] = useState("ĐẶT LỊCH HẸN");
   const [oldInfo, setOldInfo] = useState();
+  const accessToken = localStorage.getItem("accessToken");
+
   console.log(id);
+  console.log(accessToken);
   //useEffect
   useEffect(() => {
     if (location.state != null && location.state.formData != null) {
@@ -60,7 +64,7 @@ export default function Booking() {
   console.log(selectTime);
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/emp/booking/list-branch")
+      .get("http://localhost:8080/api/emp/booking/info/list-branch")
       .then((res) => {
         setData(res.data);
       })
@@ -72,7 +76,7 @@ export default function Booking() {
       console.log(formData.branch);
       axios
         .get(
-          "http://localhost:8080/api/emp/booking/list-employee-of-branch?branchId=" +
+          "http://localhost:8080/api/emp/booking/info/list-employee-of-branch?branchId=" +
             formData.branch
         )
         .then((res) => {
@@ -85,7 +89,7 @@ export default function Booking() {
           console.error("Lỗi khi gửi yêu cầu:", error);
         });
       axios
-        .get("http://localhost:8080/api/emp/booking/working-time")
+        .get("http://localhost:8080/api/emp/booking/info/working-time")
         .then((res) => {
           setWorkingTimeData(res.data);
         })
@@ -101,7 +105,7 @@ export default function Booking() {
     if (selectStyle != null && selectDay != null) {
       axios
         .get(
-          "http://localhost:8080/api/emp/booking/busy-list?employeeId=" +
+          "http://localhost:8080/api/emp/booking/info/busy-list?employeeId=" +
             selectStyle +
             "&day=" +
             selectDay
@@ -117,6 +121,9 @@ export default function Booking() {
   }, [selectDay, selectStyle]);
 
   useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+    }
     if (location.state != null && location.state.selectService != null) {
       setSelectservice(location.state.selectService);
       location.state.selectService.forEach((element) => {
@@ -205,7 +212,7 @@ export default function Booking() {
     setSelectBranch(e.value);
 
     setFormData({
-      userId: "USR101",
+      userId: jwt_decode(accessToken).aud,
       isDelete: 0,
       serviceList: serviceList,
       branch: e.value,
@@ -222,9 +229,17 @@ export default function Booking() {
   };
 
   const handleSelectServiceButton = () => {
-    navigate("/select-service", {
-      state: { selectService: selectservice, formData: formData },
-    });
+    if(id){
+      navigate("/select-service", {
+        state: { selectService: selectservice, formData: formData, id: id },
+      });
+    }else {
+      navigate("/select-service", {
+        state: { selectService: selectservice, formData: formData },
+      });
+    }
+
+    
   };
 
   const handleInputNote = (e) => {
@@ -251,10 +266,11 @@ export default function Booking() {
             "http://localhost:8080/api/emp/booking/update/" + id,
             formData,
             {
-              header: {
+              headers: {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Methods":
                   "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+                "Authorization": "Bearer " + accessToken,
               },
             }
           )
@@ -281,10 +297,11 @@ export default function Booking() {
       } else {
         axios
           .post("http://localhost:8080/api/emp/booking/create", formData, {
-            header: {
+            headers: {
               "Content-Type": "application/json",
               "Access-Control-Allow-Methods":
                 "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+               "Authorization": "Bearer " + accessToken,
             },
           })
           .then((data) => {
