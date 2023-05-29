@@ -86,7 +86,6 @@ function DetailService(props) {
                     </div>
                   </div>
                   <div className="col-lg-8 col-md-8">
-                    <h3 className="mb-30">Xem thông tin dịch vụ</h3>
                     <form action="#">
                       <div className="mt-80" style={{ display: "flex" }}>
                         <div className="col-lg-3 col-md-4">
