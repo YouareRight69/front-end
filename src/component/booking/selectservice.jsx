@@ -165,7 +165,7 @@ export default function Selectservice() {
                   <div className="row">
                     {serviceData &&
                       serviceData
-                        ?.filter((ser) => ser.type == 2)
+                        ?.filter((item) => item.serviceId !== "SER011").filter((ser) => ser.type == 2)
                         .map((item, index) => (
                           <div
                             className="col-xl-4 col-lg-4 col-md-6 card-container"
