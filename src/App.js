@@ -38,6 +38,7 @@ import Invoice from "./component/invoice/Invoice";
 import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
 import BookingManagement from "./component/booking/BookingManagement";
+import ModalDetail from "./component/booking/ModalDetail";
 
 function App() {
   return (
@@ -65,7 +66,9 @@ function App() {
           <Route path="/invoice-history" element={<InvoiceHistory />}></Route>
           <Route path="/invoice" element={<Invoice />}></Route>
           <Route path="/payment" element={<Payment />}></Route>
-          <Route path="/booking" element={<Booking />}></Route>
+          <Route path="/booking" element={<Booking />}>
+            <Route path="/booking/:id" element={<Booking />}/>
+          </Route>
           <Route path="/select-service" element={<Selectservice />}></Route>
           <Route path="/listUser" element={<UserList />} />
           <Route path="/createUser" element={<UserCreate />} />
@@ -88,6 +91,7 @@ function App() {
           <Route path="/history-admin" element={<HistoryEmployeeA />}></Route>
           <Route path="/history-employee" element={<HistoryEmployee />}></Route>
           <Route path="/booking-management" element={<BookingManagement />}></Route>
+          <Route path="/modaldetail" element={<ModalDetail/>}></Route>
         </Routes>
       </BrowserRouter>
       <ToastContainer
