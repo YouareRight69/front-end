@@ -18,30 +18,14 @@ function CreateService() {
         media: []
     });
     const [uploading, setUploading] = useState(false);
-    const [valid, setValid] = useState({ name: "", price: "", description: "", type: "" });
+    const [valid, setValid] = useState({ name: '', price: 0, description: '', type: '' });
     const [imagesArray, setImagesArray] = useState([]);
-    const error = { color: "red" };
+    const error = { color: 'red' };
 
     const navigate = useNavigate();
 
     const onSubmit = () => {
         console.log(target)
-        // e.preventDefault();
-        if (id) {
-            axios.patch(`${service}/${id}`, target, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Methods': 'PATCH',
-                    'Access-Control-Allow-Credentials': 'true'
-                }
-            }).then(resp => {
-                navigate("/listService");
-            }).catch(error => {
-                console.log(error)
-                setValid(error.response.data);
-
-            })
-        }
         axios.post(service, target, {
             headers: {
                 'Content-Type': 'application/json',
@@ -85,7 +69,7 @@ function CreateService() {
             uploadBytes(imageref, image).then((snapshot) => {
                 getDownloadURL(snapshot.ref).then((url) => {
                     updatedTarget.media.push(url);
-
+                    console.log("hello");
                     // Kiểm tra xem đã tải lên tất cả các hình ảnh hay chưa
                     if (updatedTarget.media.length === imagesArray.length) {
                         setTarget(updatedTarget);
@@ -106,111 +90,122 @@ function CreateService() {
         <div>
             <div className="slider-area2">
                 <div className="slider-height2 d-flex align-items-center">
-                </div>
-            </div>
-            <section id="section">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-xl-4 col-lg-4 col-md-6">
-                            <div className="gallery-area" style={{ 'padding-top': '60px' }}>
-                                <div className="col-lg-12 col-md-6 col-sm-6">
-                                    <ImageGallery
-                                        sendDataToParent={handleDataFromImageGallery}
-                                    />
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-xl-12">
+                                <div className="hero-cap hero-cap2 pt-70 text-center">
+                                    <h2>Thêm mới dịch vụ</h2>
                                 </div>
                             </div>
                         </div>
-                        <div className="col-lg-8 col-md-8">
-                            <h2 className="mb-30">THÊM MỚI DỊCH VỤ</h2>
-                            <form id="form" style={{ textAlign: "left", color: "black", width: "80%" }}>
-                                <div className="mt-10" style={{ 'display': 'flex' }}>
-                                    <div className="col-lg-3 col-md-4">
-                                        {/* <p className="mt-2">Tên dịch vụ {valid.name && <span style={{error}}>{valid.name}</span>}</p> */}
-                                        <label htmlFor="exampleInputPassword1" className="form-label">Tên dịch vụ {valid.name && <span style={{ error }}>{valid.name}</span>}</label>
-                                    </div>
-                                    <div className="col-lg-9 col-md-4">
-                                        <input
-                                            placeholder="Tên dịch vụ"
-                                            value={target.name}
-                                            type="text"
-                                            name='name'
-                                            className="single-input"
-                                            onChange={handleChange}
-                                            id="exampleInputPassword1" />
-                                    </div>
-                                </div>
-
-                                <div className="mt-10" style={{ 'display': 'flex' }}>
-                                    <div className="col-lg-3 col-md-4">
-                                        {/* <p className="mt-2">Giá {valid.price && <span style={{error}}>{valid.price}</span>}</p> */}
-                                        <label htmlFor="exampleInputPassword1" className="form-label">Giá {valid.price && <span style={{ error }}>{valid.price}</span>}</label>
-                                    </div>
-                                    <div className="col-lg-9 col-md-4">
-                                        <input
-                                            type="number"
-                                            placeholder="Giá"
-                                            className="single-input"
-                                            value={target.price}
-                                            name='price'
-                                            onChange={handleChange}
-                                            id="price" />
-                                    </div>
-                                </div>
-
-                                <div className="mt-10" style={{ 'display': 'flex' }}>
-                                    <div className="col-lg-3 col-md-4">
-                                        {/* <p className="mt-2">Mô tả {valid.description && <span style={{error}}>{valid.description}</span>}</p> */}
-                                        <label htmlFor="exampleInputPassword1" className="form-label">Mô tả {valid.description && <span style={{ error }}>{valid.description}</span>}</label>
-                                    </div>
-                                    <div className="col-lg-9 col-md-4">
-                                        <textarea
-                                            type="text"
-                                            placeholder="Mô tả"
-                                            className="single-input"
-                                            value={target.description}
-                                            name='description'
-                                            onChange={handleChange}
-                                            id="description" />
-                                    </div>
-                                </div>
-                                <div className="mt-10" style={{ 'display': 'flex' }}>
-                                    <div className="col-lg-3 col-md-4">
-                                        {/* <p className="mt-2">Loại dịch vụ {valid.type && <span style={{error}}>{valid.type}</span>}</p> */}
-                                        <label htmlFor="exampleInputPassword1" className="form-label">Loại dịch vụ {valid.type && <span style={{ error }}>{valid.type}</span>}</label>
-                                    </div>
-                                    <div className="col-lg-9 col-md-4">
-                                        <input
-                                            type="text"
-                                            placeholder="Loại dịch vụ"
-                                            className="single-input"
-                                            value={target.type}
-                                            name='type'
-                                            onChange={handleChange}
-                                            id="type" />
-                                    </div>
-                                </div>
-
-                                <div className="mt-10" style={{ 'display': 'flex' }}>
-                                    <div className="col-lg-4">
-                                        <Link to="/listService">
-                                            <button className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">Trở về</button>
-                                        </Link>
-                                    </div>
-                                    <div className="col-lg-4">
-                                        <button className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                                            type="reset" onClick={handleReset}>Làm mới </button>
-                                    </div>
-                                    <div className="col-lg-4">
-                                        <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                                            onClick={handleUploadMultiImage}>Thêm mới</div>
-                                    </div>
-                                </div>
-                            </form>
-                            {uploading && <div className="progress-bar"></div>}
-                        </div>
                     </div>
                 </div>
-            </section>
+            </div>
+            <div style={{ display: "flex" }}>
+                <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
+                    Admin
+                </div>
+                <div className="col-lg-10">
+                    <section id="section">
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-xl-4 col-lg-4 col-md-6">
+                                    <div className="gallery-area" style={{ 'padding-top': '60px' }}>
+                                        <div className="col-lg-12 col-md-6 col-sm-6">
+                                            <ImageGallery
+                                                sendDataToParent={handleDataFromImageGallery}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-lg-8 col-md-8">
+                                    <form id="form" style={{ textAlign: "left", color: "black", width: "80%" }}>
+                                        <div className="mt-10-huyentn" style={{ 'display': 'flex' }}>
+                                            <div className="col-lg-3 col-md-4">
+                                                <label htmlFor="exampleInputPassword1" className="form-label">Tên dịch vụ {valid.name && <span style={{ error }}>{valid.name}</span>}</label>
+                                            </div>
+                                            <div className="col-lg-9 col-md-4">
+                                                <input
+                                                    placeholder="Tên dịch vụ"
+                                                    value={target.name}
+                                                    type="text"
+                                                    name='name'
+                                                    className="single-input"
+                                                    onChange={handleChange}
+                                                    id="exampleInputPassword1" />
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-10-huyentn" style={{ 'display': 'flex' }}>
+                                            <div className="col-lg-3 col-md-4">
+                                                <label htmlFor="exampleInputPassword1" className="form-label">Giá {valid.price && <span style={{ error }}>{valid.price}</span>}</label>
+                                            </div>
+                                            <div className="col-lg-9 col-md-4">
+                                                <input
+                                                    type="number"
+                                                    placeholder="Giá"
+                                                    className="single-input"
+                                                    value={target.price}
+                                                    name='price'
+                                                    onChange={handleChange}
+                                                    id="price" />
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-10-huyentn" style={{ 'display': 'flex' }}>
+                                            <div className="col-lg-3 col-md-4">
+                                                <label htmlFor="exampleInputPassword1" className="form-label">Mô tả {valid.description && <span style={{ error }}>{valid.description}</span>}</label>
+                                            </div>
+                                            <div className="col-lg-9 col-md-4">
+                                                <textarea
+                                                    type="text"
+                                                    placeholder="Mô tả"
+                                                    className="single-input"
+                                                    value={target.description}
+                                                    name='description'
+                                                    onChange={handleChange}
+                                                    id="description" />
+                                            </div>
+                                        </div>
+                                        <div className="mt-10-huyentn" style={{ 'display': 'flex' }}>
+                                            <div className="col-lg-3 col-md-4">
+                                                <label htmlFor="exampleInputPassword1" className="form-label">Loại dịch vụ {valid.type && <span style={{ error }}>{valid.type}</span>}</label>
+                                            </div>
+                                            <div className="col-lg-9 col-md-4">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Loại dịch vụ"
+                                                    className="single-input"
+                                                    value={target.type}
+                                                    name='type'
+                                                    onChange={handleChange}
+                                                    id="type" />
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-10-huyentn" style={{ 'display': 'flex' }}>
+                                            <div className="col-lg-4">
+                                                <Link to="/listService">
+                                                    <button className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">Trở về</button>
+                                                </Link>
+                                            </div>
+                                            <div className="col-lg-4">
+                                                <button className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
+                                                    type="reset" onClick={handleReset}>Làm mới </button>
+                                            </div>
+                                            <div className="col-lg-4">
+                                                <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
+                                                    onClick={handleUploadMultiImage}>Thêm mới</div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    {uploading && <div className="progress-bar"></div>}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
         </div>
     )
 }
