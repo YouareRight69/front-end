@@ -112,10 +112,6 @@ const ImageGallery = ({ sendDataToParent, data, sendStatus }) => {
   };
 
   const renderImages = () => {
-    // console.log("dataUserArray");
-    // console.log(imagesArray);
-    console.log("Status trong gallery: ");
-    console.log(status);
     sendStatus(status);
     return imagesArray.map((image, index) => (
       <div className="image" key={index}>
@@ -158,3 +154,4 @@ const ImageGallery = ({ sendDataToParent, data, sendStatus }) => {
 };
 
 export default ImageGallery;
+
