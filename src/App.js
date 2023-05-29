@@ -5,11 +5,11 @@ import Home from "./controller/Home";
 
 
 import Login from "./controller/login/Login.js";
-import Register from "./controller/register/Register";
-import ForgotPassword from "./controller/register/ForgotPassword";
+import ChangePassword from "./controller/register/ChangePassword";
 import ConfirmOtp from "./controller/register/ConfirmOtp";
 import ForgotChangePassword from "./controller/register/ForgotChangePassword";
-import ChangePassword from "./controller/register/ChangePassword";
+import ForgotPassword from "./controller/register/ForgotPassword";
+import Register from "./controller/register/Register";
 import UpdateInfo from "./controller/register/UpdateInfo";
 
 
@@ -19,9 +19,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import UserList from "./component//User/UserList";
 import CreateService from "./component/HairService/CreateService";
 import DetailService from "./component/HairService/DetailService";
-import HairServiceList from "./component/HairService/HairServiceList";
 import EditService from "./component/HairService/EditService";
+import HairServiceList from "./component/HairService/HairServiceList";
 import UserCreate from "./component/User/UserCreate";
+import BookingManagement from "./component/booking/BookingManagement";
 import Booking from "./component/booking/booking";
 import Selectservice from "./component/booking/selectservice";
 import AddNewBranch from "./component/branch/AddNewBranch";
@@ -37,7 +38,6 @@ import HistoryEmployee from "./component/employee/history/historyEmployee";
 import Invoice from "./component/invoice/Invoice";
 import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
-import BookingManagement from "./component/booking/BookingManagement";
 
 function App() {
   return (
