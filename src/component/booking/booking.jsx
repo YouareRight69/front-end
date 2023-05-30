@@ -11,6 +11,7 @@ import "react-multi-carousel/lib/styles.css";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import jwt_decode from "jwt-decode";
 
 export default function Booking() {
   //useState
@@ -34,19 +35,19 @@ export default function Booking() {
   const { id } = useParams();
   const [title, setTitle] = useState("ĐẶT LỊCH HẸN");
   const [oldInfo, setOldInfo] = useState();
+  const accessToken = localStorage.getItem("accessToken");
+  const [oldFormData, setOldFormData] = useState();
   console.log(id);
+  console.log(accessToken);
   //useEffect
   useEffect(() => {
     if (location.state != null && location.state.formData != null) {
-      // if (location.state.formData.serviceList.length == 0) {
       setFormData({ ...location.state.formData, serviceList: serviceList });
-      // } else {
-      //   setFormData({ ...location.state.formData });
-      // }
-
       setSelectStyle(location.state.formData.styleId);
       setSelectDay(location.state.formData.bookingDate);
       setSelectTime(location.state.formData.workTimeId);
+      setSelectSkinner(location.state.formData.skinnerId);
+
       if (id) {
         setOldInfo({
           bookingDate: location.state.formData.bookingDate,
@@ -58,9 +59,10 @@ export default function Booking() {
     setSelectBranch(formData.branch);
   }, [status]);
   console.log(selectTime);
+
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/emp/booking/list-branch")
+      .get("http://localhost:8080/api/emp/booking/info/list-branch")
       .then((res) => {
         setData(res.data);
       })
@@ -72,7 +74,7 @@ export default function Booking() {
       console.log(formData.branch);
       axios
         .get(
-          "http://localhost:8080/api/emp/booking/list-employee-of-branch?branchId=" +
+          "http://localhost:8080/api/emp/booking/info/list-employee-of-branch?branchId=" +
             formData.branch
         )
         .then((res) => {
@@ -81,16 +83,14 @@ export default function Booking() {
           setDataSkinner(res.data.filter((item) => item.employee.type === "2"));
         })
         .catch((error) => {
-          // Xử lý lỗi nếu có
           console.error("Lỗi khi gửi yêu cầu:", error);
         });
       axios
-        .get("http://localhost:8080/api/emp/booking/working-time")
+        .get("http://localhost:8080/api/emp/booking/info/working-time")
         .then((res) => {
           setWorkingTimeData(res.data);
         })
         .catch((error) => {
-          // Xử lý lỗi nếu có
           console.error("Lỗi khi gửi yêu cầu:", error);
         });
     }
@@ -101,7 +101,7 @@ export default function Booking() {
     if (selectStyle != null && selectDay != null) {
       axios
         .get(
-          "http://localhost:8080/api/emp/booking/busy-list?employeeId=" +
+          "http://localhost:8080/api/emp/booking/info/busy-list?employeeId=" +
             selectStyle +
             "&day=" +
             selectDay
@@ -110,13 +110,15 @@ export default function Booking() {
           setBusyTime(res.data);
         })
         .catch((error) => {
-          // Xử lý lỗi nếu có
           console.error("Lỗi khi gửi yêu cầu:", error);
         });
     }
   }, [selectDay, selectStyle]);
 
   useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+    }
     if (location.state != null && location.state.selectService != null) {
       setSelectservice(location.state.selectService);
       location.state.selectService.forEach((element) => {
@@ -205,11 +207,13 @@ export default function Booking() {
     setSelectBranch(e.value);
 
     setFormData({
-      userId: "USR101",
+      userId: jwt_decode(accessToken).aud,
       isDelete: 0,
       serviceList: serviceList,
       branch: e.value,
+      bookingDate: selectDay,
     });
+    setSelectStyle("");
   };
 
   const handleSelectDay = (e) => {
@@ -222,13 +226,23 @@ export default function Booking() {
   };
 
   const handleSelectServiceButton = () => {
-    navigate("/select-service", {
-      state: { selectService: selectservice, formData: formData },
-    });
+    if (id) {
+      navigate("/select-service", {
+        state: { selectService: selectservice, formData: formData, id: id },
+      });
+    } else {
+      navigate("/select-service", {
+        state: { selectService: selectservice, formData: formData },
+      });
+    }
   };
 
   const handleInputNote = (e) => {
     setFormData({ ...formData, note: e });
+  };
+
+  const handleInputName = (e) => {
+    setFormData({ ...formData, customerName: e });
   };
 
   const handleSubmitForm = (e) => {
@@ -251,10 +265,11 @@ export default function Booking() {
             "http://localhost:8080/api/emp/booking/update/" + id,
             formData,
             {
-              header: {
+              headers: {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Methods":
                   "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+                Authorization: "Bearer " + accessToken,
               },
             }
           )
@@ -276,15 +291,28 @@ export default function Booking() {
             });
           })
           .catch((error) => {
-            console.error("NOOOO");
+            toast.error("Đặt lịch thất bại! Danh sách lịch hẹn vừa được cập nhật", {
+              position: "top-center",
+              autoClose: 1200,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            })
+            navigate("/booking-management", {
+              state: null,
+            });;
           });
       } else {
         axios
           .post("http://localhost:8080/api/emp/booking/create", formData, {
-            header: {
+            headers: {
               "Content-Type": "application/json",
               "Access-Control-Allow-Methods":
                 "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+              Authorization: "Bearer " + accessToken,
             },
           })
           .then((data) => {
@@ -305,7 +333,19 @@ export default function Booking() {
             });
           })
           .catch((error) => {
-            console.error("NOOOO");
+            toast.error("Đặt lịch thất bại! Danh sách lịch hẹn vừa được cập nhật", {
+              position: "top-center",
+              autoClose: 1200,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            })
+            navigate("/booking", {
+              state: null,
+            });;
           });
       }
     }
@@ -363,6 +403,21 @@ export default function Booking() {
                       </select>
                     </div>
                   </div>
+                  {jwt_decode(accessToken).roles.includes(
+                    "ROLE_RECEPTIONIST"
+                  ) && (
+                    <div className="input-group-icon mt-10">
+                      <h1>Tên khách hàng đặt lịch</h1>
+                      <input
+                        onChange={(event) =>
+                          handleInputName(event.target.value)
+                        }
+                        className="single-textarea"
+                        placeholder="Vui lòng nhập tên khách hàng..."
+                        defaultValue={formData.customerName}
+                      />
+                    </div>
+                  )}
                   <div className="input-group-icon mt-10">
                     <h1>Chọn dịch vụ</h1>
                     <div>
