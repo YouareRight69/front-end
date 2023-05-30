@@ -87,8 +87,8 @@ function App() {
           <Route path="/booking" element={<Booking />}></Route>
           <Route path="/employee" element={<DashboardEmployee />}></Route>
           <Route path="/employee-add" element={<AddNewEmployee />}></Route>
-          <Route path="/employee-edit" element={<EditEmployee />}></Route>
-          <Route path="/employee-detail" element={<DetailEmployee />}></Route>
+          <Route path="/emp/edit" element={<EditEmployee />}></Route>
+          <Route path="/employee/:id" element={<DetailEmployee />}></Route>
           <Route path="/history-admin" element={<HistoryEmployeeA />}></Route>
           <Route path="/history-employee" element={<HistoryEmployee />}></Route>
           <Route path="/booking-management" element={<BookingManagement />}></Route>

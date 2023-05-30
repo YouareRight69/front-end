@@ -88,10 +88,10 @@ const handleInputChange = (event) => {
       console.log(resp.data);
     });
     axios.get("http://localhost:8080/api/user/findAll").then((resp) => {
-      setPeople(resp.data.content);
-      console.log(resp.data.content);
+      setPeople(resp.data);
+      console.log(resp.data);
     });
-  }, []);
+  }, []); 
 
 
   return (

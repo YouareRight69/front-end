@@ -6,18 +6,20 @@ import DeleteButton from '../../Button/DeleteButton';
 import SearchForm from '../../Button/SearchForm';
 import DetailButton from '../../Button/DetailButton';
 import axios from 'axios';
+import { useLocation, useNavigate } from "react-router-dom";
 
 function DashboardEmployee(props) {
   const url = "http://localhost:8080/api/employee/listAllEmp";
   const [list, setList] = useState({ data: { content: [] } });
   const [condition, setCondition] = useState("");
   const [display, setDisplay] = useState(true);
+  const navigate = useNavigate();
 
-    function handleClick(page) {
-      axios.get(`${url}?p=${page}&c=${condition}`).then(res => {
-          setList(res);
-      })
-    }
+  function handleClick(page) {
+    axios.get(`${url}?p=${page}&c=${condition}`).then(res => {
+        setList(res);
+    });
+  }
 
     const onSubmit = (data) => {
       setCondition(data);
@@ -35,7 +37,26 @@ function DashboardEmployee(props) {
     }, [condition, display])
     
     console.log(list);
-
+  
+    const editEmp = (employeeId) => {
+      var requestOptions = { method: "GET", redirect: "follow" };
+      fetch(
+        `http://localhost:8080/api/employee/edit?employeeId=${employeeId}`,
+        requestOptions
+      )
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw Error(response.status);
+        })
+        .then((result) => {
+          navigate("/emp/edit", { state: { result } });
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    };
   return (
     <div>
       {/* <PreLoader /> */}
@@ -80,15 +101,21 @@ function DashboardEmployee(props) {
                     </div>
                   </aside>
                 </div>
-                <div class="mt-10 col-lg-4">
-               
-                    <Link to="/employee-add">
+                <div class="mt-10 col-lg-10" style={{ display: "flex"}}>
+                  <div class="mt-10 col-lg-4">
+                  <Link to="/employee-add">
                       <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
-                        Thêm mới
+                        Thêm mới nhân viên
                       </div>
                     </Link>
-                 
-                  
+                  </div>
+                  <div class="mt-10 col-lg-4">
+                    <Link to="/employee-add">
+                      <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
+                        Thêm mới lễ tân
+                      </div>
+                    </Link>
+                    </div>
                 </div>
                 <div className="section-top-border">
                   <h3 className="mb-30">Danh sách nhân viên</h3>
@@ -122,34 +149,21 @@ function DashboardEmployee(props) {
                                 <td>{item.user.gender}</td>
                                 <td>{item.branch.name}</td>
                                 <td style={{ display: "flex"}}>
+                              <DeleteButton url={url} id={item.employeeId} rerender={rerender} />
+
                               <button
                                 type="button"
-                                className="genric-btn danger radius"
-                                style={{ marginRight: "10px" }}
-                                data-bs-toggle="modal"
-                                data-bs-target="#deleteModal"
+                                className="genric-btn success radius"
+                                style={{ marginLeft: "10px" }}
+                                onClick={() => editEmp(item.employeeId)}
+                                // data-bs-toggle="modal"
+                                // data-bs-target="#deleteModal"
                               >
-                                <i className="far fa-trash-alt"></i>
+                                <i className="fas fa-pencil-alt"></i>
                               </button>
+                              {/* <EditButton url={url} id={ item.employeeId } /> */}
 
-                              {/* <Link
-                                to="/employee-edit"
-                                style={{ marginRight: "10px" }}
-                              >
-                                <div className="genric-btn success radius">
-                                  <i className="fas fa-pencil-alt"></i>
-                                </div>
-                              </Link> */}
-                              <EditButton url={'employee'} id={ item.employeeId } />
-
-                              <Link to="/employee-detail">
-                                <div className="genric-btn primary radius">
-                                  <i
-                                    className="fa fa-eye"
-                                    aria-hidden="true"
-                                  ></i>
-                                </div>
-                              </Link>
+                              <DetailButton url={'employee'} id={item.employeeId} />
                             </td>
                               </tr>
                           )}

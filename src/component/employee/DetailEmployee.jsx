@@ -1,7 +1,32 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams  } from "react-router-dom";
+import axios from "axios";
 
 function DetailEmployee(props) {
+  const url = "http://localhost:8080/api/employee/listAllEmp";
+  const { id } = useParams();
+  const [target, setTarget] = useState({});
+  const [dataView, setDataView] = useState([]); 
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (id) {
+      axios.get(`${url}/${id}`).then((resp) => {
+        setTarget(resp.data);
+      });
+    }
+  }, [id]);
+  console.log(target);
+  useEffect(() => {
+    if (target && target.media) {
+      const urlArray = target.media.map((item) => item.url);
+      setDataView(urlArray);
+    }
+  }, [target]);
+
+  console.log(target);
+
   return (
     <div>
       <main>
@@ -40,8 +65,9 @@ function DetailEmployee(props) {
                           <div className="gallery-img">
                             <img
                               className="thien_avatar"
-                              src="./assets/img/avatar/hinh-avatar-cute-nu.jpg"
+                              src={target.user.avatar}
                               alt="avatar"
+                              value={target.user?.avatar}
                             />
                           </div>
                           <div className="overlay"></div>
@@ -51,13 +77,20 @@ function DetailEmployee(props) {
                   </div>
                   <div className="col-lg-8 col-md-8">
                     <h3 className="mb-30">Xem thông tin nhân viên</h3>
-                    <form action="#">
+                    <div className="mt-10" style={{display: "flex"}}>
+                          <div className="col-lg-3 col-md-4">
+                              <p className="mt-2">EmployeeId</p>
+                          </div>
+                          <div class="col-lg-9 col-md-4">
+                            <p className="mt-2">{target.employeeId}</p>
+                          </div>
+                      </div>
                       <div className="mt-10" style={{display: "flex"}}>
                           <div className="col-lg-3 col-md-4">
                               <p className="mt-2">Họ Tên</p>
                           </div>
                           <div class="col-lg-9 col-md-4">
-                            <p className="mt-2">Vỏ Thị Hoạ My</p>
+                            <p className="mt-2">{target.user?.fullName}</p>
                           </div>
                       </div>
                       <div className="mt-10" style={{ display: "flex" }}>
@@ -65,7 +98,7 @@ function DetailEmployee(props) {
                               <p className="mt-2">Ngày sinh</p>
                           </div>
                           <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">15/02/2000</p>
+                            <p className="mt-2">{target.user?.dateOfBirth}</p>
                           </div>
                       </div>
                       <div className="mt-10" style={{ display: "flex" }}>
@@ -73,7 +106,7 @@ function DetailEmployee(props) {
                               <p className="mt-2">Số điện thoại</p>
                           </div>
                           <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">0823976563</p>
+                            <p className="mt-2">{target.user?.phoneNumber}</p>
                           </div>
                       </div>
                       <div className="mt-10" style= {{display: "flex" }}>
@@ -103,7 +136,7 @@ function DetailEmployee(props) {
                               <p className="mt-2">Email</p>
                           </div>
                           <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">vohoamy1502@gmail.com</p>
+                            <p className="mt-2">{target.user?.account.email}</p>
                           </div>
                       </div>
                       <div className="mt-10" style= {{ display: "flex" }}>
@@ -115,12 +148,16 @@ function DetailEmployee(props) {
                           </div>
                       </div>
                       <div className="mt-10" style= {{ display: "flex" }}>
-                          <div className="col-lg-3 col-md-4">
-                              <p className="mt-2">Ngày hết hạn HD</p>
-                          </div>
-                          <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">05/10/2024</p>
-                          </div>
+                          <select
+                              style={{ width: "100%", height: "90%" }}
+                              name="type"
+                              defaultValue=""
+                            >
+                              <option value="" disabled>
+                                Kiểu nhân viên
+                              </option>
+                              <option value={target.type}>Kiểu nhân viên</option>
+                            </select>
                       </div>
                       <div className="input-group-icon mt-10" style= {{ display: "flex" }}>
                           <div className="col-lg-3 col-md-4">
@@ -130,7 +167,7 @@ function DetailEmployee(props) {
                             <p className="mt-2">Nguyễn Văn Linh</p>
                           </div>
                       </div>
-                    </form>
+                   
                     <div className="mt-110" style={{ display: "flex" }}>
                       <div className="col-lg-3 ms-10">
                         <Link to="/employee">
