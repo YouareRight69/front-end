@@ -51,6 +51,23 @@ function Header() {
     localStorage.removeItem("accessToken");
     navigate("/login");
   };
+
+  const aboutPage = () => {
+    navigate("/about");
+  }
+  const servicePage = () => {
+    navigate("/service");
+  }
+  const homePage = () => {
+    navigate("/main");
+  }
+  const trendPage = () => {
+    navigate("/trend");
+  }
+  const chart = () => {
+    navigate("/chart");
+  }
+
   return (
     <>
       <header>
@@ -73,29 +90,24 @@ function Header() {
                     <div className="main-menu f-right d-none d-lg-block">
                       <nav style={{ marginRight: "15px" }}>
                         <ul id="navigation">
-                          <li className="active">
-                            <a href="index.html">Home</a>
+                          <li >
+                            {/* <li className="active"> */}
+                            <a onClick={homePage}>Trang Chủ</a>
                           </li>
                           <li>
-                            <a href="about.html">About</a>
+                            <a onClick={servicePage}>Dịch Vụ</a>
                           </li>
                           <li>
-                            <a href="services.html">Services</a>
+                            <a onClick={trendPage}>Xu Hướng</a>
                           </li>
                           <li>
-                            <a href="blog.html">Blog</a>
-                            <ul className="submenu">
-                              <li>
-                                <a href="blog.html">Blog</a>
-                              </li>
-                              <li>
-                                <a href="blog_details.html">Blog Details</a>
-                              </li>
-                              <li>
-                                <a href="elements.html">Element</a>
-                              </li>
-                            </ul>
+                            <a onClick={aboutPage}>Giới Thiệu</a>
                           </li>
+
+                          <li>
+                            <a onClick={chart}>Chart</a>
+                          </li>
+
                           {accessToken != null ? (
                             <li>
                               <a href="#">{jwt_decode(accessToken).sub}</a>
