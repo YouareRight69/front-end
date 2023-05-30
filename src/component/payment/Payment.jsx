@@ -1,5 +1,6 @@
 import { makeStyles } from "@mui/styles";
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const useStyles = makeStyles({
   imgServiceLeft: {
@@ -19,7 +20,29 @@ const useStyles = makeStyles({
   },
 });
 
-function Payment(props) {
+function Payment() {
+  const [list, setList] = useState({ data: { content: [] } });
+  const url = "http://localhost:8080/api/receptionist/invoice/bookingdetail";
+
+  useEffect(() => {
+    axios.get(`${url}`).then((res) => {
+      const responseData = res.data;
+      setList(responseData);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (list && list.length > 0) {
+      list.forEach((item) => {
+        const bookingId = item.booking.bookingId;
+        const bookingDate = item.booking.bookingDate;
+        console.log(bookingId);
+      });
+    }
+  }, [list]);
+
+  console.log(list);
+
   const classes = useStyles();
   return (
     <div>
@@ -48,13 +71,21 @@ function Payment(props) {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "flex-start",
+                  justifyContent: "space-between",
                   flexWrap: "nowrap",
                 }}
               >
-                <div className="col-auto">Đơn hàng: #23050001</div>
-                <div className="col-4">
-                  <div className="row thien_select_cho_thanh_toan">
+                <div className="col-auto" style={{ fontWeight: "500" }}>
+                  Đơn hàng: #23050001
+                </div>
+                <div className="col-auto">
+                  <a
+                    type="button"
+                    className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
+                  >
+                    Trở về
+                  </a>
+                  {/* <div className="row thien_select_cho_thanh_toan">
                     <div className="col-auto pr-0">Chờ thanh toán:</div>
                     <div className="col-8">
                       <select
@@ -67,7 +98,7 @@ function Payment(props) {
                         <option value="3">Three</option>
                       </select>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </aside>
             </div>
@@ -78,12 +109,12 @@ function Payment(props) {
                   <table className="table table-borderless mb-0">
                     <thead>
                       <tr>
-                        <th scope="col" colspan="8"></th>
+                        <th scope="col" colSpan="8"></th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <th rowspan="4">
+                        <th rowSpan="4">
                           <div className={classes.imgServiceLeft}></div>
                         </th>
                         <td>SonTTH1</td>
@@ -119,10 +150,10 @@ function Payment(props) {
                   <table className="table table-borderless mb-0">
                     <thead>
                       <tr>
-                        <th scope="col" colspan="4">
+                        <th scope="col" colSpan="4">
                           Sản Phẩm & Dịch Vụ
                         </th>
-                        <th scope="col" colspan="3">
+                        <th scope="col" colSpan="3">
                           Đơn giá
                         </th>
                       </tr>
@@ -132,7 +163,7 @@ function Payment(props) {
                         <th>
                           <div className={classes.imgServiceLeft}></div>
                         </th>
-                        <td colspan="3">Cắt, gội, sấy tóc (Combo)</td>
+                        <td colSpan="3">Cắt, gội, sấy tóc (Combo)</td>
                         <td>120.000đ</td>
                         <td>
                           <a
@@ -157,7 +188,7 @@ function Payment(props) {
                         <th>
                           <div className={classes.imgServiceLeft}></div>
                         </th>
-                        <td colspan="3">Lấy ráy tai</td>
+                        <td colSpan="3">Lấy ráy tai</td>
                         <td>20.000đ</td>
                         <td>
                           <a
@@ -182,7 +213,7 @@ function Payment(props) {
                         <th>
                           <div className={classes.imgServiceLeft}></div>
                         </th>
-                        <td colspan="3">Làm mặt</td>
+                        <td colSpan="3">Làm mặt</td>
                         <td>60.000đ</td>
                         <td>
                           <a
@@ -204,13 +235,13 @@ function Payment(props) {
                         </td>
                       </tr>
                       <tr>
-                        <th colspan="4">Thành Tiền</th>
+                        <th colSpan="4">Thành Tiền</th>
                         <td>200.000đ</td>
                         <td></td>
                         <td></td>
                       </tr>
                       <tr>
-                        <th colspan="4">Thanh Toán</th>
+                        <th colSpan="4">Thanh Toán</th>
                         <td></td>
                         <td>
                           <div
@@ -252,17 +283,17 @@ function Payment(props) {
                     <table className="table table-borderless">
                       <thead>
                         <tr>
-                          <th scope="col" rowspan="6"></th>
+                          <th scope="col" rowSpan="6"></th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <th rowspan="2">
+                          <th rowSpan="2">
                             <div className={classes.imgServiceRight}></div>
                           </th>
                           <td>Cắt, gội, sấy tóc (Combo)</td>
                           <td></td>
-                          <td rowspan="2">
+                          <td rowSpan="2">
                             <div className={classes.imgServiceRight}></div>
                           </td>
                           <td>Lấy ráy tai</td>
@@ -276,12 +307,12 @@ function Payment(props) {
                         </tr>
 
                         <tr>
-                          <th rowspan="2">
+                          <th rowSpan="2">
                             <div className={classes.imgServiceRight}></div>
                           </th>
                           <td>Rửa mặt</td>
                           <td></td>
-                          <td rowspan="2">
+                          <td rowSpan="2">
                             <div className={classes.imgServiceRight}></div>
                           </td>
                           <td>Gội đầu</td>
@@ -295,12 +326,12 @@ function Payment(props) {
                         </tr>
 
                         <tr>
-                          <th rowspan="2">
+                          <th rowSpan="2">
                             <div className={classes.imgServiceRight}></div>
                           </th>
                           <td>Đắp mặt nạ</td>
                           <td></td>
-                          <td rowspan="2">
+                          <td rowSpan="2">
                             <div className={classes.imgServiceRight}></div>
                           </td>
                           <td>Cạo râu</td>

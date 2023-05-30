@@ -4,11 +4,11 @@ import "./App.css";
 import Home from "./controller/Home";
 
 import Login from "./controller/login/Login.js";
-import Register from "./controller/register/Register";
-import ForgotPassword from "./controller/register/ForgotPassword";
+import ChangePassword from "./controller/register/ChangePassword";
 import ConfirmOtp from "./controller/register/ConfirmOtp";
 import ForgotChangePassword from "./controller/register/ForgotChangePassword";
-import ChangePassword from "./controller/register/ChangePassword";
+import ForgotPassword from "./controller/register/ForgotPassword";
+import Register from "./controller/register/Register";
 import UpdateInfo from "./controller/register/UpdateInfo";
 
 import { ToastContainer } from "react-toastify";
@@ -16,9 +16,10 @@ import "react-toastify/dist/ReactToastify.css";
 import UserList from "./component//User/UserList";
 import CreateService from "./component/HairService/CreateService";
 import DetailService from "./component/HairService/DetailService";
-import HairServiceList from "./component/HairService/HairServiceList";
 import EditService from "./component/HairService/EditService";
+import HairServiceList from "./component/HairService/HairServiceList";
 import UserCreate from "./component/User/UserCreate";
+import BookingManagement from "./component/booking/BookingManagement";
 import Booking from "./component/booking/booking";
 import Selectservice from "./component/booking/selectservice";
 import AddNewBranch from "./component/branch/AddNewBranch";
@@ -34,7 +35,6 @@ import HistoryEmployee from "./component/employee/history/historyEmployee";
 import Invoice from "./component/invoice/Invoice";
 import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
-
 import BookingManagement from "./component/booking/BookingManagement";
 
 function App() {
@@ -63,7 +63,9 @@ function App() {
           <Route path="/invoice-history" element={<InvoiceHistory />}></Route>
           <Route path="/invoice" element={<Invoice />}></Route>
           <Route path="/payment" element={<Payment />}></Route>
-          <Route path="/booking" element={<Booking />}></Route>
+          <Route path="/booking" element={<Booking />}>
+            <Route path="/booking/:id" element={<Booking />} />
+          </Route>
           <Route path="/select-service" element={<Selectservice />}></Route>
           <Route path="/listUser" element={<UserList />} />
           <Route path="/createUser" element={<UserCreate />} />
@@ -89,6 +91,7 @@ function App() {
           <Route path="/employee-detail" element={<DetailEmployee />}></Route>
           <Route path="/history-admin" element={<HistoryEmployeeA />}></Route>
           <Route path="/history-employee" element={<HistoryEmployee />}></Route>
+
           <Route
             path="/booking-management"
             element={<BookingManagement />}

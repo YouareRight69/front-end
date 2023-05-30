@@ -1,10 +1,17 @@
 import { React, useEffect, useState } from "react";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import jwt_decode from "jwt-decode";
 
 export default function Booking() {
   //useState
@@ -25,20 +32,39 @@ export default function Booking() {
   const location = useLocation();
   const navigate = useNavigate();
   const [status, setStatus] = useState();
+  const { id } = useParams();
+  const [title, setTitle] = useState("ĐẶT LỊCH HẸN");
+  const [oldInfo, setOldInfo] = useState();
+  const accessToken = localStorage.getItem("accessToken");
+
+  console.log(id);
+  console.log(accessToken);
   //useEffect
   useEffect(() => {
     if (location.state != null && location.state.formData != null) {
+      // if (location.state.formData.serviceList.length == 0) {
       setFormData({ ...location.state.formData, serviceList: serviceList });
+      // } else {
+      //   setFormData({ ...location.state.formData });
+      // }
+
       setSelectStyle(location.state.formData.styleId);
       setSelectDay(location.state.formData.bookingDate);
       setSelectTime(location.state.formData.workTimeId);
+      if (id) {
+        setOldInfo({
+          bookingDate: location.state.formData.bookingDate,
+          styleId: location.state.formData.styleId,
+          workTimeId: location.state.formData.workTimeId,
+        });
+      }
     }
     setSelectBranch(formData.branch);
   }, [status]);
   console.log(selectTime);
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/emp/booking/list-branch")
+      .get("http://localhost:8080/api/emp/booking/info/list-branch")
       .then((res) => {
         setData(res.data);
       })
@@ -50,7 +76,7 @@ export default function Booking() {
       console.log(formData.branch);
       axios
         .get(
-          "http://localhost:8080/api/emp/booking/list-employee-of-branch?branchId=" +
+          "http://localhost:8080/api/emp/booking/info/list-employee-of-branch?branchId=" +
             formData.branch
         )
         .then((res) => {
@@ -63,7 +89,7 @@ export default function Booking() {
           console.error("Lỗi khi gửi yêu cầu:", error);
         });
       axios
-        .get("http://localhost:8080/api/emp/booking/working-time")
+        .get("http://localhost:8080/api/emp/booking/info/working-time")
         .then((res) => {
           setWorkingTimeData(res.data);
         })
@@ -79,7 +105,7 @@ export default function Booking() {
     if (selectStyle != null && selectDay != null) {
       axios
         .get(
-          "http://localhost:8080/api/emp/booking/busy-list?employeeId=" +
+          "http://localhost:8080/api/emp/booking/info/busy-list?employeeId=" +
             selectStyle +
             "&day=" +
             selectDay
@@ -92,10 +118,12 @@ export default function Booking() {
           console.error("Lỗi khi gửi yêu cầu:", error);
         });
     }
-    setSelectTime();
   }, [selectDay, selectStyle]);
 
   useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+    }
     if (location.state != null && location.state.selectService != null) {
       setSelectservice(location.state.selectService);
       location.state.selectService.forEach((element) => {
@@ -105,6 +133,11 @@ export default function Booking() {
     }
     setMinDate(getCurrentDate());
     setStatus("OK");
+    if (id == undefined) {
+      setTitle("ĐẶT LỊCH HẸN");
+    } else {
+      setTitle("CHỈNH SỬA LỊCH HẸN");
+    }
   }, []);
 
   //console log
@@ -179,7 +212,7 @@ export default function Booking() {
     setSelectBranch(e.value);
 
     setFormData({
-      userId: "USR102",
+      userId: jwt_decode(accessToken).aud,
       isDelete: 0,
       serviceList: serviceList,
       branch: e.value,
@@ -196,9 +229,17 @@ export default function Booking() {
   };
 
   const handleSelectServiceButton = () => {
-    navigate("/select-service", {
-      state: { selectService: selectservice, formData: formData },
-    });
+    if(id){
+      navigate("/select-service", {
+        state: { selectService: selectservice, formData: formData, id: id },
+      });
+    }else {
+      navigate("/select-service", {
+        state: { selectService: selectservice, formData: formData },
+      });
+    }
+
+    
   };
 
   const handleInputNote = (e) => {
@@ -219,34 +260,71 @@ export default function Booking() {
       formData.styleId != "" &&
       formData.skinnerId != ""
     ) {
-      axios
-        .post("http://localhost:8080/api/emp/booking/create", formData, {
-          header: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Methods":
-              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-          },
-        })
-        .then((data) => {
-          console.log(data.data);
-          toast.success("Đặt lịch hẹn thành công!", {
-            position: "top-center",
-            autoClose: 1200,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+      if (id) {
+        axios
+          .post(
+            "http://localhost:8080/api/emp/booking/update/" + id,
+            formData,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Methods":
+                  "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+                "Authorization": "Bearer " + accessToken,
+              },
+            }
+          )
+          .then((data) => {
+            console.log(data.data);
+            toast.success("Đặt lịch hẹn thành công!", {
+              position: "top-center",
+              autoClose: 1200,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
 
-          navigate("/", {
-            state: null,
+            navigate("/", {
+              state: null,
+            });
+          })
+          .catch((error) => {
+            console.error("NOOOO");
           });
-        })
-        .catch((error) => {
-          console.error("NOOOO");
-        });
+      } else {
+        axios
+          .post("http://localhost:8080/api/emp/booking/create", formData, {
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Methods":
+                "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+               "Authorization": "Bearer " + accessToken,
+            },
+          })
+          .then((data) => {
+            console.log(data.data);
+            toast.success("Đặt lịch hẹn thành công!", {
+              position: "top-center",
+              autoClose: 1200,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+
+            navigate("/", {
+              state: null,
+            });
+          })
+          .catch((error) => {
+            console.error("NOOOO");
+          });
+      }
     }
   };
 
@@ -258,7 +336,7 @@ export default function Booking() {
             <div className="row">
               <div className="col-xl-12">
                 <div className="hero-cap hero-cap2 pt-70 text-center">
-                  <h2>ĐẶT LỊCH HẸN</h2>
+                  <h2>{title}</h2>
                 </div>
               </div>
             </div>
@@ -378,11 +456,19 @@ export default function Booking() {
                         <h2>Chọn giờ</h2>
                         <div className="d-flex justify-content-center row m-0">
                           {workingTimeData?.map((time, index) => {
-                            const isBusy = busyTime.includes(
-                              time.timeZone.substring(0, 5)
-                            );
-                            const isSelected = selectTime === time.workingTimeId;
-                           
+                            const isBusy =
+                              formData.styleId == oldInfo?.styleId &&
+                              formData.bookingDate == oldInfo?.bookingDate
+                                ? time.workingTimeId != oldInfo?.workTimeId &&
+                                  busyTime.includes(
+                                    time.timeZone.substring(0, 5)
+                                  )
+                                : busyTime.includes(
+                                    time.timeZone.substring(0, 5)
+                                  );
+                            const isSelected =
+                              formData.workTimeId === time.workingTimeId;
+
                             const buttonStyle = {
                               border: "1px solid",
                               borderRadius: "5px",
@@ -426,14 +512,25 @@ export default function Booking() {
                         >
                           <option value=""> Vui lòng chọn skinner</option>
                           {selectBranch != "" &&
-                            dataSkinner?.map((skinner, index) => (
-                              <option
-                                key={index}
-                                value={skinner.employee.employeeId}
-                              >
-                                {skinner.fullName}
-                              </option>
-                            ))}
+                            dataSkinner?.map((skinner, index) =>
+                              skinner.employee.employeeId ==
+                              formData.skinnerId ? (
+                                <option
+                                  selected={true}
+                                  key={index}
+                                  value={skinner.employee.employeeId}
+                                >
+                                  {skinner.fullName}
+                                </option>
+                              ) : (
+                                <option
+                                  key={index}
+                                  value={skinner.employee.employeeId}
+                                >
+                                  {skinner.fullName}
+                                </option>
+                              )
+                            )}
                         </select>
                       </div>
                     </div>
@@ -444,6 +541,7 @@ export default function Booking() {
                       onChange={(event) => handleInputNote(event.target.value)}
                       className="single-textarea"
                       placeholder="Ghi chú"
+                      defaultValue={formData.note}
                     ></textarea>
                   </div>
                   <div className="input-group-icon mt-10">

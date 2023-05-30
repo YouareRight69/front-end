@@ -14,12 +14,14 @@ export default function Selectservice() {
   const [serviceData, setServiceData] = useState();
   const [oldSelect, setOldSelect] = useState([]);
   const [idArr, setIdArr] = useState([]);
+  const [id, setId]= useState();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     const data = location.state.selectService;
     setOldSelect(location.state.selectService);
+    setId(location.state.id)
     if (location.state.selectService) {
       setSelectedArr([...data]);
       data.forEach((e) => {
@@ -49,9 +51,16 @@ export default function Selectservice() {
   };
 
   const handleFinish = () => {
-    navigate("/booking", {
-      state: {selectService:selectedArr, formData: location.state.formData}
-    });
+    if(id) {
+      navigate("/booking/"+id, {
+        state: {selectService:selectedArr, formData: location.state.formData}
+      });
+    }else {
+      navigate("/booking", {
+        state: {selectService:selectedArr, formData: location.state.formData}
+      });
+    }
+   
   };
 
   const handleBack = () => {
@@ -125,7 +134,7 @@ export default function Selectservice() {
                                   className="flaticon-healthcare-and-medical"
                                   src={item.media[0]?.url}
                                   alt="lỗi"
-                                  style={{ width: "280px" }}
+                                  style={{ width: "280px",maxWidth:"300px", minHeight: "170px", maxHeight: "200px"}}
                                 ></img>
                               </div>
                               <div className="service-cap">
@@ -165,7 +174,7 @@ export default function Selectservice() {
                   <div className="row">
                     {serviceData &&
                       serviceData
-                        ?.filter((ser) => ser.type == 2)
+                        ?.filter((item) => item.serviceId !== "SER011").filter((ser) => ser.type == 2)
                         .map((item, index) => (
                           <div
                             className="col-xl-4 col-lg-4 col-md-6 card-container"
