@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { Outlet, Link } from "react-router-dom";
+import Page from '../../utils/Page';
+import SearchForm from '../../Button/SearchForm';
 
 function UserList() {
 
@@ -9,11 +11,20 @@ function UserList() {
     const [list, setList] = useState({ data: { content: [] } });
     const [condition, setCondition] = useState("");
     const [display, setDisplay] = useState(true);
+    const accessToken = localStorage.getItem("accessToken");
 
     function handleClick(page) {
-        axios.get(`${url}?p=${page}&c=${condition}`).then(res => {
+        axios.get(`${url}?p=${page}&c=${condition}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Methods":
+                    "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+                "Authorization": "Bearer " + accessToken,
+            },
+        }).then((res) => {
+            console.log(res);
             setList(res);
-        })
+        });
     }
 
     const onSubmit = (data) => {
@@ -23,12 +34,16 @@ function UserList() {
     const rerender = () => {
         setDisplay(!display);
     }
-
     useEffect(() => {
-        axios.get(`${url}?c=${condition}`).then(res => {
+        axios.get(`${url}?c=${condition}`, {
+            headers: {
+                "Authorization": "Bearer " + accessToken,
+            },
+        }).then((res) => {
             setList(res);
-        })
-    }, [condition, display])
+            console.log(res);
+        });
+    }, [condition, display]);
 
     return (
         <div>
@@ -39,21 +54,17 @@ function UserList() {
             <div className="whole-wrap">
                 <div className="container box_1170">
                     <div className="blog_right_sidebar">
-                        <aside className="single_sidebar_widget search_widget col-lg-12" style={{ 'display': 'flex' }}>
-                            <div className="col-lg-1">
-
-                            </div>
-                            <form action="#" className="col-lg-6">
-                                <div className="form-group">
-                                    <div className="input-group mb-3">
-                                        <input type="text" className="form-control" placeholder='Nhập từ khoá cần tìm'/>
-                                        <div className="input-group-append">
-                                            <button className="btns" type="button"><i className="ti-search"></i></button>
+                    <aside className="single_sidebar_widget search_widget col-lg-12" style={{ 'display': 'flex' }}>
+                                    <div className="col-lg-1">
+                                    </div>
+                                    <div className="form-group">
+                                        <div className="input-group mb-3">
+                                            <SearchForm
+                                                onSubmit={onSubmit}
+                                            />
                                         </div>
                                     </div>
-                                </div>
-                            </form>
-                        </aside>
+                                </aside>
                     </div>
                     <div className="mt-10" style={{ 'display': 'flex' }}>
                         <div className="col-lg-3 ms-10">
@@ -114,6 +125,12 @@ function UserList() {
             <div>
                 <Outlet />
             </div>
+            <Page
+                totalPages={list.data.totalPages}
+                number={list.data.number}
+                condition={condition}
+                handleClick={handleClick}
+            />
         </div>
     )
 }

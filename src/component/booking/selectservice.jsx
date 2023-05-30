@@ -134,7 +134,7 @@ export default function Selectservice() {
                                   className="flaticon-healthcare-and-medical"
                                   src={item.media[0]?.url}
                                   alt="lỗi"
-                                  style={{ width: "280px" }}
+                                  style={{ width: "280px",maxWidth:"300px", minHeight: "170px", maxHeight: "200px"}}
                                 ></img>
                               </div>
                               <div className="service-cap">

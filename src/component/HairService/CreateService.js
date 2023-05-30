@@ -6,6 +6,9 @@ import ImageGallery from '../common/ImageGallery';
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../firebase/index.js";
+import jwt_decode from "jwt-decode";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function CreateService() {
     const service = "http://localhost:8080/api/hairService"
@@ -20,8 +23,8 @@ function CreateService() {
     const [uploading, setUploading] = useState(false);
     const [valid, setValid] = useState({ name: '', price: '', description: '', type: '' });
     const [imagesArray, setImagesArray] = useState([]);
-
     const navigate = useNavigate();
+    const accessToken = localStorage.getItem("accessToken");
 
     const onSubmit = () => {
         console.log(target)
@@ -29,10 +32,12 @@ function CreateService() {
         axios.post(service, target, {
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Methods': 'POST'
+                'Access-Control-Allow-Methods': 'POST',
+                "Authorization": "Bearer " + accessToken,
             }
         }).then(resp => {
             navigate("/listService");
+            toast.success("Thêm mới thành công"); 
         }).catch(error => {
             if (error.response) {
                 // Xử lý lỗi phản hồi từ API
@@ -202,7 +207,7 @@ function CreateService() {
                                                     value={target.type}
                                                     name="type"
                                                     onChange={handleChange}>
-                                                    <option value="">Chọn loại dịch vụ</option>
+                                                    <option value="" disabled>Chọn loại dịch vụ</option>
                                                     <option value="1">Chăm sóc tóc</option>
                                                     <option value="2">Chăm sóc da</option>
                                                 </select>

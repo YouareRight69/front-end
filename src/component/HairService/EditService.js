@@ -6,6 +6,9 @@ import ImageGallery from '../common/ImageGallery';
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../firebase/index.js";
+import jwt_decode from "jwt-decode";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function EditService() {
   const service = "http://localhost:8080/api/hairService"
@@ -17,11 +20,16 @@ function EditService() {
   const [imagesArray, setImagesArray] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [valid, setValid] = useState({});
+  const accessToken = localStorage.getItem("accessToken");
 
   //Get data vào target
   useEffect(() => {
     if (id) {
-      axios.get(`${service}/${id}`).then((resp) => {
+      axios.get(`${service}/${id}`, {
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+        },
+      }).then((resp) => {
         setTarget(resp.data);
         setDataUpdate(resp.data);
       });
@@ -73,10 +81,12 @@ function EditService() {
             "Content-Type": "application/json",
             "Access-Control-Allow-Methods": "PATCH",
             "Access-Control-Allow-Credentials": "true",
+            "Authorization": "Bearer " + accessToken,
           },
         })
         .then((resp) => {
           navigate("/listService");
+          toast.success("Cập nhật thành công"); 
         })
         .catch((error) => {
           if (error.response) {

@@ -7,6 +7,8 @@ import EditButton from '../../Button/EditButton';
 import DeleteButton from '../../Button/DeleteButton';
 import SearchForm from '../../Button/SearchForm';
 import DetailButton from '../../Button/DetailButton';
+import jwt_decode from "jwt-decode";
+import accounting from "accounting";
 
 function UserList() {
 
@@ -14,11 +16,20 @@ function UserList() {
     const [list, setList] = useState({ data: { content: [] } });
     const [condition, setCondition] = useState("");
     const [display, setDisplay] = useState(true);
+    const accessToken = localStorage.getItem("accessToken");
 
     function handleClick(page) {
-        axios.get(`${url}?p=${page}&c=${condition}`).then(res => {
+        axios.get(`${url}?p=${page}&c=${condition}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Methods":
+                    "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+                "Authorization": "Bearer " + accessToken,
+            },
+        }).then((res) => {
+            console.log(res);
             setList(res);
-        })
+        });
     }
 
     const onSubmit = (data) => {
@@ -31,10 +42,16 @@ function UserList() {
     }
 
     useEffect(() => {
-        axios.get(`${url}?c=${condition}`).then(res => {
+        axios.get(`${url}?c=${condition}`, {
+            headers: {
+                "Authorization": "Bearer " + accessToken,
+            },
+        }).then((res) => {
             setList(res);
-        })
-    }, [condition, display])
+            console.log(res);
+        });
+    }, [condition, display]);
+
 
     return (
         <div>
@@ -70,7 +87,6 @@ function UserList() {
                                             />
                                         </div>
                                     </div>
-
                                 </aside>
                             </div>
                             <div className="mt-10" style={{ 'display': 'flex' }}>
@@ -100,7 +116,11 @@ function UserList() {
                                                         <tr style={{ 'marginTop': '5px' }} key={item.serviceId}>
                                                             <td>{item.serviceId}</td>
                                                             <td>{item.name}</td>
-                                                            <td>{item.price}</td>
+                                                            <td className="mt-2">{accounting.formatMoney(item.price, {
+                                                                symbol: "",
+                                                                format: "%v vnđ",
+                                                                precision: 0,
+                                                            })}</td>
                                                             <td><div className='long-text-huyen'>{item.description}</div></td>
                                                             <td className='item'>
                                                                 <DeleteButton url={url} id={item.serviceId} rerender={rerender} />

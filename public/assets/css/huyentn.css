@@ -13,13 +13,8 @@ td.item {
     display: flex;
 }
 
-.ti-angle-left:before.huyen {
-    content: "\e64a";
-    color: black;
-    font-size: 0.75em;
-}
 
-.ti-angle-right:before.huyen {
+i#huyentn {
     content: "\e649";
     color: black;
     font-size: 0.75em;
@@ -29,6 +24,14 @@ td.item {
     cursor: pointer;
     color: #d19f68;
     font-size: 1.25em;
+}
+
+button.page-link-huyentn {
+    cursor: pointer;
+    color: #d19f68;
+    font-size: 1.25em;
+    border: 10px;
+    padding: 5px;
 }
 
 .mt-10-huyentn {
