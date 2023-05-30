@@ -6201,3 +6201,18 @@ output .span--hidden {
 .selected_thienbd {
   border: 2px solid #292929636;
 }
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #ddd;
+}
+
+.progress-bar::after {
+  content: "";
+  display: block;
+  width: 50%;
+  height: 100%;
+  background-color: #337ab7;
+  transition: width 0.3s ease-in-out;
+}

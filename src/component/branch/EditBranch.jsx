@@ -1,69 +1,140 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
+import { storage } from "../firebase/index.js";
 import ImageGallery from "../common/ImageGallery";
 
-function EditBranch(props) {
-  const url = "http://localhost:8080/api/admin/branch";
+const url = "http://localhost:8080/api/admin/branch";
+
+function EditBranch() {
+  // const url = "http://localhost:8080/api/admin/branch";
   const { id } = useParams();
   const [target, setTarget] = useState({});
+  const [dataUpdate, setDataUpdate] = useState({});
   const [dataView, setDataView] = useState([]);
+  const [statusFromGallery, setStatusFromGallery] = useState();
   const [imagesArray, setImagesArray] = useState([]);
+  const [uploading, setUploading] = useState(false);
+
+  //Get data vào target
+  useEffect(() => {
+    if (id) {
+      axios.get(`${url}/${id}`).then((resp) => {
+        setTarget(resp.data);
+        setDataUpdate(resp.data);
+      });
+    }
+  }, [id]);
+
+  // Get data cho dataview, hiển thị hình ảnh trong gallery
+  useEffect(() => {
+    if (target && target.media) {
+      const urlArray = target.media.map((item) => item.url);
+      setDataView(urlArray);
+      DeleteMedia();
+    }
+  }, [target]);
+
+  // Lấy đữ liệu được thay đổi trong gallery ( Bao gồm dữ liệu hiện tại, hoặc dữ liệu mới)
+  useEffect(() => {
+    if (imagesArray !== dataView) {
+      const updatedTarget = { ...dataUpdate, media: imagesArray.map((url) => url) };
+      setDataUpdate(updatedTarget);
+    }
+  }, [imagesArray]);
+
+  //Xoá dữ liệu trong media của target
+  const DeleteMedia = () => {
+    setDataUpdate((prevData) => ({
+      ...prevData,
+      media: [],
+    }));
+  };
 
   const handleDataFromImageGallery = (data) => {
     setImagesArray(data);
   };
 
+  const handleStatusFromGallery = (data) => {
+    setStatusFromGallery(data);
+  };
+
   const navigate = useNavigate();
 
-  const onSubmit = (e) => {
-    console.log(target);
-    e.preventDefault();
+  const onSubmit = (data) => {
+    setUploading(false);
     if (id) {
+      const requestData = data ? data : dataUpdate;
       axios
-        .get(`${url}/${id}`, target, {
+        .patch(`${url}/${id}`, requestData, {
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Methods": "PATCH",
             "Access-Control-Allow-Credentials": "true",
           },
         })
         .then((resp) => {
           navigate("/branch");
+        })
+        .catch((error) => {
+          console.log(error);
         });
     }
   };
 
-  useEffect(() => {
-    if (id) {
-      axios.get(`${url}/${id}`).then((resp) => {
-        setTarget(resp.data);
-      });
-    }
-  }, [id]);
-
-  useEffect(() => {
-    if (target && target.media) {
-      const urlArray = target.media.map((item) => item.url);
-      setDataView(urlArray);
-    }
-  }, [target]);
+  const UpdateMedia = () => {
+    const updatedTarget = { ...dataUpdate };
+    updatedTarget.media = dataView.map((url) => url);
+    setDataUpdate(updatedTarget);
+  };
 
   const handleChange = (element) => {
-    setTarget({ ...target, [element.target.name]: element.target.value });
+    const { name, value } = element.target;
+    setDataUpdate((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   // Refresh
   const handleReset = () => {
-    setTarget({});
+    setDataUpdate({});
   };
 
-  console.log("dataView");
-  console.log(dataView);
+  const handleUploadMultiImage = async () => {
+    try {
+      setUploading(true);
+      const updatedData = { ...dataUpdate };
+      updatedData.media = [];
+
+      await Promise.all(
+        imagesArray.map(async (image) => {
+          const imageref = ref(storage, `images/${v4() + image.name}`);
+          const snapshot = await uploadBytes(imageref, image);
+          const url = await getDownloadURL(snapshot.ref);
+          updatedData.media.push(url);
+        })
+      );
+
+      onSubmit(updatedData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateBranch = () => {
+    if (statusFromGallery === true) {
+      handleUploadMultiImage();
+    } else {
+      UpdateMedia();
+      onSubmit();
+    }
+  };
 
   return (
     <div>
-      <form id="form" onSubmit={onSubmit}></form>
       <main>
         {/* Hero Start */}
         <div className="slider-area2">
@@ -99,6 +170,7 @@ function EditBranch(props) {
                         <ImageGallery
                           data={dataView}
                           sendDataToParent={handleDataFromImageGallery}
+                          sendStatus={handleStatusFromGallery}
                         />
                       </div>
                     </div>
@@ -123,7 +195,8 @@ function EditBranch(props) {
                             }}
                             required
                             className="single-input"
-                            value={target.name}
+                            value={dataUpdate.name}
+                            // defaultValue={dataUpdate.name}
                             onChange={handleChange}
                           />
                         </div>
@@ -135,7 +208,7 @@ function EditBranch(props) {
                         <div className="col-lg-9 col-md-4">
                           <input
                             type="text"
-                            name="phone"
+                            name="address"
                             placeholder="Hải Châu"
                             onFocus={(e) => {
                               e.target.placeholder = "";
@@ -145,7 +218,8 @@ function EditBranch(props) {
                             }}
                             required
                             className="single-input"
-                            value={target.address}
+                            value={dataUpdate.address}
+                            // defaultValue={dataUpdate.address}
                             onChange={handleChange}
                           />
                         </div>
@@ -160,24 +234,26 @@ function EditBranch(props) {
                         </Link>
                       </div>
                       <div className="col-lg-4 ms-10">
-                        <button
+                        {/* <button
                           className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
                           type="reset"
                           onClick={handleReset}
                         >
                           Làm mới
-                        </button>
+                        </button> */}
                       </div>
                       <div className="col-lg-4">
                         <button
                           className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
                           type="submit"
+                          onClick={updateBranch}
                         >
                           Cập nhật
                         </button>
                       </div>
                     </div>
                   </div>
+                  {uploading && <div className="progress-bar"></div>}
                 </div>
               </div>
             </section>
