@@ -1,17 +1,11 @@
+import axios from "axios";
+import jwt_decode from "jwt-decode";
 import { React, useEffect, useState } from "react";
-import {
-  Link,
-  Navigate,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import jwt_decode from "jwt-decode";
 
 export default function Booking() {
   //useState
@@ -139,6 +133,7 @@ export default function Booking() {
       setTitle("CHỈNH SỬA LỊCH HẸN");
     }
   }, []);
+  console.log("ServiceList", serviceList);
 
   //console log
   console.log("formdata", formData);
@@ -229,17 +224,15 @@ export default function Booking() {
   };
 
   const handleSelectServiceButton = () => {
-    if(id){
+    if (id) {
       navigate("/select-service", {
         state: { selectService: selectservice, formData: formData, id: id },
       });
-    }else {
+    } else {
       navigate("/select-service", {
         state: { selectService: selectservice, formData: formData },
       });
     }
-
-    
   };
 
   const handleInputNote = (e) => {
@@ -270,7 +263,7 @@ export default function Booking() {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Methods":
                   "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-                "Authorization": "Bearer " + accessToken,
+                Authorization: "Bearer " + accessToken,
               },
             }
           )
@@ -301,7 +294,7 @@ export default function Booking() {
               "Content-Type": "application/json",
               "Access-Control-Allow-Methods":
                 "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-               "Authorization": "Bearer " + accessToken,
+              Authorization: "Bearer " + accessToken,
             },
           })
           .then((data) => {

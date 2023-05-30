@@ -1,6 +1,9 @@
 import { makeStyles } from "@mui/styles";
+import accounting from "accounting";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams  } from "react-router-dom";
 
 const useStyles = makeStyles({
   imgServiceLeft: {
@@ -22,26 +25,134 @@ const useStyles = makeStyles({
 
 function Payment() {
   const [list, setList] = useState({ data: { content: [] } });
-  const url = "http://localhost:8080/api/receptionist/invoice/bookingdetail";
+  const booking = "http://localhost:8080/api/receptionist/invoice/booking";
+  const test = "http://localhost:8080/api/booking-management/details";
+  const user = "http://localhost:8080/api/user/detail";
+  const service = "http://localhost:8080/api/hairService/list";
+  const accessToken = localStorage.getItem("accessToken");
+  const [detailInfo, setDetailInfo] = useState([]);
+  const [dataUser, setDataUser] = useState([]);
+  const [idUser, setIdUser] = useState(jwt_decode(accessToken).aud);
+  const [listService, setListService] = useState([]);
+  const [dataService, setDataService] = useState([]);
+  const [dataBooking, setDataBooking] = useState();
+  const navigate = useNavigate();
+  const params = useParams();
+  const { id } = params;
+
+  const [formData, setFormData] = useState({ isDelete: 0 });
+
+  const [dataBookingById, setDataBookingById] = useState();
+  const [selectedServices, setSelectedServices] = useState([]);
 
   useEffect(() => {
-    axios.get(`${url}`).then((res) => {
-      const responseData = res.data;
-      setList(responseData);
-    });
+    axios
+      .get(`${test}?id=${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods":
+            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          Authorization: "Bearer " + accessToken,
+        },
+      })
+      .then((resp) => {
+        setDetailInfo(resp.data);
+        setListService(resp.data.service);
+        setSelectedServices(resp.data.service);
+      });
   }, []);
 
   useEffect(() => {
-    if (list && list.length > 0) {
-      list.forEach((item) => {
-        const bookingId = item.booking.bookingId;
-        const bookingDate = item.booking.bookingDate;
-        console.log(bookingId);
-      });
+    if (detailInfo.id !== undefined) {
+      axios
+        .get(`${booking}/${detailInfo.id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+            Authorization: "Bearer " + accessToken,
+          },
+        })
+        .then((resp) => {
+          setDataBookingById(resp.data);
+        });
     }
-  }, [list]);
+  }, [detailInfo]);
 
-  console.log(list);
+  console.log("dataBookingById", dataBookingById);
+
+  useEffect(() => {
+    axios
+      .get(`${user}?id=${idUser}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods":
+            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+        },
+      })
+      .then((resp) => {
+        setDataUser(resp.data);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${service}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods":
+            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+        },
+      })
+      .then((resp) => {
+        setDataService(resp.data);
+      });
+  }, []);
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const getCurrentTime = () => {
+    const currentTime = new Date();
+    const hours = currentTime.getHours();
+    const minutes = currentTime.getMinutes();
+    const seconds = "00";
+    return `${hours}:${minutes}:${seconds}`;
+  };
+
+  const handleServiceClick = (item) => {
+    setSelectedServices((prevSelectedServices) => [
+      ...prevSelectedServices,
+      item,
+    ]);
+  };
+
+  const handleEditBooking = () => {
+    axios
+      .get(
+        "http://localhost:8080/api/emp/booking/get-booking?bookingId=" + id,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+            Authorization: "Bearer " + accessToken,
+          },
+        }
+      )
+      .then((res) => {
+        navigate("/booking/" + id, {
+          state: { selectService: res.data.serviceList, formData: res.data },
+        });
+      });
+  };
+
+  // console.log(selectedServices);
 
   const classes = useStyles();
   return (
@@ -75,8 +186,11 @@ function Payment() {
                   flexWrap: "nowrap",
                 }}
               >
-                <div className="col-auto" style={{ fontWeight: "500" }}>
-                  Đơn hàng: #23050001
+                <div
+                  className="col-auto"
+                  style={{ fontWeight: "500", fontSize: "25px" }}
+                >
+                  Đơn hàng: # {detailInfo?.id}
                 </div>
                 <div className="col-auto">
                   <a
@@ -85,28 +199,14 @@ function Payment() {
                   >
                     Trở về
                   </a>
-                  {/* <div className="row thien_select_cho_thanh_toan">
-                    <div className="col-auto pr-0">Chờ thanh toán:</div>
-                    <div className="col-8">
-                      <select
-                        className="form-select"
-                        aria-label="Default select example"
-                      >
-                        <option selected>SonTTH1 - #23050001</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                      </select>
-                    </div>
-                  </div> */}
                 </div>
               </aside>
             </div>
 
             <div className="section-top-border">
               <div className="row autoWrap">
-                <div className="col-6" id="divLeft" style={{ order: "1" }}>
-                  <table className="table table-borderless mb-0">
+                <div className="col-12" style={{ order: "1" }}>
+                  <table className="table table-bordered mb-0">
                     <thead>
                       <tr>
                         <th scope="col" colSpan="8"></th>
@@ -114,10 +214,7 @@ function Payment() {
                     </thead>
                     <tbody>
                       <tr>
-                        <th rowSpan="4">
-                          <div className={classes.imgServiceLeft}></div>
-                        </th>
-                        <td>SonTTH1</td>
+                        <td>{detailInfo.name}</td>
                         <td>
                           <div>
                             <i className="fas fa-edit"></i>
@@ -127,27 +224,29 @@ function Payment() {
                         <td>Web</td>
                       </tr>
                       <tr>
-                        <td>0236115115</td>
+                        <td>{dataUser.phoneNumber}</td>
                         <td></td>
                         <td>Ngày hóa đơn:</td>
-                        <td>15/05/2023</td>
+                        <td>{getCurrentDate()}</td>
                       </tr>
                       <tr>
-                        <td>id: 001</td>
+                        <td>id: {dataUser.userId}</td>
                         <td></td>
                         <td>Giờ vào / ra:</td>
-                        <td>15:00 - 15:30</td>
+                        <td>
+                          {detailInfo.time} - {getCurrentTime()}
+                        </td>
                       </tr>
                       <tr>
                         <td></td>
                         <td></td>
                         <td>Nhân viên thu ngân:</td>
-                        <td>Trần Thị Mỹ Duyên</td>
+                        <td>{dataUser.fullName}</td>
                       </tr>
                     </tbody>
                   </table>
-                  <hr className="mt-1 mb-1" />
-                  <table className="table table-borderless mb-0">
+                  <hr className="mt-2 mb-2" />
+                  <table className="table table-bordered mb-0">
                     <thead>
                       <tr>
                         <th scope="col" colSpan="4">
@@ -159,91 +258,66 @@ function Payment() {
                       </tr>
                     </thead>
                     <tbody>
+                      {listService?.map((item, index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td colSpan="2">{item.serviceName}</td>
+                          <td colSpan="2">
+                            {accounting.formatMoney(item.price, {
+                              symbol: "",
+                              format: "%v vnđ",
+                              precision: 0,
+                            })}
+                          </td>
+                          <td>
+                            <a
+                              href="#"
+                              className="genric-btn warning border"
+                              style={{ marginRight: "5px" }}
+                            >
+                              Sửa
+                            </a>
+                          </td>
+                          <td>
+                            <a
+                              href="#"
+                              className="genric-btn danger border"
+                              style={{ marginLeft: "5px" }}
+                            >
+                              Xóa
+                            </a>
+                          </td>
+                        </tr>
+                      ))}
                       <tr>
-                        <th>
-                          <div className={classes.imgServiceLeft}></div>
-                        </th>
-                        <td colSpan="3">Cắt, gội, sấy tóc (Combo)</td>
-                        <td>120.000đ</td>
-                        <td>
-                          <a
-                            href="#"
-                            className="genric-btn warning border"
-                            style={{ marginRight: "5px" }}
-                          >
-                            Sửa
-                          </a>
-                        </td>
-                        <td>
-                          <a
-                            href="#"
-                            className="genric-btn danger border"
-                            style={{ marginLeft: "5px" }}
-                          >
-                            Xóa
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>
-                          <div className={classes.imgServiceLeft}></div>
-                        </th>
-                        <td colSpan="3">Lấy ráy tai</td>
-                        <td>20.000đ</td>
-                        <td>
-                          <a
-                            href="#"
-                            className="genric-btn warning border"
-                            style={{ marginRight: "5px" }}
-                          >
-                            Sửa
-                          </a>
-                        </td>
-                        <td>
-                          <a
-                            href="#"
-                            className="genric-btn danger border"
-                            style={{ marginLeft: "5px" }}
-                          >
-                            Xóa
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>
-                          <div className={classes.imgServiceLeft}></div>
-                        </th>
-                        <td colSpan="3">Làm mặt</td>
-                        <td>60.000đ</td>
-                        <td>
-                          <a
-                            href="#"
-                            className="genric-btn warning border"
-                            style={{ marginRight: "5px" }}
-                          >
-                            Sửa
-                          </a>
-                        </td>
-                        <td>
-                          <a
-                            href="#"
-                            className="genric-btn danger border"
-                            style={{ marginLeft: "5px" }}
-                          >
-                            Xóa
-                          </a>
+                        <td colSpan="7">
+                          <div className="text-center">
+                            <div className="btn btn-secondary"
+                            onClick={() =>
+                              handleEditBooking()
+                            }
+                            >
+                            Sửa dịch vụ +
+                            </div>
+                          </div>
                         </td>
                       </tr>
                       <tr>
                         <th colSpan="4">Thành Tiền</th>
-                        <td>200.000đ</td>
+                        <td colSpan="2">
+                          {accounting.formatMoney(detailInfo.total, {
+                            symbol: "",
+                            format: "%v vnđ",
+                            precision: 0,
+                          })}
+                        </td>
                         <td></td>
                         <td></td>
                       </tr>
                       <tr>
                         <th colSpan="4">Thanh Toán</th>
                         <td></td>
-                        <td>
+                        <td colSpan="1">
                           <div
                             className="genric-btn warning border"
                             style={{ padding: "0px 16px 0px 16px" }}
@@ -262,90 +336,6 @@ function Payment() {
                       </tr>
                     </tbody>
                   </table>
-                </div>
-                <div className="col-6" id="divRight" style={{ order: "2" }}>
-                  <div
-                    className="position-relative"
-                    style={{ height: "115px", width: "100%" }}
-                  >
-                    <div
-                      style={{
-                        fontWeight: "400",
-                        fontSize: "40px",
-                        marginTop: "78px",
-                      }}
-                      className="text-center"
-                    >
-                      Dịch Vụ
-                    </div>
-                  </div>
-                  <div>
-                    <table className="table table-borderless">
-                      <thead>
-                        <tr>
-                          <th scope="col" rowSpan="6"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th rowSpan="2">
-                            <div className={classes.imgServiceRight}></div>
-                          </th>
-                          <td>Cắt, gội, sấy tóc (Combo)</td>
-                          <td></td>
-                          <td rowSpan="2">
-                            <div className={classes.imgServiceRight}></div>
-                          </td>
-                          <td>Lấy ráy tai</td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>DV001</td>
-                          <td>120.000đ</td>
-                          <td>DV001</td>
-                          <td>20.000đ</td>
-                        </tr>
-
-                        <tr>
-                          <th rowSpan="2">
-                            <div className={classes.imgServiceRight}></div>
-                          </th>
-                          <td>Rửa mặt</td>
-                          <td></td>
-                          <td rowSpan="2">
-                            <div className={classes.imgServiceRight}></div>
-                          </td>
-                          <td>Gội đầu</td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>DV003</td>
-                          <td>50.000đ</td>
-                          <td>DV004</td>
-                          <td>60.000đ</td>
-                        </tr>
-
-                        <tr>
-                          <th rowSpan="2">
-                            <div className={classes.imgServiceRight}></div>
-                          </th>
-                          <td>Đắp mặt nạ</td>
-                          <td></td>
-                          <td rowSpan="2">
-                            <div className={classes.imgServiceRight}></div>
-                          </td>
-                          <td>Cạo râu</td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>DV005</td>
-                          <td>50.000đ</td>
-                          <td>DV006</td>
-                          <td>30.000đ</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
                 </div>
               </div>
             </div>

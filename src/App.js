@@ -66,9 +66,12 @@ function App() {
           <Route path="/branch-edit/:id" element={<EditBranch />}></Route>
           <Route path="/invoice-history" element={<InvoiceHistory />}></Route>
           <Route path="/invoice" element={<Invoice />}></Route>
+          <Route path="/payment" element={<Payment />}>
+            <Route path="/payment/:id" element={<Payment />} />
+          </Route>
           <Route path="/payment" element={<Payment />}></Route>
           <Route path="/booking" element={<Booking />}>
-            <Route path="/booking/:id" element={<Booking />}/>
+            <Route path="/booking/:id" element={<Booking />} />
           </Route>
           <Route path="/select-service" element={<Selectservice />}></Route>
           <Route path="/listUser" element={<UserList />} />
@@ -88,7 +91,7 @@ function App() {
           <Route path="/history-admin" element={<HistoryEmployeeA />}></Route>
           <Route path="/history-employee" element={<HistoryEmployee />}></Route>
           <Route path="/booking-management" element={<BookingManagement />}></Route>
-       
+
         </Routes>
       </BrowserRouter>
       <ToastContainer

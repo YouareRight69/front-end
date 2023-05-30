@@ -8,32 +8,24 @@ function DetailBranch(props) {
   const { id } = useParams();
   const [target, setTarget] = useState({});
   const [dataView, setDataView] = useState([]);
+  const accessToken = localStorage.getItem("accessToken");
 
   const navigate = useNavigate();
 
-  const onSubmit = (e) => {
-    console.log(target);
-    e.preventDefault();
+  useEffect(() => {
     if (id) {
       axios
         .get(`${url}/${id}`, target, {
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Methods": "GET",
-            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+            Authorization: "Bearer " + accessToken,
           },
         })
         .then((resp) => {
-          navigate("/branch");
+          setTarget(resp.data);
         });
-    }
-  };
-
-  useEffect(() => {
-    if (id) {
-      axios.get(`${url}/${id}`).then((resp) => {
-        setTarget(resp.data);
-      });
     }
   }, [id]);
 
@@ -47,7 +39,6 @@ function DetailBranch(props) {
   return (
     <div>
       <main>
-        <form id="form" onSubmit={onSubmit}></form>
         {/* Hero Start */}
         <div className="slider-area2">
           <div className="slider-height2 d-flex align-items-center">

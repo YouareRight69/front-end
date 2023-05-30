@@ -56,6 +56,7 @@ export default function DetailInfoButton(props) {
           format: "%v vnđ",
           precision: 0,
         })}
+        pay={detailInfo.total}
       />
     </React.Fragment>
   );

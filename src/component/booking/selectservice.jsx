@@ -38,7 +38,7 @@ export default function Selectservice() {
       .catch((err) => console.log(err));
   }, []);
 
-  console.log(serviceData);
+  // console.log(serviceData);
 
   const handleSelectButton = (item) => {
     if (idArr.includes(item.serviceId)) {
@@ -60,7 +60,7 @@ export default function Selectservice() {
         state: {selectService:selectedArr, formData: location.state.formData}
       });
     }
-   
+
   };
 
   const handleBack = () => {
@@ -69,7 +69,7 @@ export default function Selectservice() {
     });
   };
   console.log(selectedArr);
-  
+
   return (
     <>
       <section className="service-area p-3">

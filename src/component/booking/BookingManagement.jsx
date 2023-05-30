@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DeleteButton from "../button/DeleteButton";
 
-import Page from "../common/Page";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import SearchForm from "../../Button/SearchForm";
+import Page from "../common/Page";
 import DetailInfoButton from "./DetailButton";
-import jwt_decode from "jwt-decode";
 
 export default function BookingManagement() {
   const [list, setList] = useState({ data: { content: [] } });
@@ -14,28 +15,30 @@ export default function BookingManagement() {
   const [condition, setCondition] = useState("");
   const [display, setDisplay] = useState(true);
   const navigate = useNavigate();
-
+  const pay = new URL(window.location.href);
+  const searchParams = new URLSearchParams(pay.search);
+  const vnpResponseCode = searchParams.get("vnp_ResponseCode");
   const accessToken = localStorage.getItem("accessToken");
 
   function handleClick(page) {
-    axios.get(`${url}?p=${page}&c=${condition}`,  {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Methods":
-          "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-        "Authorization": "Bearer " + accessToken,
-      },
-    }).then((res) => {
-      console.log(res);
-      setList(res);
-    });
+    axios
+      .get(`${url}?p=${page}&c=${condition}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods":
+            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          Authorization: "Bearer " + accessToken,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        setList(res);
+      });
   }
-  console.log(list)
 
   const onSubmit = (data) => {
     setCondition(data);
   };
- 
 
   const rerender = () => {
     setDisplay(!display);
@@ -43,37 +46,50 @@ export default function BookingManagement() {
 
   const handleEditBooking = (id) => {
     axios
-      .get("http://localhost:8080/api/emp/booking/get-booking?bookingId=" + id,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Methods":
-            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-          "Authorization": "Bearer " + accessToken,
-        },
-      })
+      .get(
+        "http://localhost:8080/api/emp/booking/get-booking?bookingId=" + id,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+            Authorization: "Bearer " + accessToken,
+          },
+        }
+      )
       .then((res) => {
-        navigate("/booking/"+id, {
-          state: {selectService:res.data.serviceList, formData: res.data },
+        navigate("/booking/" + id, {
+          state: { selectService: res.data.serviceList, formData: res.data },
         });
       });
   };
 
   useEffect(() => {
-    axios.get(`${url}?c=${condition}`,{
-      headers: {
-        "Authorization": "Bearer " + accessToken,
-      },
-    }).then((res) => {
-      setList(res);
-      console.log(res);
-    });
+    axios
+      .get(`${url}?c=${condition}`, {
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      })
+      .then((res) => {
+        setList(res);
+        console.log(res);
+      });
   }, [condition, display]);
+
+  const handleDeleteModal = () => {};
+
+  useEffect(() => {
+    if (vnpResponseCode === "00") {
+      toast.success("Thanh toán thành công");
+    }
+  }, [vnpResponseCode]);
 
   return (
     <div>
       <main>
         {/* Hero Start */}
+
         <div className="slider-area2">
           <div className="slider-height2 d-flex align-items-center">
             <div className="container">
@@ -145,7 +161,11 @@ export default function BookingManagement() {
                                 style={{ marginTop: "5px" }}
                                 key={item.bookingId}
                               >
-                                <td>{index + 1 +list.data.number * list.data.size}</td>
+                                <td>
+                                  {index +
+                                    1 +
+                                    list.data.number * list.data.size}
+                                </td>
                                 <td>{item.bookingId}</td>
                                 <td>{item.name}</td>
                                 <td>{item.branch.name}</td>
@@ -174,9 +194,12 @@ export default function BookingManagement() {
                                   >
                                     <i className="fas fa-pencil-alt"></i>
                                   </button>
-                                <DetailInfoButton
-                                 url = {"http://localhost:8080/api/booking-management/details"}
-                                 id={item.bookingId}/>
+                                  <DetailInfoButton
+                                    url={
+                                      "http://localhost:8080/api/booking-management/details"
+                                    }
+                                    id={item.bookingId}
+                                  />
                                 </td>
                               </tr>
                             ))}
@@ -207,7 +230,6 @@ export default function BookingManagement() {
             </div>
           </div>
         </div>
-        {/* End Align Area */}
       </main>
     </div>
   );

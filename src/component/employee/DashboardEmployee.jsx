@@ -59,7 +59,7 @@ function DashboardEmployee(props) {
                     <div className="col-lg-1"></div>
                     <div className="col-lg-3 col-md-4 mt-10">
                       <div className="input-group-icon">
-                        <div>
+                        {/* <div>
                           <select className="form-select" id="default-select">
                             <option value=" 1">Sắp xếp</option>
                             <option value="1">Bangladesh</option>
@@ -67,12 +67,12 @@ function DashboardEmployee(props) {
                             <option value="1">England</option>
                             <option value="1">Srilanka</option>
                           </select>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </aside>
                 </div>
-                <div class="mt-10" style={{display: "flex" }}>
+                <div class="mt-10" style={{ display: "flex" }}>
                   <div class="col-lg-3 ms-10">
                     <Link to="/employee-add">
                       <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
@@ -81,7 +81,7 @@ function DashboardEmployee(props) {
                     </Link>
                   </div>
                   <div class="col-lg-3 ms-10">
-                    <Link to="/history-admin"> 
+                    <Link to="/history-admin">
                       <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
                         Lịch sử làm việc
                       </div>
@@ -110,7 +110,7 @@ function DashboardEmployee(props) {
                         </thead>
                         <tbody>
                           <tr style={{ marginTop: "5px" }}>
-                          <th scope="row">01</th>
+                            <th scope="row">01</th>
                             <td>Nguyễn Văn A</td>
                             <td>12/12/2000</td>
                             <td>0245321014</td>

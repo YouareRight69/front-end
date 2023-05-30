@@ -1,14 +1,36 @@
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function ModalDetail(props) {
   const [data, setData] = useState(props.data);
+  const [urlVnpay, setUrlVnpay] = useState();
+  const accessToken = localStorage.getItem("accessToken");
+  const urlPay = "payment";
+  const name = data.name;
 
   useEffect(() => {
     setData(props.data);
   });
+
+  // console.log(`${pay}${props.pay}`);
+  // const onSubmit = (event) => {
+  //   event.preventDefault();
+
+  //   axios
+  //     .get(`${pay}${props.pay}`, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "Access-Control-Allow-Methods":
+  //           "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+  //       },
+  //     })
+  //     .then((data) => {
+  //       setUrlVnpay(data.data);
+  //       window.open(data.data, "_blank");
+  //     })
+  //     .catch("NOT OKKKK");
+  // };
 
   return (
     <div
@@ -60,9 +82,7 @@ export default function ModalDetail(props) {
                     <b>Tổng cộng</b>
                   </td>
                   <td colSpan="2">
-                    <b>
-                     {props.total}
-                    </b>
+                    <b>{props.total}</b>
                   </td>
                 </tr>
               </tbody>
@@ -76,13 +96,17 @@ export default function ModalDetail(props) {
             >
               OK
             </button>
-            <button
-              type="button"
+            <Link
+              as={Link}
               className="btn btn-secondary"
-              data-bs-dismiss="modal"
+              to={`/${urlPay}/${data?.id}`}
             >
-              Thanh toán
-            </button>
+              <div
+                data-bs-dismiss="modal"
+              >
+                Thanh toán
+              </div>
+            </Link>
           </div>
         </div>
       </div>
