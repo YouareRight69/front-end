@@ -2,7 +2,8 @@ import axios from "axios";
 import React from "react";
 import Modal from "../common/Modal";
 import jwt_decode from "jwt-decode";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function DeleteButton(props) {
    const accessToken = localStorage.getItem("accessToken");
   const deleteItem = () => {
@@ -14,7 +15,20 @@ export default function DeleteButton(props) {
             "PUT, POST, GET, DELETE, PATCH, OPTIONS",
           "Authorization": "Bearer " + accessToken,
         },
-      }).then((resp) => props.rerender());
+      }).then((resp) => {
+        props.rerender()
+        toast.success("Xóa lịch hẹn thành công!", {
+          position: "top-center",
+          autoClose: 1200,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }  
+      );
       return;
     }
     axios
