@@ -58,6 +58,23 @@ function Header() {
     localStorage.removeItem("accessToken");
     navigate("/login");
   };
+
+  const aboutPage = () => {
+    navigate("/about");
+  };
+  const servicePage = () => {
+    navigate("/service");
+  };
+  const homePage = () => {
+    navigate("/main");
+  };
+  const trendPage = () => {
+    navigate("/trend");
+  };
+  const chart = () => {
+    navigate("/chart");
+  };
+
   return (
     <>
       <header>
@@ -80,19 +97,25 @@ function Header() {
                     <div className="main-menu f-right d-none d-lg-block">
                       <nav style={{ marginRight: "15px" }}>
                         <ul id="navigation">
-                          <li className="active">
-                            <a onClick={home}>Trang chủ</a>
+                          <li>
+                            {/* <li className="active"> */}
+                            <a onClick={homePage}>Trang Chủ</a>
                           </li>
                           <li>
-                            <a onClick={service}>Dịch vụ</a>
+                            <a onClick={servicePage}>Dịch Vụ</a>
+                          </li>
+                          <li>
+                            <a onClick={trendPage}>Xu Hướng</a>
                           </li>
 
                           <li>
-                            <a onClick={trend}>Xu hướng</a>
+                            <a onClick={aboutPage}>Giới Thiệu</a>
                           </li>
+
                           <li>
-                            <a onClick={contact}>Liên hệ</a>
+                            <a onClick={chart}>Chart</a>
                           </li>
+
                           {accessToken != null ? (
                             <li>
                               <a href="#">{jwt_decode(accessToken).sub}</a>

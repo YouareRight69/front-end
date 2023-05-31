@@ -37,14 +37,28 @@ import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
 // import BookingManagement from "./component/booking/BookingManagement";
 
+import Footer from "./component/common/user/footer";
+import Main from "./component/common/user/Main";
+import Services from "./component/common/user/Services";
+import About from "./component/common/user/About";
+import Trend from "./component/common/user/Trend";
+import BarChart1 from "./component/common/admin/BarChart1";
+
 function App() {
   return (
     <>
       <BrowserRouter>
+
         <Routes>
-          <Route path="/" element={<Home />}>
-            {/* <Route index element={<Home />} />       */}
-          </Route>
+          {/* <Home />
+          <Main /> */}
+          <Route path="/" element={<Home />}>   </Route>
+          <Route exact path='/main' element={<Main />} />
+          <Route exact path='/service' element={<Services />} />
+          <Route exact path='/about' element={<About />} />
+          <Route exact path='/trend' element={<Trend />} />
+          <Route exact path='/chart' element={<BarChart1 />} />
+
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
@@ -97,6 +111,7 @@ function App() {
             element={<BookingManagement />}
           ></Route>
         </Routes>
+        <Footer />
       </BrowserRouter>
 
       <ToastContainer
