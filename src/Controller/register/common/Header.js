@@ -64,8 +64,8 @@ function Header() {
   const trendPage = () => {
     navigate("/trend");
   }
-  const chart = () => {
-    navigate("/chart");
+  const booking = () => {
+    navigate("/booking");
   }
 
   return (
@@ -79,9 +79,7 @@ function Header() {
                 {/* <!-- Logo --> */}
                 <div className="col-xl-2 col-lg-2 col-md-1">
                   <div className="logo">
-                    <a href="index.html">
                       <img src="assets/img/logo/loder.png" alt="" />
-                    </a>
                   </div>
                 </div>
                 <div className="col-xl-10 col-lg-10 col-md-10">
@@ -105,12 +103,12 @@ function Header() {
                           </li>
 
                           <li>
-                            <a onClick={chart}>Chart</a>
+                            <a onClick={booking}>Đặt lịch hẹn</a>
                           </li>
 
                           {accessToken != null ? (
                             <li>
-                              <a href="#">{jwt_decode(accessToken).sub}</a>
+                              <a href="#">Xin chào {jwt_decode(accessToken).sub}</a>
                               <ul
                                 className="submenu"
                                 style={{ width: "200px" }}
@@ -161,12 +159,7 @@ function Header() {
       </header>
       <main>
         {/* <!--? slider Area Start--> */}
-        <div className="slider-area position-relative fix">
-          <div className="slider-active">
-            {/* <!-- Single Slider --> */}
-            <div className="single-slider slider-height d-flex align-items-center"></div>
-          </div>
-        </div>
+        
       </main>
     </>
   );

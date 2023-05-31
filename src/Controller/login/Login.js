@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import LeftSideNamNB from "../register/common/LeftSideNamNB";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+import { ToastContainer, toast } from "react-toastify";
 // import { useCookies } from "react-cookie";
 
 function Login() {
@@ -60,14 +61,26 @@ function Login() {
         // alert(cookies.accessToken);
         const role = jwt_decode(result.accessToken);
         if (role.roles === "[ROLE_CUSTOMER]") {
-          navigate("/");
+          navigate("/main");
         }
         if (role.roles === "[ROLE_ADMIN]") {
           navigate("/register");
         }
+        if (role.roles === "[ROLE_RECEPTIONIST]") {
+          navigate("/booking-management");
+        }
       })
       .catch((error) => {
-        alert("Tên đăng nhập hoặc mật khẩu không đúng!");
+        toast.error("Tên đăng nhập hoặc mật khẩu không đúng!", {
+          position: "top-center",
+          autoClose: 1200,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       });
   };
   return (

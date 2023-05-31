@@ -5,17 +5,23 @@ export default function Trend() {
     return (
         <div>
             <Header />
-            <section class="service-area ">
-                <div class="container">
-
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-xl-7 col-lg-8 col-md-11 col-sm-11">
-                            <div class="section-tittle text-center mb-90">
-
-                                <h2 className='pt-5'>Các mẫu Trend hiện tại</h2>
+            <div class="slider-area2">
+                    <div class="slider-height2 d-flex align-items-center">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="hero-cap hero-cap2 pt-70 text-center">
+                                        <h2>Các mẫu trend hiện tại</h2>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            <section class="service-area ">
+                <div class="container">
+
+                
 
                     <div class="row">
                         <div class="col-xl-4 col-lg-4 col-md-6">
