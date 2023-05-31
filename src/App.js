@@ -43,16 +43,18 @@ import Services from "./component/common/user/Services";
 import About from "./component/common/user/About";
 import Trend from "./component/common/user/Trend";
 import BarChart1 from "./component/common/admin/BarChart1";
+import Header from "./controller/register/common/Header";
 
 function App() {
   return (
     <>
       <BrowserRouter>
-
+      <Header/>
         <Routes>
+         
           {/* <Home />
           <Main /> */}
-          <Route path="/" element={<Home />}>   </Route>
+          <Route path="/" element={<Main />}>   </Route>
           <Route exact path='/main' element={<Main />} />
           <Route exact path='/service' element={<Services />} />
           <Route exact path='/about' element={<About />} />

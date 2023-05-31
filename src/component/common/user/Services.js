@@ -25,8 +25,7 @@ function Services() {
 
                         <div class="row d-flex justify-content-center">
                             <div class="col-xl-7 col-lg-8 col-md-11 col-sm-11">
-                                <div class="section-tittle text-center mb-90">
-                                    <span>Những dịch vụ chuyên nghiệp</span>
+                                <div class="section-tittle text-center mb-90 mt-30">
                                     <h2>Dịch vụ tốt nhất của chúng tôi mà chúng tôi cung cấp cho bạn</h2>
                                 </div>
                             </div>

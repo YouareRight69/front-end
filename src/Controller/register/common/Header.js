@@ -71,8 +71,8 @@ function Header() {
   const trendPage = () => {
     navigate("/trend");
   };
-  const chart = () => {
-    navigate("/chart");
+  const booking = () => {
+    navigate("/booking");
   };
 
   return (
@@ -86,9 +86,9 @@ function Header() {
                 {/* <!-- Logo --> */}
                 <div className="col-xl-2 col-lg-2 col-md-1">
                   <div className="logo">
-                    <a onClick={home}>
-                      <img src="assets/img/logo/loder.png" alt="" />
-                    </a>
+                    {/* <a onClick={home}> */}
+
+                    <img src="assets/img/logo/loder.png" alt="" />
                   </div>
                 </div>
                 <div className="col-xl-10 col-lg-10 col-md-10">
@@ -113,12 +113,14 @@ function Header() {
                           </li>
 
                           <li>
-                            <a onClick={chart}>Chart</a>
+                            <a onClick={booking}>Đặt lịch hẹn</a>
                           </li>
 
                           {accessToken != null ? (
                             <li>
-                              <a href="#">{jwt_decode(accessToken).sub}</a>
+                              <a href="#">
+                                Xin chào {jwt_decode(accessToken).sub}
+                              </a>
                               <ul
                                 className="submenu"
                                 style={{ width: "200px" }}
@@ -170,5 +172,4 @@ function Header() {
     </>
   );
 }
-
 export default Header;

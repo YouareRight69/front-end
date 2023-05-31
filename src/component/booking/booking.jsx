@@ -96,7 +96,7 @@ export default function Booking() {
     }
     setBusyTime([]);
   }, [selectBranch]);
-
+console.log(data)
   useEffect(() => {
     if (selectStyle != null && selectDay != null) {
       axios
@@ -245,17 +245,20 @@ export default function Booking() {
     setFormData({ ...formData, customerName: e });
   };
 
+  
   const handleSubmitForm = (e) => {
     e.preventDefault();
     if (!("note" in formData)) {
       setFormData({ ...formData, note: null });
     }
+
+
     if (
       formData.isDelete == 0 &&
       formData.serviceList.length > 0 &&
       formData.branch != "" &&
       formData.userId != "" &&
-      (formData.bookingDate != "") & (formData.workTimeId != "") &&
+      (formData.bookingDate != "") && (formData.workTimeId != "") &&
       formData.styleId != "" &&
       formData.skinnerId != ""
     ) {
@@ -275,7 +278,7 @@ export default function Booking() {
           )
           .then((data) => {
             console.log(data.data);
-            toast.success("Đặt lịch hẹn thành công!", {
+            toast.success("Cập nhật lịch hẹn thành công!", {
               position: "top-center",
               autoClose: 1200,
               hideProgressBar: false,
@@ -286,12 +289,12 @@ export default function Booking() {
               theme: "light",
             });
 
-            navigate("/", {
+            navigate("/booking-management", {
               state: null,
             });
           })
           .catch((error) => {
-            toast.error("Đặt lịch thất bại! Danh sách lịch hẹn vừa được cập nhật", {
+            toast.error("Cập nhật thất bại! Danh sách lịch hẹn vừa được cập nhật", {
               position: "top-center",
               autoClose: 1200,
               hideProgressBar: false,
@@ -328,7 +331,7 @@ export default function Booking() {
               theme: "light",
             });
 
-            navigate("/", {
+            navigate("/main", {
               state: null,
             });
           })
@@ -392,11 +395,11 @@ export default function Booking() {
                               value={branch.branchId}
                               selected={true}
                             >
-                              {branch.name}
+                              {branch.name } | { branch.address}
                             </option>
                           ) : (
                             <option key={index} value={branch.branchId}>
-                              {branch.name}
+                              {branch.name } | { branch.address}
                             </option>
                           )
                         )}
@@ -432,7 +435,7 @@ export default function Booking() {
                       </button>
                     </div>
 
-                    <div className="m-3">Dịch vụ đã chọn</div>
+                    { selectservice.length > 0 && <div className="m-3">Dịch vụ đã chọn</div>}
                     <div>
                       {selectservice?.map((item, index) => (
                         <span
