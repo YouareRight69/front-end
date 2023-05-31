@@ -47,6 +47,13 @@ function Header() {
     navigate("/login");
   };
 
+  const home = () => {
+    navigate("/");
+  };
+  const service = () => {};
+  const trend = () => {};
+  const contact = () => {};
+
   const logout = () => {
     localStorage.removeItem("accessToken");
     navigate("/login");
@@ -54,19 +61,19 @@ function Header() {
 
   const aboutPage = () => {
     navigate("/about");
-  }
+  };
   const servicePage = () => {
     navigate("/service");
-  }
+  };
   const homePage = () => {
     navigate("/main");
-  }
+  };
   const trendPage = () => {
     navigate("/trend");
-  }
+  };
   const chart = () => {
     navigate("/chart");
-  }
+  };
 
   return (
     <>
@@ -79,7 +86,7 @@ function Header() {
                 {/* <!-- Logo --> */}
                 <div className="col-xl-2 col-lg-2 col-md-1">
                   <div className="logo">
-                    <a href="index.html">
+                    <a onClick={home}>
                       <img src="assets/img/logo/loder.png" alt="" />
                     </a>
                   </div>
@@ -90,7 +97,7 @@ function Header() {
                     <div className="main-menu f-right d-none d-lg-block">
                       <nav style={{ marginRight: "15px" }}>
                         <ul id="navigation">
-                          <li >
+                          <li>
                             {/* <li className="active"> */}
                             <a onClick={homePage}>Trang Chủ</a>
                           </li>
@@ -100,6 +107,7 @@ function Header() {
                           <li>
                             <a onClick={trendPage}>Xu Hướng</a>
                           </li>
+
                           <li>
                             <a onClick={aboutPage}>Giới Thiệu</a>
                           </li>
@@ -159,15 +167,6 @@ function Header() {
         </div>
         {/* <!-- Header End --> */}
       </header>
-      <main>
-        {/* <!--? slider Area Start--> */}
-        <div className="slider-area position-relative fix">
-          <div className="slider-active">
-            {/* <!-- Single Slider --> */}
-            <div className="single-slider slider-height d-flex align-items-center"></div>
-          </div>
-        </div>
-      </main>
     </>
   );
 }
