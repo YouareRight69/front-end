@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function ModalDetail(props) {
   const [data, setData] = useState(props.data);
@@ -7,6 +7,8 @@ export default function ModalDetail(props) {
   const accessToken = localStorage.getItem("accessToken");
   const urlPay = "payment";
   const name = data.name;
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setData(props.data);
@@ -29,6 +31,14 @@ export default function ModalDetail(props) {
   //       window.open(data.data, "_blank");
   //     })
   //     .catch("NOT OKKKK");
+  // };
+
+  // const handleChangePayment = () => {
+  //   if (data.id) {
+  //     navigate("/payment/", {
+  //       state: { idBooking: data?.id },
+  //     });
+  //   }
   // };
 
   return (
@@ -100,7 +110,11 @@ export default function ModalDetail(props) {
               className="btn btn-secondary"
               to={`/${urlPay}/${data?.id}`}
             >
-              <div data-bs-dismiss="modal">Thanh toán</div>
+            <div data-bs-dismiss="modal"
+            // onClick={handleChangePayment()}
+            >
+              Thanh toán
+            </div>
             </Link>
           </div>
         </div>

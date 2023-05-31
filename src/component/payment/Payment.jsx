@@ -2,20 +2,30 @@ import accounting from "accounting";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Modal from "../common/Modal";
 
 function Payment() {
   const user = "http://localhost:8080/api/user/detail";
   const test = "http://localhost:8080/api/receptionist/invoice/details";
+  const pay = "http://localhost:8080/api/payment/vnpay";
+  const [urlVnpay, setUrlVnpay] = useState();
   const accessToken = localStorage.getItem("accessToken");
   const [detailInfo, setDetailInfo] = useState([]);
   const [dataUser, setDataUser] = useState([]);
-  const [idUser, setIdUser] = useState(jwt_decode(accessToken).aud);
+  const idUser = jwt_decode(accessToken).aud;
   const [serviceData, setServiceData] = useState([]);
-  const [statusInvoice, setStatusInvice] = useState("");
+  const [statusInvoice, setStatusInvice] = useState("0");
   const [formData, setFormData] = useState({ isDelete: 0 });
+  const [dataTam, setDataTam] = useState();
   const [serviceListId, setServiceListId] = useState([]);
+  const [status, setStatus] = useState();
+  const [statusPay, setStatusPay] = useState(false);
+  const invoiceTime = new Date();
   const navigate = useNavigate();
+  const location = useLocation();
   const params = useParams();
   const { id } = params;
 
@@ -32,8 +42,15 @@ function Payment() {
       .then((resp) => {
         setDetailInfo(resp.data);
         setServiceData(resp.data.service);
+        setStatus("OK");
       });
   }, []);
+
+  useEffect(() => {
+    if (location.state != null && location.state.formData != null) {
+      setDataTam({ ...location.state.formData });
+    }
+  }, [status]);
 
   useEffect(() => {
     if (serviceData.length > 0) {
@@ -47,16 +64,18 @@ function Payment() {
   useEffect(() => {
     if (serviceListId.length > 0) {
       setFormData({
-        userId: jwt_decode(accessToken).aud,
+        userId: detailInfo.userIdBooking,
         isDelete: 0,
         serviceList: serviceListId,
-        invoiceTime: getCurrentTime(),
+        invoiceTime: invoiceTime,
         status: statusInvoice,
         total: detailInfo.total,
         bookingId: id,
+        skinnerId: dataTam?.skinnerId,
+        styleId: dataTam?.styleId,
       });
     }
-  }, [serviceListId, statusInvoice]);
+  }, [serviceListId, statusInvoice, dataTam]);
 
   useEffect(() => {
     axios
@@ -103,16 +122,77 @@ function Payment() {
         }
       )
       .then((res) => {
-        navigate("/payment/" + id, {});
+        navigate("/payment-edit/" + id, {
+          state: { selectService: res.data.serviceList, formData: res.data },
+        });
       });
   };
 
   const handleSaveInvoice = (e) => {
-    // e.preventDefault();
     setStatusInvice("1");
+    axios
+      .post(
+        "http://localhost:8080/api/receptionist/invoice/create?bookingid",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+            Authorization: "Bearer " + accessToken,
+          },
+        }
+      )
+      .then((data) => {
+        console.log(data.data);
+        toast.success("Lưu hoá đơn thành công!", {
+          position: "top-center",
+          autoClose: 1200,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        navigate("/invoice-history", {
+          state: null,
+        });
+      })
+      .catch((error) => {
+        console.error("NOOOO", error);
+      });
   };
 
-  console.log(formData);
+  const togglePay = () => {
+    setStatusPay(true);
+  };
+
+  useEffect(() => {
+    if (statusPay === true && detailInfo) {
+      handleSaveInvoice();
+      axios
+        .get(`${pay}/${detailInfo.total}/${detailInfo.id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+            Authorization: "Bearer " + accessToken,
+          },
+        })
+        .then((data) => {
+          setUrlVnpay(data.data);
+          window.open(data.data, "_blank");
+        })
+        .catch("NOT OKKKK");
+    }
+  }, [statusPay, detailInfo]);
+
+  const deleteItem = () => {
+    handleSaveInvoice();
+    setStatusPay(true);
+  };
 
   return (
     <div>
@@ -183,13 +263,13 @@ function Payment() {
                         <td>Web</td>
                       </tr>
                       <tr>
-                        <td>{dataUser.phoneNumber}</td>
+                        <td>{detailInfo.phoneUerBooking}</td>
                         <td></td>
                         <td>Ngày hóa đơn:</td>
                         <td>{getCurrentDate()}</td>
                       </tr>
                       <tr>
-                        <td>id: {dataUser.userId}</td>
+                        <td>id: {detailInfo.userIdBooking}</td>
                         <td></td>
                         <td>Giờ vào / ra:</td>
                         <td>
@@ -228,13 +308,7 @@ function Payment() {
                               precision: 0,
                             })}
                           </td>
-                          <td>
-                            {/* <div className="text-center">
-                              <div className="button rounded-0 primary-bg text-white boxed-btn">
-                                Sửa
-                              </div>
-                            </div> */}
-                          </td>
+                          <td></td>
                         </tr>
                       ))}
                       <tr>
@@ -263,14 +337,27 @@ function Payment() {
                         <th colSpan="2">Thanh Toán</th>
                         <td colSpan="1">
                           <div className="text-center">
-                            <div className="button rounded-0 primary-bg text-white boxed-btn">
+                            <button
+                              className="button rounded-0 primary-bg text-white boxed-btn"
+                              data-bs-toggle="modal"
+                              data-bs-target={`#modal-${detailInfo.id}`}
+                            >
                               Tại quầy
-                            </div>
+                            </button>
+                            <Modal
+                              id={detailInfo.id}
+                              title={`Thanh toán hoá đơn ${detailInfo.id}`}
+                              message={`Bạn có chắc muốn thanh toán hoá đơn ${detailInfo.id}`}
+                              deleteItem={deleteItem}
+                            />
                           </div>
                         </td>
                         <td>
                           <div className="text-center">
-                            <div className="button rounded-0 primary-bg text-white boxed-btn">
+                            <div
+                              className="button rounded-0 primary-bg text-white boxed-btn"
+                              onClick={togglePay}
+                            >
                               VNPay
                             </div>
                           </div>
@@ -281,7 +368,7 @@ function Payment() {
                   <div className="text-right mt-5">
                     <div
                       className="btn btn-secondary"
-                      onClick={(e) => handleSaveInvoice()}
+                      onClick={() => handleSaveInvoice()}
                     >
                       Lưu
                     </div>
@@ -291,7 +378,6 @@ function Payment() {
             </div>
           </div>
         </div>
-        {/* End Align Area */}
       </main>
     </div>
   );

@@ -55,7 +55,7 @@ export default function Booking() {
     }
     setSelectBranch(formData.branch);
   }, [status]);
-  
+
   useEffect(() => {
     axios
       .get("http://localhost:8080/api/emp/booking/info/list-branch")
@@ -244,13 +244,13 @@ export default function Booking() {
       setFormData({ ...formData, note: null });
     }
     if (
-      formData.isDelete == 0 &&
+      formData.isDelete === 0 &&
       formData.serviceList.length > 0 &&
-      formData.branch != "" &&
-      formData.userId != "" &&
-      (formData.bookingDate != "") & (formData.workTimeId != "") &&
-      formData.styleId != "" &&
-      formData.skinnerId != ""
+      formData.branch !== "" &&
+      formData.userId !== "" &&
+      (formData.bookingDate !== "") & (formData.workTimeId !== "") &&
+      formData.styleId !== "" &&
+      formData.skinnerId !== ""
     ) {
       if (id) {
         axios

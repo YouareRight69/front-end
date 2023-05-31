@@ -67,7 +67,7 @@ function App() {
           <Route path="/branch-detail/:id" element={<DetailBranch />}></Route>
           <Route path="/branch-edit/:id" element={<EditBranch />}></Route>
           <Route path="/invoice-history" element={<InvoiceHistory />}></Route>
-          <Route path="/invoice" element={<Invoice />}></Route>
+          <Route path="/invoice/:id" element={<Invoice />}></Route>
           <Route path="/payment" element={<Payment />}>
             <Route path="/payment/:id" element={<Payment />} />
           </Route>

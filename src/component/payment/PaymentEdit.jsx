@@ -185,7 +185,6 @@ export default function PaymentEdit() {
 
   //function
   const handleClickTime = (time) => {
-    // setSelectTime(time);
     if (
       selectTime === time.workingTimeId ||
       busyTime.includes(time.timeZone.substring(0, 5))
@@ -281,7 +280,7 @@ export default function PaymentEdit() {
             });
 
             navigate("/payment/" + id, {
-              state: null,
+              state: {formData: location.state.formData}
             });
           })
           .catch((error) => {

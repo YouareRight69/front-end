@@ -1,11 +1,87 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import accounting from "accounting";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import SearchForm from "../../Button/SearchForm";
+import DeleteButton from "../button/DeleteButton";
+import DetailButton from "../button/DetailButton";
+import EditButton from "../button/EditButton";
+import Page from "../common/Page";
 
 function InvoiceHistory(props) {
+  const [condition, setCondition] = useState("");
+  const [list, setList] = useState({ data: { content: [] } });
+  const urlInvoiceList = "http://localhost:8080/api/invoice-management";
+  const urlInvoiceSuccess =
+    "http://localhost:8080/api/invoice-management/success";
+  const accessToken = localStorage.getItem("accessToken");
+  const [dataFirst, setDataFirst] = useState();
+  const [status, setStatus] = useState("");
+  const [display, setDisplay] = useState(true);
+  const pay = new URL(window.location.href);
+  const searchParams = new URLSearchParams(pay.search);
+  const vnpResponseCode = searchParams.get("vnp_ResponseCode");
+  const vnp_TxnRef = searchParams.get("vnp_TxnRef");
+
+  const onSubmit = (data) => {
+    setCondition(data);
+  };
+
+  const rerender = () => {
+    setDisplay(!display);
+  };
+
+  useEffect(() => {
+    if (vnpResponseCode === "00") {
+      axios
+        .patch(`${urlInvoiceSuccess}/${vnp_TxnRef}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+            Authorization: "Bearer " + accessToken,
+          },
+        })
+        .then((resp) => {
+          console.log(resp);
+          setStatus("OKK");
+        });
+    }
+  }, [vnpResponseCode]);
+
+  useEffect(() => {
+    axios
+      .get(`${urlInvoiceList}?c=${condition}`, {
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      })
+      .then((res) => {
+        setList(res);
+        setDataFirst(res.data.content);
+      });
+  }, [condition, status]);
+
+  function handleClick(page) {
+    axios
+      .get(`${urlInvoiceList}?p=${page}&c=${condition}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods":
+            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          Authorization: "Bearer " + accessToken,
+        },
+      })
+      .then((res) => {
+        setList(res);
+        setDataFirst(res.data.content);
+      });
+  }
+
+  console.log(dataFirst);
+
   return (
     <div>
       <main>
-        {/* Hero Start */}
         <div className="slider-area2">
           <div className="slider-height2 d-flex align-items-center">
             <div className="container">
@@ -19,8 +95,6 @@ function InvoiceHistory(props) {
             </div>
           </div>
         </div>
-        {/* Hero End */}
-        {/* Start Align Area */}
         <div style={{ display: "flex" }}>
           <div className="col-lg-2" style={{ backgroundColor: "bisque" }}>
             Admin
@@ -37,42 +111,11 @@ function InvoiceHistory(props) {
                     <div className="col-lg-1"></div>
                     <form action="#" className="col-lg-6">
                       <div className="form-group">
-                        <div className="input-group mb-3">
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Nhập từ khoá cần tìm"
-                            onFocus={(e) => {
-                              e.target.placeholder = "";
-                            }}
-                            onBlur={(e) => {
-                              e.target.placeholder = "Nhập từ khoá cần tìm";
-                            }}
-                          />
-                          <div className="input-group-append">
-                            <button className="btns" type="button">
-                              <i className="ti-search"></i>
-                            </button>
-                          </div>
-                        </div>
+                        <SearchForm onSubmit={onSubmit} />
                       </div>
                     </form>
                     <div className="col-lg-1"></div>
-                    <div className="col-lg-3 col-md-4 mt-10">
-                      <div className="input-group-icon">
-                        <div className="form-select" id="default-select">
-                          <select
-                            className="form-select"
-                            aria-label="Default select example"
-                          >
-                            <option selected>Sắp xếp</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
+                    <div className="col-lg-3 col-md-4 mt-10"></div>
                   </aside>
                   <div className="col-lg-3"></div>
                 </div>
@@ -87,45 +130,56 @@ function InvoiceHistory(props) {
                         <thead>
                           <tr>
                             <th scope="col">STT</th>
-                            <th scope="col">Nhân Viên Thu Ngân</th>
+                            <th scope="col">Họ và Tên khách hàng</th>
+                            <th scope="col">Ngày Đặt Lịch</th>
                             <th scope="col">Ngày Hoá Đơn</th>
                             <th scope="col">Tiền Thanh Toán</th>
+                            <th scope="col">Trạng Thái</th>
                             <th scope="col">Chức năng</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr style={{ marginTop: "5px" }}>
-                            <th scope="row">01</th>
-                            <td>Trần Thị Mỹ Duyên</td>
-                            <td>16/05/2023</td>
-                            <td>140.000đ</td>
-                            <td>
-                              <Link to="/invoice">
-                                <div className="genric-btn primary radius">
-                                  <i
-                                    className="fa fa-eye"
-                                    aria-hidden="true"
-                                  ></i>
-                                </div>
-                              </Link>
-                            </td>
-                          </tr>
-                          <tr style={{ marginTop: "5px" }}>
-                            <th scope="row">02</th>
-                            <td>Nguyễn Thị Thanh Trang</td>
-                            <td>15/05/2023</td>
-                            <td>200.000đ</td>
-                            <td>
-                              <Link to="/invoice">
-                                <div className="genric-btn primary radius">
-                                  <i
-                                    className="fa fa-eye"
-                                    aria-hidden="true"
-                                  ></i>
-                                </div>
-                              </Link>
-                            </td>
-                          </tr>
+                          {list.data.content.length > 0 &&
+                            list.data.content.map((item, index) => (
+                              <tr
+                                style={{ marginTop: "5px" }}
+                                key={item.invoiceId}
+                              >
+                                <th scope="row">{item.invoiceId}</th>
+                                <td>{item.booking.name}</td>
+                                <td>{item.booking.bookingDate}</td>
+                                <td>{item.invoiceTime.split("T")[0]}</td>
+                                <td>
+                                  {accounting.formatMoney(item.total, {
+                                    symbol: "",
+                                    format: "%v vnđ",
+                                    precision: 0,
+                                  })}
+                                </td>
+                                <td>
+                                  {item.status === "0"
+                                    ? "Chưa thanh toán"
+                                    : "Đã thanh toán"}
+                                </td>
+                                <td>
+                                  <DeleteButton
+                                    url={urlInvoiceList}
+                                    id={item.invoiceId}
+                                    nameBranch={item.invoiceId}
+                                    type={"mã hoá đơn"}
+                                    rerender={rerender}
+                                  />
+                                  <EditButton
+                                    url={"payment"}
+                                    id={item.booking.bookingId}
+                                  />
+                                  <DetailButton
+                                    url={"invoice"}
+                                    id={item.booking.bookingId}
+                                  />
+                                </td>
+                              </tr>
+                            ))}
                         </tbody>
                       </table>
                     </div>
@@ -135,41 +189,12 @@ function InvoiceHistory(props) {
                   className="blog_area"
                   style={{ paddingBottom: "80px" }}
                 >
-                  <div className="col-lg-12 mb-5 mb-lg-0">
-                    <nav className="blog-pagination1 justify-content-center d-flex">
-                      <ul className="pagination">
-                        <li className="page-item">
-                          <a
-                            href="#"
-                            className="page-link"
-                            aria-label="Previous"
-                          >
-                            <i className="ti-angle-left"></i>
-                          </a>
-                        </li>
-                        <li className="page-item">
-                          <a href="#" className="page-link">
-                            1
-                          </a>
-                        </li>
-                        <li className="page-item active">
-                          <a href="#" className="page-link">
-                            2
-                          </a>
-                        </li>
-                        <li className="page-item active">
-                          <a href="#" className="page-link">
-                            3
-                          </a>
-                        </li>
-                        <li className="page-item">
-                          <a href="#" className="page-link" aria-label="Next">
-                            <i className="ti-angle-right"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
+                  <Page
+                    totalPages={list.data.totalPages}
+                    number={list.data.number}
+                    condition={condition}
+                    handleClick={handleClick}
+                  />
                 </section>
                 <div style={{ display: "flex" }}>
                   <div className="col-lg-10 ms-10 mb-50"></div>
@@ -186,7 +211,6 @@ function InvoiceHistory(props) {
             </div>
           </div>
         </div>
-        {/* End Align Area */}
       </main>
     </div>
   );
