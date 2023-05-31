@@ -74,6 +74,9 @@ function Header() {
   const booking = () => {
     navigate("/booking");
   };
+  const goToBookingManagement = () => {
+    navigate("/booking-management")
+  }
 
   return (
     <>
@@ -125,6 +128,9 @@ function Header() {
                                 className="submenu"
                                 style={{ width: "200px" }}
                               >
+                                 <li>
+                                  <a onClick={goToBookingManagement}>Quản lý lịch hẹn</a>
+                                </li>
                                 <li>
                                   <a onClick={getUpdateInfo}>
                                     Cập nhật thông tin
@@ -138,6 +144,7 @@ function Header() {
                                 <li>
                                   <a onClick={logout}>Đăng xuất</a>
                                 </li>
+                                
                               </ul>
                             </li>
                           ) : (

@@ -23,17 +23,17 @@
 
 .boxed-btn.namnb6_1 {
     background: #fff;
-    color: #f7f31b !important;
+    color: red !important;
     display: inline-block;
     padding: 18px 44px;
     font-family: "Oswald", sans-serif;
     font-size: 17px;
     font-weight: 600;
     border: 0;
-    border: 1px solid #f7f31b;
+    border: 1px solid red;
     letter-spacing: 3px;
     text-align: center;
-    color: #f7f31b;
+    color: red;
     text-transform: uppercase;
     cursor: pointer;
 }
@@ -47,9 +47,9 @@
 }
 
 .boxed-btn.namnb6_1:hover {
-    background: #f7f31b;
+    background: #f7731b;
     color: #fff !important;
-    border: 1px solid #f7f31b;
+    border: 1px solid #f7731b;
 }
 
 .boxed-btn.namnb6_2 {
