@@ -3,7 +3,6 @@ import "./App.css";
 
 import Home from "./controller/Home";
 
-
 import Login from "./controller/login/Login.js";
 import ChangePassword from "./controller/register/ChangePassword";
 import ConfirmOtp from "./controller/register/ConfirmOtp";
@@ -12,10 +11,8 @@ import ForgotPassword from "./controller/register/ForgotPassword";
 import Register from "./controller/register/Register";
 import UpdateInfo from "./controller/register/UpdateInfo";
 
-
-
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import UserList from "./component//User/UserList";
 import CreateService from "./component/HairService/CreateService";
 import DetailService from "./component/HairService/DetailService";
@@ -38,17 +35,32 @@ import HistoryEmployee from "./component/employee/history/historyEmployee";
 import Invoice from "./component/invoice/Invoice";
 import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
+// import BookingManagement from "./component/booking/BookingManagement";
 
-
+import Footer from "./component/common/user/footer";
+import Main from "./component/common/user/Main";
+import Services from "./component/common/user/Services";
+import About from "./component/common/user/About";
+import Trend from "./component/common/user/Trend";
+import BarChart1 from "./component/common/admin/BarChart1";
+import Header from "./controller/register/common/Header";
 
 function App() {
   return (
     <>
       <BrowserRouter>
+      <Header/>
         <Routes>
-          <Route path="/" element={<Home />}>
-            {/* <Route index element={<Home />} />       */}
-          </Route>
+         
+          {/* <Home />
+          <Main /> */}
+          <Route path="/" element={<Main />}>   </Route>
+          <Route exact path='/main' element={<Main />} />
+          <Route exact path='/service' element={<Services />} />
+          <Route exact path='/about' element={<About />} />
+          <Route exact path='/trend' element={<Trend />} />
+          <Route exact path='/chart' element={<BarChart1 />} />
+
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
@@ -68,7 +80,7 @@ function App() {
           <Route path="/invoice" element={<Invoice />}></Route>
           <Route path="/payment" element={<Payment />}></Route>
           <Route path="/booking" element={<Booking />}>
-            <Route path="/booking/:id" element={<Booking />}/>
+            <Route path="/booking/:id" element={<Booking />} />
           </Route>
           <Route path="/select-service" element={<Selectservice />}></Route>
           <Route path="/listUser" element={<UserList />} />
@@ -76,7 +88,11 @@ function App() {
           <Route path="/listService" element={<HairServiceList />} />
           <Route path="/createService" element={<CreateService />} />
           <Route path="/detailService/:id" element={<DetailService />} />
-          <Route path='/listService/:id' element={<EditService />} />
+
+          {/* <Route path="/listService/:id" element={<CreateService />} /> */}
+
+          <Route path="/listService/:id" element={<EditService />} />
+
           <Route path="/branch" element={<Branch />}></Route>
           <Route path="/branch-add" element={<AddNewBranch />}></Route>
           <Route path="/branch-detail" element={<DetailBranch />}></Route>
@@ -91,13 +107,18 @@ function App() {
           <Route path="/employee-detail" element={<DetailEmployee />}></Route>
           <Route path="/history-admin" element={<HistoryEmployeeA />}></Route>
           <Route path="/history-employee" element={<HistoryEmployee />}></Route>
-          <Route path="/booking-management" element={<BookingManagement />}></Route>
-       
+
+          <Route
+            path="/booking-management"
+            element={<BookingManagement />}
+          ></Route>
         </Routes>
+        <Footer />
       </BrowserRouter>
+
       <ToastContainer
-        position="top-center"
-        autoClose={3}
+        position="top-right"
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

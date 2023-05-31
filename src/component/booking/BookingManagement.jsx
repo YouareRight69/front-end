@@ -43,7 +43,7 @@ export default function BookingManagement() {
 
   const handleEditBooking = (id) => {
     axios
-      .get("http://localhost:8080/api/emp/booking/get-booking?bookingId=" + id,
+      .get("http://localhost:8080/api/emp/booking/get-booking?bookingId=" + id ,
       {
         headers: {
           "Content-Type": "application/json",

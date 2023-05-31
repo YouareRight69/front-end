@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import LeftSideNamNB from "./common/LeftSideNamNB";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function ConfirmOtp() {
   const location = useLocation();
@@ -42,7 +43,7 @@ function ConfirmOtp() {
         navigate("/forgot-changePassword", { state: { email } });
       })
       .catch((error) => {
-        alert("Mã OTP không chính xác!");
+        toast.error("Mã OTP không chính xác!");
       });
   };
 
@@ -94,7 +95,7 @@ function ConfirmOtp() {
                         <button
                           style={{ width: "100%" }}
                           type="button"
-                          className="button boxed-btn"
+                          className="button boxed-btn namnb6_2"
                           onClick={sendOtp}
                         >
                           {" "}
