@@ -15,21 +15,21 @@ export default function Page(props) {
                         <ul className="pagination">
                             {props.number > 0 && <ul className="pagination">
                                 <li className="page-item">
-                                    <button className="page-link" onClick={() => props.handleClick(props.number - 1)}>
-                                        <i className="ti-angle-left"></i>
+                                    <button className="page-link-huyentn" onClick={() => props.handleClick(props.number - 1)}>
+                                        <i className="ti-angle-left" id= "huyentn"></i>
                                     </button>
                                 </li>
                             </ul>}
                             {page.map((item, index) =>
                                 <li className="page-item" key={index + item}>
-                                    <button className={index === props.number ? "page-link" : "page-link"}
+                                    <button className={index === props.number ? "page-link-huyentn" : "page-link-huyentn"}
                                         onClick={() => props.handleClick(index)}>{index + 1}</button>
                                 </li>
                             )}
                             {props.number < props.totalPages - 1 && <ul className="pagination">
                                 <li className="page-item">
-                                    <button className="page-link" onClick={() => props.handleClick(props.totalPages - 1)}>
-                                        <i className="ti-angle-right"></i>
+                                    <button className="page-link-huyentn" onClick={() => props.handleClick(props.totalPages - 1)}>
+                                        <i className="ti-angle-right" id= "huyentn"></i>
                                     </button>
                                 </li>
                             </ul>}

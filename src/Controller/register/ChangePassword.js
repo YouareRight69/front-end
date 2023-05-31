@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+import { toast } from "react-toastify";
+import Header from "./common/Header";
 
 function ChangePassword() {
   const location = useLocation();
@@ -50,11 +52,16 @@ function ChangePassword() {
       })
       .then((result) => {
         localStorage.removeItem("accessToken");
-        alert("Đổi mật khẩu thành công!");
+        toast.success("Đổi mật khẩu thành công!");
         navigate("/login");
       })
       .catch((error) => {
-        alert(error);
+        if (error == "Error: 401") {
+          localStorage.removeItem("accessToken");
+          navigate("/login");
+          toast.error("Hết phiên đăng nhập!");
+        }
+        toast.error(error);
       });
   };
 
@@ -70,6 +77,9 @@ function ChangePassword() {
 
   return (
     <main>
+      <div>
+        <Header />
+      </div>
       <div className="slider-area2">
         <div className="slider-height2 d-flex align-items-center">
           <div className="container">
@@ -155,7 +165,7 @@ function ChangePassword() {
                         <button
                           style={{ width: "100%" }}
                           type="submit"
-                          className="button boxed-btn namnb6"
+                          className="button boxed-btn namnb6_1"
                           onClick={exit}
                         >
                           {" "}
@@ -166,7 +176,7 @@ function ChangePassword() {
                         <button
                           style={{ width: "100%" }}
                           type="button"
-                          className="button boxed-btn"
+                          className="button boxed-btn namnb6_2"
                           onClick={changePassword}
                         >
                           {" "}

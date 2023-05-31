@@ -2,16 +2,21 @@ import axios from 'axios'
 import React from 'react'
 
 export default function DeleteButton(props) {
+  const accessToken = localStorage.getItem("accessToken");
   const deleteItem = () => {
     if (props.id) {
-      axios.delete(`${props.url}/${props.id}`)
-        .then(resp => props.rerender())
-        console.log(props.url)
+      axios.delete(`${props.url}/${props.id}`, {
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+        },
+      }).then(resp => props.rerender())
+      console.log(props.url)
       return;
     }
     axios.delete(`${props.url}/delete`, props.item, {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer " + accessToken
       }
     }).then(resp => props.rerender())
   }

@@ -47,6 +47,13 @@ function Header() {
     navigate("/login");
   };
 
+  const home = () => {
+    navigate("/");
+  };
+  const service = () => {};
+  const trend = () => {};
+  const contact = () => {};
+
   const logout = () => {
     localStorage.removeItem("accessToken");
     navigate("/login");
@@ -54,19 +61,19 @@ function Header() {
 
   const aboutPage = () => {
     navigate("/about");
-  }
+  };
   const servicePage = () => {
     navigate("/service");
-  }
+  };
   const homePage = () => {
     navigate("/main");
-  }
+  };
   const trendPage = () => {
     navigate("/trend");
-  }
+  };
   const booking = () => {
     navigate("/booking");
-  }
+  };
 
   return (
     <>
@@ -79,7 +86,9 @@ function Header() {
                 {/* <!-- Logo --> */}
                 <div className="col-xl-2 col-lg-2 col-md-1">
                   <div className="logo">
-                      <img src="assets/img/logo/loder.png" alt="" />
+                    {/* <a onClick={home}> */}
+
+                    <img src="assets/img/logo/loder.png" alt="" />
                   </div>
                 </div>
                 <div className="col-xl-10 col-lg-10 col-md-10">
@@ -88,7 +97,7 @@ function Header() {
                     <div className="main-menu f-right d-none d-lg-block">
                       <nav style={{ marginRight: "15px" }}>
                         <ul id="navigation">
-                          <li >
+                          <li>
                             {/* <li className="active"> */}
                             <a onClick={homePage}>Trang Chủ</a>
                           </li>
@@ -98,6 +107,7 @@ function Header() {
                           <li>
                             <a onClick={trendPage}>Xu Hướng</a>
                           </li>
+
                           <li>
                             <a onClick={aboutPage}>Giới Thiệu</a>
                           </li>
@@ -108,7 +118,9 @@ function Header() {
 
                           {accessToken != null ? (
                             <li>
-                              <a href="#">Xin chào {jwt_decode(accessToken).sub}</a>
+                              <a href="#">
+                                Xin chào {jwt_decode(accessToken).sub}
+                              </a>
                               <ul
                                 className="submenu"
                                 style={{ width: "200px" }}
@@ -157,12 +169,7 @@ function Header() {
         </div>
         {/* <!-- Header End --> */}
       </header>
-      <main>
-        {/* <!--? slider Area Start--> */}
-        
-      </main>
     </>
   );
 }
-
 export default Header;

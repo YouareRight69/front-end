@@ -6,6 +6,9 @@ import ImageGallery from '../common/ImageGallery';
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../firebase/index.js";
+import jwt_decode from "jwt-decode";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function EditService() {
   const service = "http://localhost:8080/api/hairService"
@@ -17,12 +20,16 @@ function EditService() {
   const [imagesArray, setImagesArray] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [valid, setValid] = useState({});
-  const error = { color: "red" };
+  const accessToken = localStorage.getItem("accessToken");
 
   //Get data vào target
   useEffect(() => {
     if (id) {
-      axios.get(`${service}/${id}`).then((resp) => {
+      axios.get(`${service}/${id}`, {
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+        },
+      }).then((resp) => {
         setTarget(resp.data);
         setDataUpdate(resp.data);
       });
@@ -74,13 +81,28 @@ function EditService() {
             "Content-Type": "application/json",
             "Access-Control-Allow-Methods": "PATCH",
             "Access-Control-Allow-Credentials": "true",
+            "Authorization": "Bearer " + accessToken,
           },
         })
         .then((resp) => {
           navigate("/listService");
+          toast.success("Cập nhật thành công"); 
         })
         .catch((error) => {
-          console.log(error);
+          if (error.response) {
+            // Xử lý lỗi phản hồi từ API
+            const errorData = error.response.data;
+            if (errorData && Array.isArray(errorData) && errorData.length > 0) {
+              const validationErrors = {};
+              errorData.forEach(error => {
+                validationErrors[error.field] = error.defaultMessage;
+              });
+              setValid(validationErrors);
+            }
+          } else {
+            // Xử lý các lỗi khác
+            console.log(error);
+          }
         });
     }
   };
@@ -99,10 +121,16 @@ function EditService() {
     }));
   };
 
-  // Refresh
   const handleReset = () => {
-    setDataUpdate({});
+    setTarget({
+      name: "",
+      price: 0,
+      description: "",
+      type: "",
+      media: []
+    });
   };
+
 
   const handleUploadMultiImage = async () => {
     try {
@@ -173,7 +201,7 @@ function EditService() {
                     <div className="mt-10-huyentn" style={{ 'display': 'flex' }}>
                       <div className="col-lg-3 col-md-4">
                         {/* <p className="mt-2">Tên dịch vụ {valid.name && <span style={{error}}>{valid.name}</span>}</p> */}
-                        <label htmlFor="exampleInputPassword1" className="form-label">Tên dịch vụ {valid.name && <span style={{ error }}>{valid.name}</span>}</label>
+                        <label htmlFor="exampleInputPassword1" className="form-label">Tên dịch vụ </label>
                       </div>
                       <div className="col-lg-9 col-md-4">
                         <input
@@ -184,13 +212,13 @@ function EditService() {
                           className="single-input"
                           onChange={handleChange}
                           id="exampleInputPassword1" />
+                        {valid.name && <span className="span-huyentn">{valid.name}</span>}
                       </div>
                     </div>
 
                     <div className="mt-10-huyentn" style={{ 'display': 'flex' }}>
                       <div className="col-lg-3 col-md-4">
-                        {/* <p className="mt-2">Giá {valid.price && <span style={{error}}>{valid.price}</span>}</p> */}
-                        <label htmlFor="exampleInputPassword1" className="form-label">Giá {valid.price && <span style={{ error }}>{valid.price}</span>}</label>
+                        <label htmlFor="exampleInputPassword1" className="form-label">Giá </label>
                       </div>
                       <div className="col-lg-9 col-md-4">
                         <input
@@ -201,13 +229,13 @@ function EditService() {
                           name='price'
                           onChange={handleChange}
                           id="price" />
+                        {valid.price && <span className="span-huyentn">{valid.price}</span>}
                       </div>
                     </div>
 
                     <div className="mt-10-huyentn" style={{ 'display': 'flex' }}>
                       <div className="col-lg-3 col-md-4">
-                        {/* <p className="mt-2">Mô tả {valid.description && <span style={{error}}>{valid.description}</span>}</p> */}
-                        <label htmlFor="exampleInputPassword1" className="form-label">Mô tả {valid.description && <span style={{ error }}>{valid.description}</span>}</label>
+                        <label htmlFor="exampleInputPassword1" className="form-label">Mô tả </label>
                       </div>
                       <div className="col-lg-9 col-md-4">
                         <textarea
@@ -218,22 +246,26 @@ function EditService() {
                           name='description'
                           onChange={handleChange}
                           id="description" />
+                        {valid.description && <span className="span-huyentn">{valid.description}</span>}
                       </div>
                     </div>
-                    <div className="mt-10-huyentn" style={{ 'display': 'flex' }}>
+
+                    <div className="mt-10-huyentn" style={{ display: 'flex' }}>
                       <div className="col-lg-3 col-md-4">
-                        {/* <p className="mt-2">Loại dịch vụ {valid.type && <span style={{error}}>{valid.type}</span>}</p> */}
-                        <label htmlFor="exampleInputPassword1" className="form-label">Loại dịch vụ {valid.type && <span style={{ error }}>{valid.type}</span>}</label>
+                        <label htmlFor="type" className="form-label">Loại dịch vụ</label>
                       </div>
                       <div className="col-lg-9 col-md-4">
-                        <input
-                          type="text"
-                          placeholder="Loại dịch vụ"
+                        <select
+                          id="type"
                           className="single-input"
                           value={dataUpdate.type}
-                          name='type'
-                          onChange={handleChange}
-                          id="type" />
+                          name="type"
+                          onChange={handleChange}>
+                          <option value="">Chọn loại dịch vụ</option>
+                          <option value="1">Chăm sóc tóc</option>
+                          <option value="2">Chăm sóc da</option>
+                        </select>
+                        {valid.type && <span className="span-huyentn">{valid.type}</span>}
                       </div>
                     </div>
 

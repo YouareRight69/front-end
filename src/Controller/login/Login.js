@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import LeftSideNamNB from "../register/common/LeftSideNamNB";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import { ToastContainer, toast } from "react-toastify";
+
+import { ToastContainer, toast } from "react-toastify"
+// import { toast } from "react-toastify";
+
 // import { useCookies } from "react-cookie";
 
 function Login() {
@@ -81,6 +84,7 @@ function Login() {
           progress: undefined,
           theme: "light",
         });
+        // toast.error("Tên đăng nhập hoặc mật khẩu không đúng!");
       });
   };
   return (
@@ -151,7 +155,7 @@ function Login() {
                         <button
                           style={{ width: "100%" }}
                           type="button"
-                          className="button boxed-btn namnb6"
+                          className="button boxed-btn namnb6_1"
                         >
                           {" "}
                           Hủy{" "}
@@ -161,7 +165,7 @@ function Login() {
                         <button
                           style={{ width: "100%" }}
                           type="button"
-                          className="button boxed-btn"
+                          className="button boxed-btn namnb6_2"
                           onClick={login}
                         >
                           {" "}

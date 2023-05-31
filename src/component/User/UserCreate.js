@@ -157,7 +157,7 @@ function UserCreate() {
                                         <p className="mt-2">Địa chỉ</p>
                                     </div>
                                     <div className="col-lg-9 col-md-4">
-                                        <input type="text" placeholder="Địa chỉ" 
+                                        <input type="text" placeholder="Địa chỉ"
                                             className="single-input"
                                             name='address' onChange={(e) => handleChange(e)} id="address" />
                                     </div>
