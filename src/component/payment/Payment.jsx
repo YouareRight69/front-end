@@ -1,49 +1,23 @@
-import { makeStyles } from "@mui/styles";
 import accounting from "accounting";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams  } from "react-router-dom";
-
-const useStyles = makeStyles({
-  imgServiceLeft: {
-    height: "40px",
-    width: "40px",
-    backgroundImage: "url(assets/img/thien/1.jpg)",
-  },
-  imgServiceRight: {
-    height: "40px",
-    width: "40px",
-    backgroundImage: "url(assets/img/thien/1.jpg)",
-  },
-  autoWrap: {
-    display: "flex",
-    flexWrap: "wrap",
-    flexDirection: "column",
-  },
-});
+import { useNavigate, useParams } from "react-router-dom";
 
 function Payment() {
-  const [list, setList] = useState({ data: { content: [] } });
-  const booking = "http://localhost:8080/api/receptionist/invoice/booking";
-  const test = "http://localhost:8080/api/booking-management/details";
   const user = "http://localhost:8080/api/user/detail";
-  const service = "http://localhost:8080/api/hairService/list";
+  const test = "http://localhost:8080/api/receptionist/invoice/details";
   const accessToken = localStorage.getItem("accessToken");
   const [detailInfo, setDetailInfo] = useState([]);
   const [dataUser, setDataUser] = useState([]);
   const [idUser, setIdUser] = useState(jwt_decode(accessToken).aud);
-  const [listService, setListService] = useState([]);
-  const [dataService, setDataService] = useState([]);
-  const [dataBooking, setDataBooking] = useState();
+  const [serviceData, setServiceData] = useState([]);
+  const [statusInvoice, setStatusInvice] = useState("");
+  const [formData, setFormData] = useState({ isDelete: 0 });
+  const [serviceListId, setServiceListId] = useState([]);
   const navigate = useNavigate();
   const params = useParams();
   const { id } = params;
-
-  const [formData, setFormData] = useState({ isDelete: 0 });
-
-  const [dataBookingById, setDataBookingById] = useState();
-  const [selectedServices, setSelectedServices] = useState([]);
 
   useEffect(() => {
     axios
@@ -57,29 +31,32 @@ function Payment() {
       })
       .then((resp) => {
         setDetailInfo(resp.data);
-        setListService(resp.data.service);
-        setSelectedServices(resp.data.service);
+        setServiceData(resp.data.service);
       });
   }, []);
 
   useEffect(() => {
-    if (detailInfo.id !== undefined) {
-      axios
-        .get(`${booking}/${detailInfo.id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Methods":
-              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-            Authorization: "Bearer " + accessToken,
-          },
-        })
-        .then((resp) => {
-          setDataBookingById(resp.data);
-        });
+    if (serviceData.length > 0) {
+      const updatedServiceListId = serviceData.map(
+        (element) => element.serviceId
+      );
+      setServiceListId(updatedServiceListId);
     }
-  }, [detailInfo]);
+  }, [serviceData]);
 
-  console.log("dataBookingById", dataBookingById);
+  useEffect(() => {
+    if (serviceListId.length > 0) {
+      setFormData({
+        userId: jwt_decode(accessToken).aud,
+        isDelete: 0,
+        serviceList: serviceListId,
+        invoiceTime: getCurrentTime(),
+        status: statusInvoice,
+        total: detailInfo.total,
+        bookingId: id,
+      });
+    }
+  }, [serviceListId, statusInvoice]);
 
   useEffect(() => {
     axios
@@ -88,24 +65,11 @@ function Payment() {
           "Content-Type": "application/json",
           "Access-Control-Allow-Methods":
             "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          Authorization: "Bearer " + accessToken,
         },
       })
       .then((resp) => {
         setDataUser(resp.data);
-      });
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get(`${service}`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Methods":
-            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-        },
-      })
-      .then((resp) => {
-        setDataService(resp.data);
       });
   }, []);
 
@@ -120,16 +84,9 @@ function Payment() {
   const getCurrentTime = () => {
     const currentTime = new Date();
     const hours = currentTime.getHours();
-    const minutes = currentTime.getMinutes();
+    const minutes = currentTime.getMinutes().toString().padStart(2, "0");
     const seconds = "00";
     return `${hours}:${minutes}:${seconds}`;
-  };
-
-  const handleServiceClick = (item) => {
-    setSelectedServices((prevSelectedServices) => [
-      ...prevSelectedServices,
-      item,
-    ]);
   };
 
   const handleEditBooking = () => {
@@ -146,15 +103,17 @@ function Payment() {
         }
       )
       .then((res) => {
-        navigate("/booking/" + id, {
-          state: { selectService: res.data.serviceList, formData: res.data },
-        });
+        navigate("/payment/" + id, {});
       });
   };
 
-  // console.log(selectedServices);
+  const handleSaveInvoice = (e) => {
+    // e.preventDefault();
+    setStatusInvice("1");
+  };
 
-  const classes = useStyles();
+  console.log(formData);
+
   return (
     <div>
       <main>
@@ -206,7 +165,7 @@ function Payment() {
             <div className="section-top-border">
               <div className="row autoWrap">
                 <div className="col-12" style={{ order: "1" }}>
-                  <table className="table table-bordered mb-0">
+                  <table className="table table-borderless mb-0">
                     <thead>
                       <tr>
                         <th scope="col" colSpan="8"></th>
@@ -245,24 +204,24 @@ function Payment() {
                       </tr>
                     </tbody>
                   </table>
-                  <hr className="mt-2 mb-2" />
+                  <hr className="mt-5 mb-5" />
                   <table className="table table-bordered mb-0">
                     <thead>
                       <tr>
-                        <th scope="col" colSpan="4">
+                        <th scope="col" colSpan="2">
                           Sản Phẩm & Dịch Vụ
                         </th>
-                        <th scope="col" colSpan="3">
+                        <th scope="col" colSpan="2">
                           Đơn giá
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {listService?.map((item, index) => (
+                      {serviceData?.map((item, index) => (
                         <tr key={index}>
                           <td>{index + 1}</td>
-                          <td colSpan="2">{item.serviceName}</td>
-                          <td colSpan="2">
+                          <td>{item.serviceName}</td>
+                          <td>
                             {accounting.formatMoney(item.price, {
                               symbol: "",
                               format: "%v vnđ",
@@ -270,40 +229,28 @@ function Payment() {
                             })}
                           </td>
                           <td>
-                            <a
-                              href="#"
-                              className="genric-btn warning border"
-                              style={{ marginRight: "5px" }}
-                            >
-                              Sửa
-                            </a>
-                          </td>
-                          <td>
-                            <a
-                              href="#"
-                              className="genric-btn danger border"
-                              style={{ marginLeft: "5px" }}
-                            >
-                              Xóa
-                            </a>
+                            {/* <div className="text-center">
+                              <div className="button rounded-0 primary-bg text-white boxed-btn">
+                                Sửa
+                              </div>
+                            </div> */}
                           </td>
                         </tr>
                       ))}
                       <tr>
-                        <td colSpan="7">
+                        <td colSpan="4">
                           <div className="text-center">
-                            <div className="btn btn-secondary"
-                            onClick={() =>
-                              handleEditBooking()
-                            }
+                            <div
+                              className="btn btn-secondary w-100"
+                              onClick={() => handleEditBooking()}
                             >
-                            Sửa dịch vụ +
+                              Sửa dịch vụ +
                             </div>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <th colSpan="4">Thành Tiền</th>
+                        <th colSpan="2">Thành Tiền</th>
                         <td colSpan="2">
                           {accounting.formatMoney(detailInfo.total, {
                             symbol: "",
@@ -311,31 +258,34 @@ function Payment() {
                             precision: 0,
                           })}
                         </td>
-                        <td></td>
-                        <td></td>
                       </tr>
                       <tr>
-                        <th colSpan="4">Thanh Toán</th>
-                        <td></td>
+                        <th colSpan="2">Thanh Toán</th>
                         <td colSpan="1">
-                          <div
-                            className="genric-btn warning border"
-                            style={{ padding: "0px 16px 0px 16px" }}
-                          >
-                            Tại quầy
+                          <div className="text-center">
+                            <div className="button rounded-0 primary-bg text-white boxed-btn">
+                              Tại quầy
+                            </div>
                           </div>
                         </td>
                         <td>
-                          <div
-                            className="genric-btn primary border"
-                            style={{ padding: "0px 16px 0px 16px" }}
-                          >
-                            Zalo Pay
+                          <div className="text-center">
+                            <div className="button rounded-0 primary-bg text-white boxed-btn">
+                              VNPay
+                            </div>
                           </div>
                         </td>
                       </tr>
                     </tbody>
                   </table>
+                  <div className="text-right mt-5">
+                    <div
+                      className="btn btn-secondary"
+                      onClick={(e) => handleSaveInvoice()}
+                    >
+                      Lưu
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

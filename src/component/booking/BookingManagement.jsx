@@ -35,6 +35,7 @@ export default function BookingManagement() {
         setList(res);
       });
   }
+  console.log(list);
 
   const onSubmit = (data) => {
     setCondition(data);

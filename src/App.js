@@ -38,6 +38,8 @@ import HistoryEmployee from "./component/employee/history/historyEmployee";
 import Invoice from "./component/invoice/Invoice";
 import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
+import PaymentEdit from "./component/payment/PaymentEdit";
+import PaymentServiceEdit from "./component/payment/PaymentServiceEdit";
 
 
 
@@ -69,6 +71,8 @@ function App() {
           <Route path="/payment" element={<Payment />}>
             <Route path="/payment/:id" element={<Payment />} />
           </Route>
+          <Route path="/payment-edit/:id" element={<PaymentEdit />} />
+          <Route path="/payment-service-edit/:id" element={<PaymentServiceEdit />} />
           <Route path="/payment" element={<Payment />}></Route>
           <Route path="/booking" element={<Booking />}>
             <Route path="/booking/:id" element={<Booking />} />

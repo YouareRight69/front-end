@@ -7,7 +7,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function Booking() {
+export default function PaymentEdit() {
   //useState
   const [data, setData] = useState();
   const [selectBranch, setSelectBranch] = useState("");
@@ -55,7 +55,7 @@ export default function Booking() {
     }
     setSelectBranch(formData.branch);
   }, [status]);
-  
+  console.log(selectTime);
   useEffect(() => {
     axios
       .get("http://localhost:8080/api/emp/booking/info/list-branch")
@@ -67,6 +67,7 @@ export default function Booking() {
       });
 
     if (formData.branch != "") {
+      console.log(formData.branch);
       axios
         .get(
           "http://localhost:8080/api/emp/booking/info/list-employee-of-branch?branchId=" +
@@ -224,11 +225,11 @@ export default function Booking() {
 
   const handleSelectServiceButton = () => {
     if (id) {
-      navigate("/select-service", {
+      navigate("/payment-service-edit/" + id, {
         state: { selectService: selectservice, formData: formData, id: id },
       });
     } else {
-      navigate("/select-service", {
+      navigate("/payment-service-edit/" + id, {
         state: { selectService: selectservice, formData: formData },
       });
     }
@@ -268,7 +269,7 @@ export default function Booking() {
           )
           .then((data) => {
             console.log(data.data);
-            toast.success("Đặt lịch hẹn thành công!", {
+            toast.success("Chỉnh sửa dịch vụ thành công!", {
               position: "top-center",
               autoClose: 1200,
               hideProgressBar: false,
@@ -279,7 +280,7 @@ export default function Booking() {
               theme: "light",
             });
 
-            navigate("/", {
+            navigate("/payment/" + id, {
               state: null,
             });
           })
@@ -298,7 +299,7 @@ export default function Booking() {
           })
           .then((data) => {
             console.log(data.data);
-            toast.success("Đặt lịch hẹn thành công!", {
+            toast.success("Chỉnh sửa dịch vụ thành công!", {
               position: "top-center",
               autoClose: 1200,
               hideProgressBar: false,
@@ -309,7 +310,7 @@ export default function Booking() {
               theme: "light",
             });
 
-            navigate("/", {
+            navigate("/payment/" + id, {
               state: null,
             });
           })

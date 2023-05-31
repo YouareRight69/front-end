@@ -25,14 +25,14 @@ export default function DetailInfoButton(props) {
 
   return (
     <React.Fragment>
-      <button
+      <div
         className="genric-btn primary"
         data-bs-toggle="modal"
         data-bs-target={`#modalDetail-${props.id}`}
         onClick={getInfo}
       >
         <i className="fa fa-eye" aria-hidden="true"></i>
-      </button>
+      </div>
 
       <ModalDetail
         id={props.id}
