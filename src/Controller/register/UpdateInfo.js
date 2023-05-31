@@ -221,7 +221,7 @@ function UpdateInfo() {
                   </label>
                 </div>
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                  <p style={{ paddingTop: "5px" }}>
+                  <p style={{ paddingTop: "5px", paddingRight: "45px" }}>
                     Nhấn vào ảnh để cập nhật Avatar!
                   </p>
                 </div>
