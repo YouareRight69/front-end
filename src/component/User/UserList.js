@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Outlet, Link } from "react-router-dom";
 import Page from '../../utils/Page';
 import SearchForm from '../../Button/SearchForm';
+import DeleteUser from '../../Button/DeleteUser';
 
 function UserList() {
 
@@ -67,9 +68,6 @@ function UserList() {
                                 </aside>
                     </div>
                     <div className="mt-10" style={{ 'display': 'flex' }}>
-                        <div className="col-lg-3 ms-10">
-                            <button className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"><Link to="/createUser">Thêm mới</Link></button>
-                        </div>
                         <div className="col-lg-3 ms-10"></div>
                     </div>
                     <div className="section-top-border">
@@ -101,16 +99,7 @@ function UserList() {
                                                     <td>{item.phoneNumber}</td>
                                                     {/* <td>{item.account.accountId}</td> */}
                                                     <td>
-                                                        <button className="genric-btn danger radius" data-toggle="modal"
-                                                            data-target="#exampleModal">
-                                                            <i className="far fa-trash-alt"></i>
-                                                        </button>
-                                                        <button className="genric-btn success radius">
-                                                            <i className="fas fa-pencil-alt"></i>
-                                                        </button>
-                                                        <button className="genric-btn primary radius" style={{ 'marginRight': '10px' }}><i
-                                                            className="fa fa-eye" aria-hidden="true"></i>
-                                                        </button>
+                                                    <DeleteUser url={url} id={item.userId} rerender={rerender} />
                                                     </td>
                                                 </tr>
                                             )}
