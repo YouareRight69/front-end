@@ -76,6 +76,9 @@ function Login() {
         if (role.roles === "[ROLE_RECEPTIONIST]") {
           navigate("/booking-management");
         }
+        if (role.roles === "[ROLE_EMPLOYEE]") {
+          navigate("/main");
+        }
       })
       .catch((error) => {
         // toast.error("Tên đăng nhập hoặc mật khẩu không đúng!", {
