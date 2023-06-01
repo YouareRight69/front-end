@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { v4 } from "uuid";
 import ImageGallery from "../common/ImageGallery";
+import Sidebar from "../common/admin/sidebar";
 import { storage } from "../firebase/index.js";
 const accessToken = localStorage.getItem("accessToken");
 
@@ -114,6 +115,8 @@ function AddNewBranch(props) {
         })
       );
 
+      console.log("up xong anh");
+
       onSubmit(updatedData);
     } catch (error) {
       console.log(error);
@@ -140,8 +143,8 @@ function AddNewBranch(props) {
         {/* Hero End */}
         {/* Services Area Start */}
         <div style={{ display: "flex" }}>
-          <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
-            Admin
+          <div className="col-lg-2">
+            <Sidebar />
           </div>
           <div className="col-lg-10">
             <section className="service-area section-padding300">
@@ -157,7 +160,6 @@ function AddNewBranch(props) {
                         <ImageGallery
                           sendDataToParent={handleDataFromImageGallery}
                           sendStatus={handleStatusFromGallery}
-                          
                         />
                       </div>
                     </div>

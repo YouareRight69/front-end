@@ -79,7 +79,7 @@ function Payment() {
 
   useEffect(() => {
     axios
-      .get(`${user}?id=${idUser}`, {
+      .get(`${user}/${idUser}`, {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Methods":

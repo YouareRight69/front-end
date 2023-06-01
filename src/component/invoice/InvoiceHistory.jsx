@@ -6,6 +6,7 @@ import DeleteButton from "../button/DeleteButton";
 import DetailButton from "../button/DetailButton";
 import EditButton from "../button/EditButton";
 import Page from "../common/Page";
+import jwt_decode from "jwt-decode";
 
 function InvoiceHistory(props) {
   const [condition, setCondition] = useState("");
@@ -13,6 +14,8 @@ function InvoiceHistory(props) {
   const urlInvoiceList = "http://localhost:8080/api/invoice-management";
   const urlInvoiceSuccess = "http://localhost:8080/api/invoice-management/success";
   const accessToken = localStorage.getItem("accessToken");
+  // accesToken phai ton tai
+  const roles=jwt_decode(accessToken).roles;
   const [dataFirst, setDataFirst] = useState();
   const [status, setStatus] = useState("");
   const [display, setDisplay] = useState(true);
@@ -95,7 +98,7 @@ function InvoiceHistory(props) {
           </div>
         </div>
         <div style={{ display: "flex" }}>
-          <div className="col-lg-2" style={{ backgroundColor: "bisque" }}>
+          <div className="col-lg-2">
             Admin
           </div>
 
@@ -168,10 +171,10 @@ function InvoiceHistory(props) {
                                     type={"mã hoá đơn"}
                                     rerender={rerender}
                                   />
-                                  <EditButton
+                                {item.status === "0" && <EditButton
                                     url={"payment"}
                                     id={item.booking.bookingId}
-                                  />
+                                  />}
                                   <DetailButton
                                     url={"invoice"}
                                     id={item.booking.bookingId}

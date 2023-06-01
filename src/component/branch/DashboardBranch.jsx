@@ -6,6 +6,7 @@ import DeleteButton from "../button/DeleteButton";
 import DetailButton from "../button/DetailButton";
 import EditButton from "../button/EditButton";
 import Page from "../common/Page";
+import Sidebar from "../common/admin/sidebar";
 
 function DashboardBranch(props) {
   const [list, setList] = useState({ data: { content: [] } });
@@ -73,8 +74,8 @@ function DashboardBranch(props) {
         {/* Hero End */}
         {/* Start Align Area */}
         <div style={{ display: "flex" }}>
-          <div className="col-lg-2" style={{ backgroundColor: "bisque" }}>
-            Admin
+          <div className="col-lg-2">
+            <Sidebar />
           </div>
 
           <div className="col-lg-10">

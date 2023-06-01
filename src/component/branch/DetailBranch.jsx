@@ -2,20 +2,22 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import ImageGalleryEdit from "../common/ImageGalleryEdit";
+import Sidebar from "../common/admin/sidebar";
 
 function DetailBranch(props) {
   const url = "http://localhost:8080/api/admin/branch";
+  const accessToken = localStorage.getItem("accessToken");
   const { id } = useParams();
   const [target, setTarget] = useState({});
   const [dataView, setDataView] = useState([]);
-  const accessToken = localStorage.getItem("accessToken");
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
+      console.log(accessToken);
       axios
-        .get(`${url}/${id}`, target, {
+        .get(`${url}/${id}`, {
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Methods":
@@ -56,8 +58,8 @@ function DetailBranch(props) {
         {/* Hero End */}
         {/* Services Area Start */}
         <div style={{ display: "flex" }}>
-          <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
-            Admin
+          <div className="col-lg-2">
+            <Sidebar />
           </div>
           <div className="col-lg-10">
             <section className="service-area section-padding300">

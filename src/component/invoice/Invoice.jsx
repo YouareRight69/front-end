@@ -1,9 +1,9 @@
 import accounting from "accounting";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import moment from "moment";
 
 function Payment() {
   const user = "http://localhost:8080/api/user/detail";
@@ -52,7 +52,7 @@ function Payment() {
 
   useEffect(() => {
     axios
-      .get(`${user}?id=${idUser}`, {
+      .get(`${user}/${idUser}`, {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Methods":
@@ -64,6 +64,8 @@ function Payment() {
         setDataUser(resp.data);
       });
   }, []);
+
+  console.log(dataUser);
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -135,7 +137,8 @@ function Payment() {
                         <td>{detailInfo.userIdBooking}</td>
                         <td>Giờ vào / ra:</td>
                         <td>
-                          {detailInfo.time} - {moment(timeInvoice).format("HH:mm:ss")}
+                          {detailInfo.time} -{" "}
+                          {moment(timeInvoice).format("HH:mm:ss")}
                         </td>
                       </tr>
                       <tr>
