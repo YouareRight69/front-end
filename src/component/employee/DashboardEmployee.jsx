@@ -165,11 +165,11 @@ function DashboardEmployee(props) {
                             list.data.content.map((item) => 
                               <tr style={{ marginTop: "5px" }} key={item.employeeId}>
                                 <th scope="row">{item.employeeId}</th>
-                                <td>{item.user.fullName}</td>
-                                <td>{item.user.dateOfBirth}</td>
-                                <td>{item.user.phoneNumber}</td>
-                                <td>{item.user.account.email}</td>
-                                <td>{item.user.gender}</td>
+                                <td>{item.user?.fullName}</td>
+                                <td>{item.user?.dateOfBirth}</td>
+                                <td>{item.user?.phoneNumber}</td>
+                                <td>{item.user?.account.email}</td>
+                                <td>{item.user?.gender}</td>
                                 <td>
                                   {
                                     item.type === "1" ? "Hair dresser" :
@@ -178,7 +178,7 @@ function DashboardEmployee(props) {
                                     ""
                                   }
                                 </td>
-                                <td>{item.branch.name}</td>
+                                <td>{item.branch?.name}</td>
                                 <td style={{ display: "flex"}}>
                               <DeleteButton url={url} id={item.employeeId} rerender={rerender} />
 
