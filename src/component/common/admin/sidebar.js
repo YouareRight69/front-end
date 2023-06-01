@@ -6,7 +6,7 @@ function Sidebar() {
   const navigate = useNavigate();
 
   const toCustomer = () => {
-    navigate("/user");
+    navigate("/listUser");
   };
   const toEmployee = () => {
     navigate("/employee");
