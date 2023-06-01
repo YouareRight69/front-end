@@ -6,6 +6,7 @@ import SearchForm from '../../Button/SearchForm';
 import DetailButton from '../../Button/DetailButton';
 import axios from 'axios';
 import { useLocation, useNavigate } from "react-router-dom";
+import Sidebar from "../common/admin/sidebar";
 
 function DashboardEmployee(props) {
   const url = "http://localhost:8080/api/employee/listAllEmp";
@@ -101,8 +102,8 @@ function DashboardEmployee(props) {
         {/* Hero End */}
         {/* Start Align Area */}
         <div style={{ display: "flex" }}>
-          <div className="col-lg-2" style={{ backgroundColor: "bisque" }}>
-            Admin
+          <div className="col-lg-2" >
+            <Sidebar></Sidebar>
           </div>
 
           <div className="col-lg-10">
@@ -210,16 +211,6 @@ function DashboardEmployee(props) {
                   condition={condition}
                   handleClick={handleClick}
                 />
-                <div style={{ display: "flex" }}>
-                  <div className="col-lg-10 ms-10 mb-50"></div>
-                  <div className="col-lg-2 ms-10 mb-50">
-                  <Link to="/employee">
-                            <div className="button rounded-0 primary-bg w-100 btn_1 boxed-btn">
-                              Trở về
-                            </div>
-                          </Link>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

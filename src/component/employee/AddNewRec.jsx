@@ -84,7 +84,9 @@ console.log(formValue)
         },
       })
       .then((resp) => {
-        nagative("/employee");
+        nagative("/employee"); 
+        toast.success("Thêm mới thành công");
+
       })
       .catch((error) => {
         console.log(error);
