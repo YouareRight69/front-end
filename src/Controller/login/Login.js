@@ -71,7 +71,7 @@ function Login() {
           navigate("/main");
         }
         if (role.roles === "[ROLE_ADMIN]") {
-          navigate("/register");
+          navigate("/chart");
         }
         if (role.roles === "[ROLE_RECEPTIONIST]") {
           navigate("/booking-management");

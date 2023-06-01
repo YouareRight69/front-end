@@ -163,7 +163,7 @@ function Register() {
               className="row"
               style={{ display: "flex", height: "100%", alignItems: "center" }}
             >
-              <div className="col-lg-7 col-md-7" style={{ marginTop: "50px" }}>
+              <div className="col-lg-7 col-md-7" style={{ marginTop: "60px" }}>
                 <h3 className="mb-30" style={{ color: "#d19f68" }}>
                   Đăng ký tài khoản
                 </h3>
