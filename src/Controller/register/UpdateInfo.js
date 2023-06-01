@@ -184,8 +184,15 @@ function UpdateInfo() {
           backgroundSize: "cover",
         }}
       >
-        <div className="container box_1170" style={{ width: "80%" }}>
-          <div className="section-top-border" style={{ height: "90vh" }}>
+        <div
+          className="container box_1170 "
+          style={{
+            width: "80%",
+            border: "2px solid brown",
+            margin: "20px auto",
+          }}
+        >
+          <div className="section-top-border" style={{ height: "50vh" }}>
             <div
               className="row"
               style={{ display: "flex", height: "100%", alignItems: "center" }}
