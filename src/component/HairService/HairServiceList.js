@@ -98,6 +98,7 @@ function UserList() {
                                 <div className="col-lg-3 ms-10"></div>
                             </div>
                             <div className="section-top-border">
+                                <h3 className="mb-30">Danh sách dịch vụ</h3>
                                 <div>
                                     <div className="progress-table" style={{ 'textAlign': 'center' }}>
                                         <table className="table table-hover" id="table">
