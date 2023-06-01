@@ -2,9 +2,13 @@ import axios from "axios";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { v4 } from "uuid";
 import ImageGallery from "../common/ImageGallery";
+import Sidebar from "../common/admin/sidebar";
 import { storage } from "../firebase/index.js";
+const accessToken = localStorage.getItem("accessToken");
 
 function AddNewBranch(props) {
   const url = "http://localhost:8080/api/admin/branch";
@@ -15,6 +19,7 @@ function AddNewBranch(props) {
     media: [],
   });
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0); // State lưu trữ giá trị phần trăm tải lên
 
   //Validation
   const [valid, setValid] = useState({ name: "", address: "" });
@@ -32,12 +37,23 @@ function AddNewBranch(props) {
         .patch(`${url}/${id}`, data, {
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Methods": "PATCH",
-            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+            Authorization: "Bearer " + accessToken,
           },
         })
         .then((resp) => {
           navigate("/branch");
+          toast.success("Thêm mới chi nhánh thành công!", {
+            position: "top-center",
+            autoClose: 1200,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
         })
         .catch((error) => {
           console.log(error);
@@ -48,7 +64,9 @@ function AddNewBranch(props) {
       .post(url, data, {
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Methods": "POST",
+          "Access-Control-Allow-Methods":
+            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          Authorization: "Bearer " + accessToken,
         },
       })
       .then((resp) => {
@@ -97,6 +115,8 @@ function AddNewBranch(props) {
         })
       );
 
+      console.log("up xong anh");
+
       onSubmit(updatedData);
     } catch (error) {
       console.log(error);
@@ -123,8 +143,8 @@ function AddNewBranch(props) {
         {/* Hero End */}
         {/* Services Area Start */}
         <div style={{ display: "flex" }}>
-          <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
-            Admin
+          <div className="col-lg-2">
+            <Sidebar />
           </div>
           <div className="col-lg-10">
             <section className="service-area section-padding300">
@@ -140,13 +160,13 @@ function AddNewBranch(props) {
                         <ImageGallery
                           sendDataToParent={handleDataFromImageGallery}
                           sendStatus={handleStatusFromGallery}
-                          
                         />
                       </div>
                     </div>
                   </div>
                   <div className="col-lg-8 col-md-8">
                     <h3 className="mb-30">Thêm mới chi nhánh</h3>
+                    {uploading && <div className="progress-bar"></div>}
                     <form action="#">
                       <div className="mt-80" style={{ display: "flex" }}>
                         <div className="col-lg-3 col-md-4">
@@ -221,7 +241,6 @@ function AddNewBranch(props) {
                       </div>
                     </div>
                   </div>
-                  {uploading && <div className="progress-bar"></div>}
                 </div>
               </div>
             </section>

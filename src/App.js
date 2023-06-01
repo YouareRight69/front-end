@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 
-import Home from "./controller/Home";
 
 import Login from "./controller/login/Login.js";
 import ChangePassword from "./controller/register/ChangePassword";
@@ -26,7 +25,14 @@ import AddNewBranch from "./component/branch/AddNewBranch";
 import Branch from "./component/branch/DashboardBranch";
 import DetailBranch from "./component/branch/DetailBranch";
 import EditBranch from "./component/branch/EditBranch";
+import BarChart1 from "./component/common/admin/BarChart1";
+import About from "./component/common/user/About";
+import Main from "./component/common/user/Main";
+import Services from "./component/common/user/Services";
+import Trend from "./component/common/user/Trend";
+import Footer from "./component/common/user/footer";
 import AddNewEmployee from "./component/employee/AddNewEmployee";
+import AddNewRec from "./component/employee/AddNewRec";
 import DashboardEmployee from "./component/employee/DashboardEmployee";
 import DetailEmployee from "./component/employee/DetailEmployee";
 import EditEmployee from "./component/employee/EditEmployee";
@@ -35,18 +41,8 @@ import HistoryEmployee from "./component/employee/history/historyEmployee";
 import Invoice from "./component/invoice/Invoice";
 import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
-
-import AddNewRec from "./component/employee/AddNewRec";
-
-
-// import BookingManagement from "./component/booking/BookingManagement";
-
-import Footer from "./component/common/user/footer";
-import Main from "./component/common/user/Main";
-import Services from "./component/common/user/Services";
-import About from "./component/common/user/About";
-import Trend from "./component/common/user/Trend";
-import BarChart1 from "./component/common/admin/BarChart1";
+import PaymentEdit from "./component/payment/PaymentEdit";
+import PaymentServiceEdit from "./component/payment/PaymentServiceEdit";
 import Header from "./controller/register/common/Header";
 
 
@@ -54,11 +50,9 @@ function App() {
   return (
     <>
       <BrowserRouter>
-      <Header/>
+        <Header />
         <Routes>
-         
-          {/* <Home />
-          <Main /> */}
+
           <Route path="/" element={<Main />}>   </Route>
           <Route exact path='/main' element={<Main />} />
           <Route exact path='/service' element={<Services />} />
@@ -77,13 +71,6 @@ function App() {
           <Route path="/changePassword" element={<ChangePassword />}></Route>
           <Route path="/updateInfo" element={<UpdateInfo />}></Route>
 
-          <Route path="/branch" element={<Branch />}></Route>
-          <Route path="/branch-add" element={<AddNewBranch />}></Route>
-          <Route path="/branch-detail/:id" element={<DetailBranch />}></Route>
-          <Route path="/branch-edit/:id" element={<EditBranch />}></Route>
-          <Route path="/invoice-history" element={<InvoiceHistory />}></Route>
-          <Route path="/invoice" element={<Invoice />}></Route>
-          <Route path="/payment" element={<Payment />}></Route>
           <Route path="/booking" element={<Booking />}>
             <Route path="/booking/:id" element={<Booking />} />
           </Route>
@@ -94,17 +81,20 @@ function App() {
           <Route path="/createService" element={<CreateService />} />
           <Route path="/detailService/:id" element={<DetailService />} />
 
-          {/* <Route path="/listService/:id" element={<CreateService />} /> */}
-
-          <Route path="/listService/:id" element={<EditService />} />
+          <Route path='/listService/:id' element={<EditService />} />
 
           <Route path="/branch" element={<Branch />}></Route>
           <Route path="/branch-add" element={<AddNewBranch />}></Route>
-          <Route path="/branch-detail" element={<DetailBranch />}></Route>
-          <Route path="/branch-edit" element={<EditBranch />}></Route>
+          <Route path="/branch-detail/:id" element={<DetailBranch />}></Route>
+          <Route path="/branch-edit/:id" element={<EditBranch />}></Route>
+
+          <Route path="/invoice/:id" element={<Invoice />}></Route>
           <Route path="/invoice-history" element={<InvoiceHistory />}></Route>
-          <Route path="/invoice" element={<Invoice />}></Route>
-          <Route path="/payment" element={<Payment />}></Route>
+
+          <Route path="/payment/:id" element={<Payment />} />
+          <Route path="/payment-edit/:id" element={<PaymentEdit />} />
+          <Route path="/payment-service-edit/:id" element={<PaymentServiceEdit />} />
+
           <Route path="/booking" element={<Booking />}></Route>
           <Route path="/employee" element={<DashboardEmployee />}></Route>
           <Route path="/employee-add" element={<AddNewEmployee />}></Route>
@@ -112,11 +102,7 @@ function App() {
           <Route path="/employee/:id" element={<DetailEmployee />}></Route>
           <Route path="/history-admin" element={<HistoryEmployeeA />}></Route>
           <Route path="/history-employee" element={<HistoryEmployee />}></Route>
-
           <Route path="/employee-addRec" element={<AddNewRec />}></Route>
-       
-
-
           <Route
             path="/booking-management"
             element={<BookingManagement />}
