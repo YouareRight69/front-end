@@ -9,6 +9,7 @@ import { storage } from "../firebase/index.js";
 import jwt_decode from "jwt-decode";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Sidebar from "../common/admin/sidebar";
 
 function EditService() {
   const service = "http://localhost:8080/api/hairService"
@@ -21,7 +22,13 @@ function EditService() {
   const [uploading, setUploading] = useState(false);
   const [valid, setValid] = useState({});
   const accessToken = localStorage.getItem("accessToken");
-
+  useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+    } else if (!["[ROLE_ADMIN]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+    }
+  }, []);
   //Get data vào target
   useEffect(() => {
     if (id) {
@@ -86,7 +93,7 @@ function EditService() {
         })
         .then((resp) => {
           navigate("/listService");
-          toast.success("Cập nhật thành công"); 
+          toast.success("Cập nhật thành công");
         })
         .catch((error) => {
           if (error.response) {
@@ -177,9 +184,9 @@ function EditService() {
           </div>
         </div>
       </div>
-      <div style={{ display: "flex" }}>
-        <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
-          Admin
+      <div className='row'>
+        <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+          <Sidebar />
         </div>
         <div className="col-lg-10">
           <section id="section">

@@ -1,34 +1,45 @@
 import axios from "axios";
 import React from "react";
-import Modal from "../common/Modal";
-import jwt_decode from "jwt-decode";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Modal from "../common/Modal";
 export default function DeleteButton(props) {
-   const accessToken = localStorage.getItem("accessToken");
+  const accessToken = localStorage.getItem("accessToken");
   const deleteItem = () => {
     if (props.id) {
-      axios.delete(`${props.url}/${props.id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Methods":
-            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-          "Authorization": "Bearer " + accessToken,
-        },
-      }).then((resp) => {
-        props.rerender()
-        toast.success("Xóa lịch hẹn thành công!", {
-          position: "top-center",
-          autoClose: 1200,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
+      axios
+        .delete(`${props.url}/${props.id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+            Authorization: "Bearer " + accessToken,
+          },
+        })
+        .then((resp) => {
+          props.rerender();
+          props.url === "http://localhost:8080/api/admin/branch"
+            ? toast.success("Xóa chi nhánh thành công!", {
+                position: "top-center",
+                autoClose: 1200,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              })
+            : toast.success("Xóa lịch hẹn thành công!", {
+                position: "top-center",
+                autoClose: 1200,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
         });
-      }  
-      );
       return;
     }
     axios

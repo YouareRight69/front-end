@@ -50,9 +50,9 @@ function Header() {
   const home = () => {
     navigate("/");
   };
-  const service = () => {};
-  const trend = () => {};
-  const contact = () => {};
+  const service = () => { };
+  const trend = () => { };
+  const contact = () => { };
 
   const logout = () => {
     localStorage.removeItem("accessToken");
@@ -75,6 +75,15 @@ function Header() {
     navigate("/booking");
   };
   const goToBookingManagement = () => {
+    navigate("/booking-management");
+  };
+  const goToInvoiceHistory = () => {
+    navigate("/invoice-history")
+  }
+  const management = () => {
+    navigate("/chart")
+  }
+  const recManagement = () => {
     navigate("/booking-management")
   }
 
@@ -91,7 +100,7 @@ function Header() {
                   <div className="logo">
                     {/* <a onClick={home}> */}
 
-                    <img src="assets/img/logo/loder.png" alt="" />
+                    <img src="assets/img/logo/logo2_footer.png" alt="" />
                   </div>
                 </div>
                 <div className="col-xl-10 col-lg-10 col-md-10">
@@ -115,10 +124,15 @@ function Header() {
                             <a onClick={aboutPage}>Giới Thiệu</a>
                           </li>
 
-                          <li>
+                          {accessToken && jwt_decode(accessToken).roles == "[ROLE_ADMIN]" && <li>
+                            <a onClick={management}>Quản lý</a>
+                          </li>}
+                          {accessToken && jwt_decode(accessToken).roles == "[ROLE_RECEPTIONIST]" && <li>
+                            <a onClick={recManagement}>Quản lý</a>
+                          </li>}
+                          {accessToken && !["[ROLE_ADMIN]", "[ROLE_EMPLOYEE]", "[ROLE_RECEPTIONIST]"].includes(jwt_decode(accessToken).roles) && <li>
                             <a onClick={booking}>Đặt lịch hẹn</a>
-                          </li>
-
+                          </li>}
                           {accessToken != null ? (
                             <li>
                               <a href="#">
@@ -128,9 +142,14 @@ function Header() {
                                 className="submenu"
                                 style={{ width: "200px" }}
                               >
-                                 <li>
+
+                                {jwt_decode(accessToken).roles != "[ROLE_CUSTOMER]" ? "" : <li>
                                   <a onClick={goToBookingManagement}>Quản lý lịch hẹn</a>
-                                </li>
+                                </li>}
+                                {jwt_decode(accessToken).roles == "[ROLE_CUSTOMER]" ? <li>
+                                  <a onClick={goToInvoiceHistory}>Lịch sử thanh toán</a>
+                                </li> : ""}
+
                                 <li>
                                   <a onClick={getUpdateInfo}>
                                     Cập nhật thông tin
@@ -144,7 +163,6 @@ function Header() {
                                 <li>
                                   <a onClick={logout}>Đăng xuất</a>
                                 </li>
-                                
                               </ul>
                             </li>
                           ) : (

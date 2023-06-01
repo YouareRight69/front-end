@@ -33,3 +33,6 @@
     margin-bottom: auto;
 }
 
+.error-message {
+  color: red
+}

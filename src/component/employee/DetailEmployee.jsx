@@ -1,7 +1,47 @@
-import React from "react";
-import { Link } from "react-router-dom";
-
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import Sidebar from "../common/admin/sidebar";
+import jwt_decode from "jwt-decode";
 function DetailEmployee(props) {
+  const url = "http://localhost:8080/api/employee/listAllEmp";
+  const { id } = useParams();
+  const [target, setTarget] = useState({});
+  const [dataView, setDataView] = useState([]);
+  const accessToken = localStorage.getItem("accessToken");
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+    } else if (!["[ROLE_ADMIN]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+    }
+  }, []);
+  useEffect(() => {
+    if (id) {
+      axios.get(`${url}/${id}`, {
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+        },
+      }).then((resp) => {
+        setTarget(resp.data);
+      });
+    }
+  }, [id]);
+  console.log(target);
+  useEffect(() => {
+    if (target && target.media) {
+      const urlArray = target.media.map((item) => item.url);
+      setDataView(urlArray);
+    }
+  }, [target]);
+
+
+  console.log(target);
+  console.log(target.type);
+
   return (
     <div>
       <main>
@@ -21,9 +61,9 @@ function DetailEmployee(props) {
         </div>
         {/* Hero End */}
         {/* Services Area Start */}
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
-            Admin
+        <div className='row'>
+          <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+            <Sidebar />
           </div>
           <div className="col-lg-10">
             <section className="service-area section-padding300">
@@ -33,15 +73,16 @@ function DetailEmployee(props) {
                   <div className="col-xl-4 col-lg-4 col-md-6">
                     <div
                       className="gallery-area"
-                      style={{ paddingTop: "50px" }}
+                      style={{ paddingTop: "100px" }}
                     >
                       <div className="col-lg-12 col-md-6 col-sm-6">
                         <div className="box snake thien_snake">
                           <div className="gallery-img">
                             <img
                               className="thien_avatar"
-                              src="./assets/img/avatar/hinh-avatar-cute-nu.jpg"
+                              src={target.avatar}
                               alt="avatar"
+                            // value={target.user?.avatar}
                             />
                           </div>
                           <div className="overlay"></div>
@@ -51,86 +92,100 @@ function DetailEmployee(props) {
                   </div>
                   <div className="col-lg-8 col-md-8">
                     <h3 className="mb-30">Xem thông tin nhân viên</h3>
-                    <form action="#">
-                      <div className="mt-10" style={{display: "flex"}}>
-                          <div className="col-lg-3 col-md-4">
-                              <p className="mt-2">Họ Tên</p>
-                          </div>
-                          <div class="col-lg-9 col-md-4">
-                            <p className="mt-2">Vỏ Thị Hoạ My</p>
-                          </div>
+                    <div className="mt-10" style={{ display: "flex" }}>
+                      <div className="col-lg-3 col-md-4">
+                        <p className="mt-2">EmployeeId</p>
                       </div>
-                      <div className="mt-10" style={{ display: "flex" }}>
-                          <div className="col-lg-3 col-md-4">
-                              <p className="mt-2">Ngày sinh</p>
-                          </div>
-                          <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">15/02/2000</p>
-                          </div>
+                      <div class="col-lg-9 col-md-4">
+                        <p className="mt-2">{target.employee?.employeeId}</p>
                       </div>
-                      <div className="mt-10" style={{ display: "flex" }}>
-                          <div className="col-lg-3 col-md-4">
-                              <p className="mt-2">Số điện thoại</p>
-                          </div>
-                          <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">0823976563</p>
-                          </div>
+                    </div>
+                    <div className="mt-10" style={{ display: "flex" }}>
+                      <div className="col-lg-3 col-md-4">
+                        <p className="mt-2">Họ Tên</p>
                       </div>
-                      <div className="mt-10" style= {{display: "flex" }}>
-                          <div className="col-lg-3 col-md-4">
-                              <p className="mt-2">Giới tính</p>
-                          </div>
-                          <div className="col-lg-9 col-md-4" style= {{ display: "flex" }}>
-                              <div className="col-lg-3" style= {{ display: "flex" }}>
-                                  <div className="col-lg-3 mt-1">
-                                      <div className="confirm-radio">
-                                          <input 
-                                            type="checkbox" 
-                                            id="confirm-radio" 
-                                            checked
-                                          />
-                                          <label for="confirm-radio"></label>
-                                      </div>
-                                  </div>
-                                  <div className="col-lg-7">
-                                      <label for="html">Nữ</label>
-                                  </div>
-                              </div>
-                          </div>
+                      <div class="col-lg-9 col-md-4">
+                        <p className="mt-2">{target.fullName}</p>
                       </div>
-                      <div className="mt-10" style= {{ display: "flex" }}>
-                          <div className="col-lg-3 col-md-4">
-                              <p className="mt-2">Email</p>
-                          </div>
-                          <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">vohoamy1502@gmail.com</p>
-                          </div>
+                    </div>
+                    <div className="mt-10" style={{ display: "flex" }}>
+                      <div className="col-lg-3 col-md-4">
+                        <p className="mt-2">Ngày sinh</p>
                       </div>
-                      <div className="mt-10" style= {{ display: "flex" }}>
-                          <div className="col-lg-3 col-md-4">
-                              <p className="mt-2">Ngày ký HD</p>
-                          </div>
-                          <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">05/10/2015</p>
-                          </div>
+                      <div className="col-lg-9 col-md-4">
+                        <p className="mt-2">{target.dateOfBirth}</p>
                       </div>
-                      <div className="mt-10" style= {{ display: "flex" }}>
-                          <div className="col-lg-3 col-md-4">
-                              <p className="mt-2">Ngày hết hạn HD</p>
-                          </div>
-                          <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">05/10/2024</p>
-                          </div>
+                    </div>
+
+                    <div className="mt-10" style={{ display: "flex" }}>
+                      <div className="col-lg-3 col-md-4">
+                        <p className="mt-2">Số điện thoại</p>
                       </div>
-                      <div className="input-group-icon mt-10" style= {{ display: "flex" }}>
-                          <div className="col-lg-3 col-md-4">
-                              <p className="mt-2">Chi nhánh</p>
-                          </div>
-                          <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">Nguyễn Văn Linh</p>
-                          </div>
+                      <div className="col-lg-9 col-md-4">
+                        <p className="mt-2">{target.phoneNumber}</p>
                       </div>
-                    </form>
+                    </div>
+                    <div className="mt-10" style={{ display: "flex" }}>
+                      <div className="col-lg-3 col-md-4">
+                        <p className="mt-2">Giới tính</p>
+                      </div>
+                      <div className="col-lg-9 col-md-4" style={{ display: "flex" }}>
+                        <div className="col-lg-3" style={{ display: "flex" }}>
+                          <div className="col-lg-3 mt-1">
+                            <div className="confirm-radio">
+                              <input
+                                type="checkbox"
+                                id="confirm-radio"
+                                checked
+                              />
+                              <label for="confirm-radio"></label>
+                            </div>
+                          </div>
+                          <div className="col-lg-7">
+                            <label for="html">{target.gender}</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-10" style={{ display: "flex" }}>
+                      <div className="col-lg-3 col-md-4">
+                        <p className="mt-2">Email</p>
+                      </div>
+                      <div className="col-lg-9 col-md-4">
+                        <p className="mt-2">{target.account?.email}</p>
+                      </div>
+                    </div>
+
+                    <div className="mt-10" style={{ display: "flex" }}>
+                      <div className="col-lg-3 col-md-4">
+                        <p className="mt-2">Kiểu nhân viên</p>
+                      </div>
+                      <div className="col-lg-9 col-md-4">
+                        <input
+                          style={{ width: "100%", height: "80%", border: "none" }}
+                          name="type"
+                          defaultValue=""
+                          value={
+                            target.employee?.type === "1" ? "Hair dresser" :
+                              target.employee?.type === "2" ? "Skinner" :
+                                target.employee?.type === "3" ? "Lễ tân" :
+                                  ""
+                          }
+                          readOnly
+                        />
+
+                      </div>
+
+                    </div>
+                    <div className="input-group-icon mt-10" style={{ display: "flex" }}>
+                      <div className="col-lg-3 col-md-4">
+                        <p className="mt-2">Chi nhánh</p>
+                      </div>
+                      <div className="col-lg-9 col-md-4">
+                        <p className="mt-2">Nguyễn Văn Linh</p>
+                      </div>
+                    </div>
+
                     <div className="mt-110" style={{ display: "flex" }}>
                       <div className="col-lg-3 ms-10">
                         <Link to="/employee">

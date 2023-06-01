@@ -7,7 +7,7 @@ import { Bar, Line, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, registerables } from "chart.js";
 import jwt_decode from "jwt-decode";
 import Header from "../../../controller/register/common/Header";
-import Sidebar from "./sidebar";
+// import Sidebar from "./sidebar";
 import {
   Link,
   Navigate,
@@ -15,7 +15,12 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+
+import Sidebar from "./sidebar";
+
 ChartJS.register(...registerables);
+
+// import { useNavigate } from "react-router-dom";
 
 export default function BarChart1() {
   const accessToken = localStorage.getItem("accessToken");
@@ -38,7 +43,46 @@ export default function BarChart1() {
   const navigate = useNavigate();
   const [selectedValue, setSelectedValue] = useState('BRA001');
   const [limit, setLimit] = useState([]);
+
   const [branch, setBranch] = useState([]);
+
+
+
+  // const navigate = useNavigate();
+
+  const toCustomer = () => {
+    navigate("/user");
+  };
+  const toEmployee = () => {
+    navigate("/employee");
+  };
+  const toService = () => {
+    navigate("/listService");
+  };
+  const toBranch = () => {
+    navigate("/branch");
+  };
+  const toChart = () => {
+    navigate("/chart");
+  };
+
+
+  useEffect(() => {
+
+    if (accessToken == null) {
+      navigate("/login");
+      return
+    } else if (!["[ROLE_ADMIN]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+      return
+    } else {
+      loadChart();
+      loadUser();
+      loadTotal();
+      loadLimit();
+    }
+  }, []);
+
 
   const loadChart = async () => {
     const result = await axios.get(
@@ -82,7 +126,8 @@ export default function BarChart1() {
         },
       })
       .then((res) => {
-        setTotal(res.data[0].total);
+
+        setTotal(res.data[0]?.total);
       });
   };
 
@@ -110,6 +155,9 @@ export default function BarChart1() {
     console.log(array);
     setMonth(array);
   }
+
+
+
 
   const loadLimit = async () => {
     const result = await axios.get(
@@ -268,25 +316,8 @@ export default function BarChart1() {
         </div>
       </div>
       <div className="row">
-        <div className="col-2 ">
-          {/* <Sidebar /> */}
-          <nav
-            className="nav flex-column"
-            style={{
-              color: "white",
-              backgroundColor: "black",
-              height: "100%",
-              alignItems: "baseline",
-            }}
-          >
-            <a className="nav-link m-3 text-center">Quản lý khách hàng</a>
-            <a className="nav-link m-3 text-center"> Quản lý nhân viên</a>
-            <a className="nav-link m-3 text-center">Quản lý dịch vụ</a>
-            <a className="nav-link m-3 text-center">Quản lý chi nhánh</a>
-            <a className="nav-link m-3 text-center">Quản lý thông kê</a>
-            <a className="nav-link m-3 text-center">Quản lý thanh toán</a>
-            <a className="nav-link m-3 text-center">Quản lý dặt lịch </a>
-          </nav>
+        <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+          <Sidebar />
         </div>
         <div className="col-10 pt-5">
           <div>
@@ -448,7 +479,7 @@ export default function BarChart1() {
                       <h4 className="info-box-text">DOANH THU</h4>
                       <div>
                         {" "}
-                        <h1> ${total} </h1>
+                        {total && <h1> ${total} </h1>}
                       </div>
                     </div>
                     <div
@@ -485,7 +516,7 @@ export default function BarChart1() {
                       <h4 className="info-box-text"></h4>
                       <div>
                         {" "}
-                        <h1> ${total} </h1>
+                        {total && <h1> ${total} </h1>}
                       </div>
                     </div>
                     <div

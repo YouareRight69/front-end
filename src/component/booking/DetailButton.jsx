@@ -1,7 +1,6 @@
-import axios from "axios";
-import React from "react";
-import { useState } from "react";
 import accounting from "accounting";
+import axios from "axios";
+import React, { useState } from "react";
 import ModalDetail from "./ModalDetail";
 
 export default function DetailInfoButton(props) {
@@ -26,20 +25,20 @@ export default function DetailInfoButton(props) {
 
   return (
     <React.Fragment>
-      <button
+      <div
         className="genric-btn primary"
         data-bs-toggle="modal"
         data-bs-target={`#modalDetail-${props.id}`}
         onClick={getInfo}
       >
         <i className="fa fa-eye" aria-hidden="true"></i>
-      </button>
+      </div>
 
       <ModalDetail
         id={props.id}
         data={detailInfo}
         listService={listService?.map((item, index) => (
-          <tr key={index} style={{textAlign:"left"}}>
+          <tr key={index} style={{ textAlign: "left" }}>
             <td>{index + 1}</td>
             <td>{item.serviceName}</td>
             <td>{item.employeeName}</td>
@@ -57,6 +56,7 @@ export default function DetailInfoButton(props) {
           format: "%v vnđ",
           precision: 0,
         })}
+        pay={detailInfo.total}
       />
     </React.Fragment>
   );

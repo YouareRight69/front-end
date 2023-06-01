@@ -7,7 +7,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function Booking() {
+export default function PaymentEdit() {
   //useState
   const [data, setData] = useState();
   const [selectBranch, setSelectBranch] = useState("");
@@ -23,7 +23,6 @@ export default function Booking() {
   const [formData, setFormData] = useState({ isDelete: 0 });
   const [serviceList, setServiceList] = useState([]);
   const [minDate, setMinDate] = useState("");
-  const [maxDate, setMaxDate] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const [status, setStatus] = useState();
@@ -31,30 +30,21 @@ export default function Booking() {
   const [title, setTitle] = useState("ĐẶT LỊCH HẸN");
   const [oldInfo, setOldInfo] = useState();
   const accessToken = localStorage.getItem("accessToken");
-  const [oldFormData, setOldFormData] = useState();
-  const [errors, setErrors] = useState({});
+
   console.log(id);
   console.log(accessToken);
-
-
   //useEffect
   useEffect(() => {
-    if (accessToken == null) {
-      navigate("/login");
-    } else if (!["[ROLE_CUSTOMER]", "[ROLE_RECEPTIONIST]"].includes(jwt_decode(accessToken).roles)) {
-      navigate("/main")
-    }
-  }, []);
-
-
-  useEffect(() => {
     if (location.state != null && location.state.formData != null) {
+      // if (location.state.formData.serviceList.length == 0) {
       setFormData({ ...location.state.formData, serviceList: serviceList });
+      // } else {
+      //   setFormData({ ...location.state.formData });
+      // }
+
       setSelectStyle(location.state.formData.styleId);
       setSelectDay(location.state.formData.bookingDate);
       setSelectTime(location.state.formData.workTimeId);
-      setSelectSkinner(location.state.formData.skinnerId);
-
       if (id) {
         setOldInfo({
           bookingDate: location.state.formData.bookingDate,
@@ -65,6 +55,7 @@ export default function Booking() {
     }
     setSelectBranch(formData.branch);
   }, [status]);
+  console.log(selectTime);
   useEffect(() => {
     axios
       .get("http://localhost:8080/api/emp/booking/info/list-branch")
@@ -76,6 +67,7 @@ export default function Booking() {
       });
 
     if (formData.branch != "") {
+      console.log(formData.branch);
       axios
         .get(
           "http://localhost:8080/api/emp/booking/info/list-employee-of-branch?branchId=" +
@@ -87,6 +79,7 @@ export default function Booking() {
           setDataSkinner(res.data.filter((item) => item.employee.type === "2"));
         })
         .catch((error) => {
+          // Xử lý lỗi nếu có
           console.error("Lỗi khi gửi yêu cầu:", error);
         });
       axios
@@ -95,12 +88,13 @@ export default function Booking() {
           setWorkingTimeData(res.data);
         })
         .catch((error) => {
+          // Xử lý lỗi nếu có
           console.error("Lỗi khi gửi yêu cầu:", error);
         });
     }
     setBusyTime([]);
   }, [selectBranch]);
-  console.log(data);
+
   useEffect(() => {
     if (selectStyle != null && selectDay != null) {
       axios
@@ -114,6 +108,7 @@ export default function Booking() {
           setBusyTime(res.data);
         })
         .catch((error) => {
+          // Xử lý lỗi nếu có
           console.error("Lỗi khi gửi yêu cầu:", error);
         });
     }
@@ -131,7 +126,6 @@ export default function Booking() {
       location.state.selectService = [];
     }
     setMinDate(getCurrentDate());
-    setMaxDate(getMaxDate());
     setStatus("OK");
     if (id == undefined) {
       setTitle("ĐẶT LỊCH HẸN");
@@ -188,18 +182,9 @@ export default function Booking() {
     const dd = String(today.getDate()).padStart(2, "0");
     return `${yyyy}-${mm}-${dd}`;
   };
-  const getMaxDate = () => {
-    const today = new Date();
-    today.setDate(today.getDate() + 10);
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
-  };
 
   //function
   const handleClickTime = (time) => {
-    // setSelectTime(time);
     if (
       selectTime === time.workingTimeId ||
       busyTime.includes(time.timeZone.substring(0, 5))
@@ -225,21 +210,12 @@ export default function Booking() {
       isDelete: 0,
       serviceList: serviceList,
       branch: e.value,
-      bookingDate: selectDay,
     });
-    setSelectStyle("");
   };
 
   const handleSelectDay = (e) => {
-    var toDay = new Date();
-    var selectDay = new Date(e);
-    toDay.setDate(toDay.getDate() + 10);
     setSelectDay(e);
-    if (new Date(e) <= toDay && new Date(getCurrentDate()) <= selectDay) {
-      setFormData({ ...formData, bookingDate: e });
-    } else {
-      setFormData({ ...formData, bookingDate: undefined });
-    }
+    setFormData({ ...formData, bookingDate: e });
   };
   const handleSelectSkinner = (e) => {
     setSelectSkinner(e);
@@ -248,25 +224,18 @@ export default function Booking() {
 
   const handleSelectServiceButton = () => {
     if (id) {
-      navigate("/select-service", {
+      navigate("/payment-service-edit/" + id, {
         state: { selectService: selectservice, formData: formData, id: id },
       });
     } else {
-      navigate("/select-service", {
+      navigate("/payment-service-edit/" + id, {
         state: { selectService: selectservice, formData: formData },
       });
     }
   };
-  const handleBack = () => {
-    navigate("/booking-management");
-  };
 
   const handleInputNote = (e) => {
     setFormData({ ...formData, note: e });
-  };
-
-  const handleInputName = (e) => {
-    setFormData({ ...formData, customerName: e });
   };
 
   const handleSubmitForm = (e) => {
@@ -274,49 +243,15 @@ export default function Booking() {
     if (!("note" in formData)) {
       setFormData({ ...formData, note: null });
     }
-
-    const errors = {};
-
-    if (!formData.branch) {
-      errors.branch = "Vui lòng chọn chi nhánh";
-    }
-
-    if (jwt_decode(accessToken).roles.includes("ROLE_RECEPTIONIST")) {
-      if (!formData.customerName || formData.customerName?.trim() == "") {
-        errors.customerName = "Vui lòng nhập tên khách hàng";
-      }
-    }
-
-    if (!formData.serviceList || formData.serviceList.length == 0) {
-      errors.serviceList = "Vui lòng chọn ít nhất một dịch vụ";
-    }
-    var toDay = new Date();
-    var selectDay = new Date(e);
-    toDay.setDate(toDay.getDate() + 10);
     if (
-      !formData.bookingDate ||
-      new Date(formData.bookingDate) < new Date(getCurrentDate()) ||
-      new Date(formData.bookingDate) > toDay
+      formData.isDelete == 0 &&
+      formData.serviceList.length > 0 &&
+      formData.branch != "" &&
+      formData.userId != "" &&
+      (formData.bookingDate != "") & (formData.workTimeId != "") &&
+      formData.styleId != "" &&
+      formData.skinnerId != ""
     ) {
-      errors.bookingDate =
-        "Vui lòng chọn ngày trong khoảng 10 ngày tính từ ngày hiện tại!";
-    }
-
-    if (!formData.styleId) {
-      errors.styleId = "Vui lòng chọn stylist";
-    }
-
-    if (!formData.skinnerId) {
-      errors.skinnerId = "Vui lòng chọn skinner";
-    }
-    if (!formData.workTimeId) {
-      errors.workTimeId = "Vui lòng chọn giờ";
-    }
-
-    // If there are errors, set the state and display the error messages
-    if (Object.keys(errors).length > 0) {
-      setErrors(errors);
-    } else {
       if (id) {
         axios
           .post(
@@ -333,7 +268,7 @@ export default function Booking() {
           )
           .then((data) => {
             console.log(data.data);
-            toast.success("Cập nhật lịch hẹn thành công!", {
+            toast.success("Chỉnh sửa dịch vụ thành công!", {
               position: "top-center",
               autoClose: 1200,
               hideProgressBar: false,
@@ -344,27 +279,12 @@ export default function Booking() {
               theme: "light",
             });
 
-            navigate("/booking-management", {
-              state: null,
+            navigate("/payment/" + id, {
+              state: { formData: location.state.formData }
             });
           })
           .catch((error) => {
-            toast.error(
-              "Cập nhật thất bại! Danh sách lịch hẹn vừa được cập nhật",
-              {
-                position: "top-center",
-                autoClose: 1200,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              }
-            );
-            navigate("/booking-management", {
-              state: null,
-            });
+            console.error("NOOOO");
           });
       } else {
         axios
@@ -378,7 +298,7 @@ export default function Booking() {
           })
           .then((data) => {
             console.log(data.data);
-            toast.success("Đặt lịch hẹn thành công!", {
+            toast.success("Chỉnh sửa dịch vụ thành công!", {
               position: "top-center",
               autoClose: 1200,
               hideProgressBar: false,
@@ -389,42 +309,15 @@ export default function Booking() {
               theme: "light",
             });
 
-            navigate("/main", {
+            navigate("/payment/" + id, {
               state: null,
             });
           })
           .catch((error) => {
-            toast.error(
-              "Đặt lịch thất bại! Danh sách lịch hẹn vừa được cập nhật",
-              {
-                position: "top-center",
-                autoClose: 1200,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              }
-            );
-            navigate("/booking", {
-              state: null,
-            });
+            console.error("NOOOO");
           });
       }
     }
-
-    // if (
-    //   formData.isDelete == 0 &&
-    //   formData.serviceList.length > 0 &&
-    //   formData.branch != ""   &&
-    //   formData.userId != "" && formData.userId != undefined &&
-    //   formData.bookingDate != undefined &&
-    //   formData.workTimeId != "" &&formData.workTimeId != undefined &&
-    //   formData.styleId != "" && formData.styleId != undefined &&
-    //   formData.skinnerId != "" &&  formData.skinnerId != undefined
-    // ) {
-    // }
   };
 
   return (
@@ -468,40 +361,17 @@ export default function Booking() {
                               value={branch.branchId}
                               selected={true}
                             >
-                              {branch.name} | {branch.address}
+                              {branch.name}
                             </option>
                           ) : (
                             <option key={index} value={branch.branchId}>
-                              {branch.name} | {branch.address}
+                              {branch.name}
                             </option>
                           )
                         )}
                       </select>
-                      {errors.branch && (
-                        <span className="error-message">{errors.branch}</span>
-                      )}
                     </div>
                   </div>
-                  {jwt_decode(accessToken).roles.includes(
-                    "ROLE_RECEPTIONIST"
-                  ) && (
-                      <div className="input-group-icon mt-10">
-                        <h1>Tên khách hàng đặt lịch</h1>
-                        <input
-                          onChange={(event) =>
-                            handleInputName(event.target.value)
-                          }
-                          className="single-textarea"
-                          placeholder="Vui lòng nhập tên khách hàng..."
-                          defaultValue={formData.customerName}
-                        />
-                        {errors.customerName && (
-                          <span className="error-message">
-                            {errors.customerName}
-                          </span>
-                        )}
-                      </div>
-                    )}
                   <div className="input-group-icon mt-10">
                     <h1>Chọn dịch vụ</h1>
                     <div>
@@ -514,16 +384,9 @@ export default function Booking() {
                         <i className="fas fa-cut fa-rotate-270"></i> Chọn dịch
                         vụ
                       </button>
-                      {errors.serviceList && (
-                        <span className="error-message">
-                          {errors.serviceList}
-                        </span>
-                      )}
                     </div>
 
-                    {selectservice.length > 0 && (
-                      <div className="m-3">Dịch vụ đã chọn</div>
-                    )}
+                    <div className="m-3">Dịch vụ đã chọn</div>
                     <div>
                       {selectservice?.map((item, index) => (
                         <span
@@ -570,16 +433,10 @@ export default function Booking() {
                               ))}
                             </Carousel>
                           )}
-                          {errors.styleId && (
-                            <span className="error-message">
-                              {errors.styleId}
-                            </span>
-                          )}
                         </div>
                         <h2>Chọn ngày</h2>
                         <input
                           min={minDate}
-                          max={maxDate}
                           type="date"
                           defaultValue={selectDay}
                           required
@@ -588,11 +445,6 @@ export default function Booking() {
                             handleSelectDay(event.target.value);
                           }}
                         />
-                        {errors.bookingDate && (
-                          <span className="error-message">
-                            {errors.bookingDate}
-                          </span>
-                        )}
                         <h2>Chọn giờ</h2>
                         <div className="d-flex justify-content-center row m-0">
                           {workingTimeData?.map((time, index) => {
@@ -634,11 +486,6 @@ export default function Booking() {
                             );
                           })}
                         </div>
-                        {errors.workTimeId && (
-                          <span className="error-message">
-                            {errors.workTimeId}
-                          </span>
-                        )}
                       </div>
                     </div>
                   )}
@@ -677,11 +524,6 @@ export default function Booking() {
                             )}
                         </select>
                       </div>
-                      {errors.skinnerId && (
-                        <span className="error-message">
-                          {errors.skinnerId}
-                        </span>
-                      )}
                     </div>
                   )}
                   <div className="mt-10">
@@ -694,36 +536,15 @@ export default function Booking() {
                     ></textarea>
                   </div>
                   <div className="input-group-icon mt-10">
-                    {id ? (
-                      <div>
-                        <span
-                          className="btn header-btn px-2 mx-2"
-                          style={{ width: "20%" }}
-                          onClick={handleBack}
-                        >
-                          <i class="fa fa-arrow-left" aria-hidden="true"></i>{" "}
-                          Quay lại
-                        </span>
-
-                        <button
-                          className="btn header-btn"
-                          style={{ width: "79%" }}
-                          onClick={(event) => handleSubmitForm(event)}
-                        >
-                          <i className="fas fa-cut fa-rotate-270"></i> Hoàn tất
-                        </button>
-                      </div>
-                    ) : (
-                      <div>
-                        <button
-                          onClick={(event) => handleSubmitForm(event)}
-                          className="btn header-btn"
-                          style={{ width: "100%" }}
-                        >
-                          <i className="fas fa-check"></i>Hoàn tất
-                        </button>
-                      </div>
-                    )}
+                    <div>
+                      <button
+                        onClick={(event) => handleSubmitForm(event)}
+                        className="btn header-btn"
+                        style={{ width: "100%" }}
+                      >
+                        <i className="fas fa-check"></i>Hoàn tất
+                      </button>
+                    </div>
                   </div>
                 </form>
               </div>

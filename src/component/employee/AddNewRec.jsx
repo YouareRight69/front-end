@@ -6,16 +6,14 @@ import { storage } from "../firebase/Firebase";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { ToastContainer, toast } from 'react-toastify';
-
+import jwt_decode from "jwt-decode";
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from "../common/admin/sidebar";
-import jwt_decode from "jwt-decode";
 
 const initFormValue = {
   dateOfBirth: "",
   address: "",
   gender: "",
-  type: "",
   branchId: "",
 }
 
@@ -24,9 +22,9 @@ const isEmtyValue = (value) => {
 }
 
 function AddNewEmployee(props) {
-  const navigate = useNavigate()
   const [formValue, setFormValue] = useState(initFormValue);
   const [formError, setFormError] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
     if (accessToken == null) {
       navigate("/login");
@@ -59,9 +57,6 @@ function AddNewEmployee(props) {
       error["gender"] = "Vui lòng chọn giới tính";
     }
 
-    if (isEmtyValue(formValue.type)) {
-      error["type"] = "Vui lòng chọn kiểu phục vụ";
-    }
 
     if (isEmtyValue(formValue.branchId)) {
       error["branchId"] = "Vui lòng chọn chi nhánh";
@@ -71,8 +66,6 @@ function AddNewEmployee(props) {
 
     return Object.keys(error).length === 0;
   }
-  console.log(formError)
-
   const [imageSrc, setImageSrc] = useState("./assets/img/avatar/avatar.jpg");
   const [branch, setBranch] = useState([]);
   const [people, setPeople] = useState([]);
@@ -88,11 +81,11 @@ function AddNewEmployee(props) {
   const onSubmit = (event) => {
     event.preventDefault();
     const formData = Object.fromEntries(new FormData(event.target));
-    console.log(formData);
     formData.avatar = imgUpload;
+    console.log(formData);
     if (ValidateForm()) {
       axios
-        .post("http://localhost:8080/api/employee/createEmp", formData, {
+        .post("http://localhost:8080/api/employee/createRec", formData, {
           headers: {
             "Content-Type": "application/json",
             'Access-Control-Allow-Methods': 'POST',
@@ -102,6 +95,7 @@ function AddNewEmployee(props) {
         .then((resp) => {
           nagative("/employee");
           toast.success("Thêm mới thành công");
+
         })
         .catch((error) => {
           console.log(error);
@@ -109,8 +103,6 @@ function AddNewEmployee(props) {
     } else {
       console.log("form invalue", formValue);
     }
-
-
   };
 
   const handleInputChange = (event) => {
@@ -152,7 +144,7 @@ function AddNewEmployee(props) {
       setBranch(resp.data.content);
       console.log(resp.data);
     });
-    axios.get("http://localhost:8080/api/user/findAll", {
+    axios.get("http://localhost:8080/api/user/findAllRec", {
       headers: {
         "Authorization": "Bearer " + accessToken,
       }
@@ -221,7 +213,7 @@ function AddNewEmployee(props) {
                     </div>
                   </div>
                   <div className="col-lg-8 col-md-8">
-                    <h3 className="mb-30">Thêm mới nhân viên</h3>
+                    <h3 className="mb-30">Thêm mới lễ tân</h3>
                     <form onSubmit={onSubmit}>
                       <div className="mt-5" style={{ display: "flex" }}>
                         <div className="col-lg-3 col-md-4">
@@ -273,7 +265,6 @@ function AddNewEmployee(props) {
                             onblur="this.placeholder = 'Địa chỉ'"
                             className="single-input"
                             onChange={handleChange}
-
                           />
                           <p
                             style={{
@@ -357,7 +348,7 @@ function AddNewEmployee(props) {
                         style={{ display: "flex" }}
                       >
                         <div className="col-lg-3 col-md-4">
-                          <p className="mt-2">Tài khoản nhân viên</p>
+                          <p className="mt-2">Tài khoản lễ tân</p>
                         </div>
                         <div className="col-lg-9 col-md-4">
                           <div className="form-select" id="default-select">
@@ -369,7 +360,7 @@ function AddNewEmployee(props) {
                               onChange={(event) => onChange(event.target.value)}
                             >
                               <option value="" disabled>
-                                Tài khoản nhân viên
+                                Tài khoản lễ tân
                               </option>
                               {people.map((item) => (
                                 <option value={item.userId} key={item.userId}>
@@ -377,41 +368,7 @@ function AddNewEmployee(props) {
                                 </option>
                               ))}
                             </select>
-
                           </div>
-                        </div>
-                      </div>
-                      <div
-                        className="input-group-icon mt-5"
-                        style={{ display: "flex" }}
-                      >
-                        <div className="col-lg-3 col-md-4">
-                          <p className="mt-2">Kiểu phục vụ</p>
-                        </div>
-                        <div className="col-lg-9 col-md-4">
-                          <div className="form-select" id="default-select">
-                            <select
-                              style={{ width: "100%", height: "90%" }}
-                              name="type"
-                              // required
-                              defaultValue=""
-                              onChange={handleChange}
-                            >
-                              <option value="" disabled>
-                                Kiểu phục vụ
-                              </option>
-                              <option value="1">Hair dresser</option>
-                              <option value="2">Skinner</option>
-                            </select>
-                          </div>
-                          <p
-                            style=
-                            {{
-                              margin: "0px 5px", color: 'red', fontSize: "14px", height: "0px"
-                            }}
-                            className="error-feedback">
-                            &nbsp; {formError.type}
-                          </p>
                         </div>
                       </div>
                       <div
@@ -422,6 +379,7 @@ function AddNewEmployee(props) {
                           <p className="mt-2">Chi nhánh</p>
                         </div>
                         <div className="col-lg-9 col-md-4">
+                          {/* <div className="icon"><i className="fa fa-globe" aria-hidden="true"></i></div> */}
                           <div className="form-select" id="default-select">
                             <select
                               style={{ width: "100%", height: "90%" }}
