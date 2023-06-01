@@ -39,11 +39,13 @@ function UpdateInfo() {
       }
     }
   }, [
+
     result && result.fullname, // Add null check for `result` and its properties
     result && result.email,
     result && result.phoneNumber,
     result && result.dob,
     result && result.address,
+
   ]);
 
   const setParams = (event) => {
@@ -67,6 +69,7 @@ function UpdateInfo() {
   const [inputImg, setInputImg] = useState("assets/img/logo/avatar.png");
 
   useEffect(() => {
+
     if (result && result.avatar) {
       setInputImg(result.avatar);
     }
