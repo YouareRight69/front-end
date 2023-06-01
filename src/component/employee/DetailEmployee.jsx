@@ -24,8 +24,10 @@ function DetailEmployee(props) {
       setDataView(urlArray);
     }
   }, [target]);
+  
 
   console.log(target);
+  console.log(target.type);
 
   return (
     <div>
@@ -65,9 +67,9 @@ function DetailEmployee(props) {
                           <div className="gallery-img">
                             <img
                               className="thien_avatar"
-                              src={target.user.avatar}
+                              src={target.user?.avatar}
                               alt="avatar"
-                              value={target.user?.avatar}
+                              // value={target.user?.avatar}
                             />
                           </div>
                           <div className="overlay"></div>
@@ -101,6 +103,7 @@ function DetailEmployee(props) {
                             <p className="mt-2">{target.user?.dateOfBirth}</p>
                           </div>
                       </div>
+                      
                       <div className="mt-10" style={{ display: "flex" }}>
                           <div className="col-lg-3 col-md-4">
                               <p className="mt-2">Số điện thoại</p>
@@ -126,7 +129,7 @@ function DetailEmployee(props) {
                                       </div>
                                   </div>
                                   <div className="col-lg-7">
-                                      <label for="html">Nữ</label>
+                                      <label for="html">{target.user?.gender}</label>
                                   </div>
                               </div>
                           </div>
@@ -148,16 +151,25 @@ function DetailEmployee(props) {
                           </div>
                       </div>
                       <div className="mt-10" style= {{ display: "flex" }}>
-                          <select
-                              style={{ width: "100%", height: "90%" }}
+                        <div className="col-lg-3 col-md-4">
+                          <p className="mt-2">Kiểu nhân viên</p>
+                        </div>
+                        <div className="col-lg-9 col-md-4">
+                          <input
+                              style={{ width: "100%", height: "80%", border: "none" }}
                               name="type"
                               defaultValue=""
-                            >
-                              <option value="" disabled>
-                                Kiểu nhân viên
-                              </option>
-                              <option value={target.type}>Kiểu nhân viên</option>
-                            </select>
+                              value= {
+                                target.type === "1" ? "Da" :
+                                target.type === "2" ? "Tóc" :
+                                target.type === "3" ? "Lễ tân" :
+                                ""
+                              }
+                              readOnly
+                            />
+                  
+                        </div>
+                          
                       </div>
                       <div className="input-group-icon mt-10" style= {{ display: "flex" }}>
                           <div className="col-lg-3 col-md-4">

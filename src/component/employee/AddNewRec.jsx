@@ -6,61 +6,7 @@ import { storage } from "../firebase/Firebase";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 
-const initFormValue = {
-  dateOfBirth: "",
-  address: "",
-  gender: "",
-  type: "",
-  branchId:"",  
-}
-
-const isEmtyValue = (value) =>{
-  return !value || value.trim().length < 1;
-}
-
 function AddNewEmployee(props) {
-
-  const [formValue, setFormValue] = useState(initFormValue);
-  const [formError, setFormError] = useState([]);
-
-  const handleChange = (event) => {
-    event.preventDefault();
-    const {value, name} = event.target;
-    setFormValue({
-      ...formValue,
-      [name]: value,
-    })
-  }
-console.log(formValue)
-  const ValidateForm = () =>{
-    const error = {};
-
-    if(isEmtyValue(formValue.address)){
-      error["address"] = "Trường này không được trống"
-    }
-
-    if (isEmtyValue(formValue.dateOfBirth)) {
-      error["dateOfBirth"] = "Trường này không được trống";
-    }
-
-    if (isEmtyValue(formValue.gender)) {
-      error["gender"] = "Vui lòng chọn giới tính";
-    }
-  
-    if (isEmtyValue(formValue.type)) {
-      error["type"] = "Vui lòng chọn kiểu phục vụ";
-    }
-  
-    if (isEmtyValue(formValue.branchId)) {
-      error["branchId"] = "Vui lòng chọn chi nhánh";
-    }
-
-    setFormError(error);
-
-    return Object.keys(error).length === 0;
-  }
-console.log(formError)
-
   const [imageSrc, setImageSrc] = useState("./assets/img/avatar/avatar.jpg");
   const [branch, setBranch] = useState([]);
   const [people, setPeople] = useState([]);
@@ -75,11 +21,10 @@ console.log(formError)
   const onSubmit = (event) => {
     event.preventDefault();
     const formData = Object.fromEntries(new FormData(event.target));
-    console.log(formData);
     formData.avatar = imgUpload;
-    if(ValidateForm()) {
-      axios
-      .post("http://localhost:8080/api/employee/createEmp", formData, {
+
+    axios
+      .post("http://localhost:8080/api/employee/createRec", formData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -90,12 +35,22 @@ console.log(formError)
       .catch((error) => {
         console.log(error);
       });
-    } else {
-      console.log("form invalue", formValue);
-    }
-    
-      
   };
+
+  // const handleInputChange = (event) => {
+  //   const file = event.target.files[0];
+  //   const reader = new FileReader();
+  //   const imgRef = ref(storage, `avatars/"mytest"+${v4()}`);
+  //   uploadBytes(imgRef, imageSrc).then((snapshot) => {
+  //     getDownloadURL(snapshot.ref).then((url) => {
+  //       setImgUpload(url);
+  //     });
+  //   });
+  //   reader.onload = () => {
+  //     setImageSrc(reader.result);
+  //   };
+  //   reader.readAsDataURL(file);
+  // };
 
 const handleInputChange = (event) => {
   const file = event.target.files[0];
@@ -132,7 +87,7 @@ const handleInputChange = (event) => {
       setBranch(resp.data.content);
       console.log(resp.data);
     });
-    axios.get("http://localhost:8080/api/user/findAll").then((resp) => {
+    axios.get("http://localhost:8080/api/user/findAllRec").then((resp) => {
       setPeople(resp.data);
       console.log(resp.data);
     });
@@ -197,7 +152,7 @@ const handleInputChange = (event) => {
                     </div>
                   </div>
                   <div className="col-lg-8 col-md-8">
-                    <h3 className="mb-30">Thêm mới nhân viên</h3>
+                    <h3 className="mb-30">Thêm mới lễ tân</h3>
                     <form onSubmit={onSubmit}>
                       <div className="mt-5" style={{ display: "flex" }}>
                         <div className="col-lg-3 col-md-4">
@@ -210,7 +165,7 @@ const handleInputChange = (event) => {
                             placeholder="Họ tên"
                             onfocus="this.placeholder = ''"
                             onblur="this.placeholder = 'Họ tên'"
-                            // required
+                            required
                             readOnly
                             className="single-input"
                             value={name}
@@ -228,13 +183,9 @@ const handleInputChange = (event) => {
                             placeholder="Ngày Sinh"
                             onfocus="this.placeholder = ''"
                             onblur="this.placeholder = 'Ngày Sinh'"
-                            // required
+                            required
                             className="single-input"
-                            onChange={handleChange}
                           />
-                          <p style={{ margin: "0px 5px", color: 'red', fontSize: "14px", height:"0px" }} className="error-feedback">
-                            &nbsp; {formError.dateOfBirth}
-                          </p>
                         </div>
                       </div>
                       <div className="mt-5" style={{ display: "flex" }}>
@@ -248,33 +199,19 @@ const handleInputChange = (event) => {
                             placeholder="Địa chỉ"
                             onfocus="this.placeholder = ''"
                             onblur="this.placeholder = 'Địa chỉ'"
-                            // required
+                            required
                             className="single-input"
-                            onChange={handleChange}
-
                           />
-                          <p 
-                            style= {{ 
-                              margin: "0px 5px", color: 'red', fontSize: "14px", height:"0px" 
-                            }} 
-                            className="error-feedback"
-                          > 
-                            &nbsp; {formError.address}
-                          </p>
                         </div>
                       </div>
                       <div className="mt-5" style={{ display: "flex" }}>
-                        
                         <div className="col-lg-3 col-md-4">
                           <p className="mt-2">Giới tính</p>
                         </div>
-                       <div>
-                        
-                       <div
+                        <div
                           className="col-lg-9 col-md-4"
                           style={{ display: "flex" }}
                         >
-                          
                           <div className="col-lg-3" style={{ display: "flex" }}>
                             <div className="col-lg-3 mt-1">
                               <div className="confirm-radio">
@@ -283,13 +220,10 @@ const handleInputChange = (event) => {
                                   id="confirm-radio"
                                   name="gender"
                                   value="Nam"
-                                  checked={formValue.gender === "Nam"} 
-                                  onChange={handleChange} 
                                   // checked
                                 />
                                 <label for="confirm-radio"></label>
                               </div>
-                              
                             </div>
                             <div className="col-lg-7">
                               <label for="html">Nam</label>
@@ -304,8 +238,6 @@ const handleInputChange = (event) => {
                                   id="primary-radio"
                                   name="gender"
                                   value="Nữ"
-                                  checked={formValue.gender === "Nữ"} // Add this line
-                                  onChange={handleChange}
                                   // checked
                                 />
                                 <label for="primary-radio"></label>
@@ -315,27 +247,14 @@ const handleInputChange = (event) => {
                               <label for="html">Nữ</label>
                             </div>
                           </div>
-                          
                         </div>
-                        <div >
-                        <p 
-                          style=
-                            {{ 
-                              margin: "0px 20px", color: 'red', fontSize: "14px", height:"0px" 
-                            }} 
-                          className="error-feedback">
-                          &nbsp; {formError.gender}
-                        </p>
-                        </div>
-                       </div>
-                        
                       </div>
                       <div
                         className="input-group-icon mt-5"
                         style={{ display: "flex" }}
                       >
                         <div className="col-lg-3 col-md-4">
-                          <p className="mt-2">Tài khoản nhân viên</p>
+                          <p className="mt-2">Tài khoản lễ tân</p>
                         </div>
                         <div className="col-lg-9 col-md-4">
                           <div className="form-select" id="default-select">
@@ -343,11 +262,10 @@ const handleInputChange = (event) => {
                               style={{ width: "100%", height: "90%" }}
                               defaultValue=""
                               name="userId"
-                              required
                               onChange={(event) => onChange(event.target.value)}
                             >
                               <option value="" disabled>
-                                Tài khoản nhân viên
+                                Tài khoản lễ tân
                               </option>
                               {people.map((item) => (
                                 <option value={item.userId} key={item.userId}>
@@ -355,41 +273,7 @@ const handleInputChange = (event) => {
                                 </option>
                               ))}
                             </select>
-                          
                           </div>
-                        </div>
-                      </div>
-                      <div
-                        className="input-group-icon mt-5"
-                        style={{ display: "flex" }}
-                      >
-                        <div className="col-lg-3 col-md-4">
-                          <p className="mt-2">Kiểu phục vụ</p>
-                        </div>
-                        <div className="col-lg-9 col-md-4">
-                          <div className="form-select" id="default-select">
-                            <select
-                              style={{ width: "100%", height: "90%" }}
-                              name="type"
-                              // required
-                              defaultValue=""
-                              onChange={handleChange}
-                            >
-                              <option value="" disabled>
-                                Kiểu phục vụ
-                              </option>
-                              <option value="1">Tóc</option>
-                              <option value="2">Da</option>
-                            </select>
-                          </div>
-                          <p 
-                              style=
-                                {{ 
-                                  margin: "0px 5px", color: 'red', fontSize: "14px", height:"0px" 
-                                }} 
-                              className="error-feedback">
-                              &nbsp; {formError.type}
-                            </p>
                         </div>
                       </div>
                       <div
@@ -400,12 +284,12 @@ const handleInputChange = (event) => {
                           <p className="mt-2">Chi nhánh</p>
                         </div>
                         <div className="col-lg-9 col-md-4">
+                          {/* <div className="icon"><i className="fa fa-globe" aria-hidden="true"></i></div> */}
                           <div className="form-select" id="default-select">
                             <select
                               style={{ width: "100%", height: "90%" }}
                               name="branchId"
                               defaultValue=""
-                              onChange={handleChange}
                             >
                               <option value="" disabled>
                                 Chi nhánh
@@ -417,14 +301,6 @@ const handleInputChange = (event) => {
                               ))}
                             </select>
                           </div>
-                          <p 
-                              style=
-                                {{ 
-                                  margin: "0px 5px", color: 'red', fontSize: "14px", height:"0px" 
-                                }} 
-                              className="error-feedback">
-                              &nbsp; {formError.branchId}
-                            </p>
                         </div>
                       </div>
                       <div className="mt-110" style={{ display: "flex" }}>

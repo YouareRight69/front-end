@@ -38,7 +38,7 @@ import HistoryEmployee from "./component/employee/history/historyEmployee";
 import Invoice from "./component/invoice/Invoice";
 import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
-
+import AddNewRec from "./component/employee/AddNewRec";
 
 
 function App() {
@@ -92,6 +92,7 @@ function App() {
           <Route path="/history-admin" element={<HistoryEmployeeA />}></Route>
           <Route path="/history-employee" element={<HistoryEmployee />}></Route>
           <Route path="/booking-management" element={<BookingManagement />}></Route>
+          <Route path="/employee-addRec" element={<AddNewRec />}></Route>
        
         </Routes>
       </BrowserRouter>

@@ -37,11 +37,11 @@ function UpdateInfo() {
       }
     }
   }, [
-    result.fullname,
-    result.email,
-    result.phoneNumber,
-    result.dob,
-    result.address,
+    result?.fullname,
+    result?.email,
+    result?.phoneNumber,
+    result?.dob,
+    result?.address,
   ]);
 
   const setParams = (event) => {
@@ -64,8 +64,8 @@ function UpdateInfo() {
   const [inputImg, setInputImg] = useState("assets/img/logo/avatar.png");
 
   useEffect(() => {
-    if (result.avatar) {
-      setInputImg(result.avatar);
+    if (result?.avatar) {
+      setInputImg(result?.avatar);
     }
   }, [result.avatar]);
 

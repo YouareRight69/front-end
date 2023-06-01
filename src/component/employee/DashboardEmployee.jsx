@@ -1,8 +1,7 @@
 import React, { useEffect, useState} from "react";
 import { Outlet, Link } from "react-router-dom";
 import Page from '../../utils/Page';
-import EditButton from '../../Button/EditButton';
-import DeleteButton from '../../Button/DeleteButton';
+import DeleteButton from '../employee/DeleteButton';
 import SearchForm from '../../Button/SearchForm';
 import DetailButton from '../../Button/DetailButton';
 import axios from 'axios';
@@ -110,7 +109,7 @@ function DashboardEmployee(props) {
                     </Link>
                   </div>
                   <div class="mt-10 col-lg-4">
-                    <Link to="/employee-add">
+                    <Link to="/employee-addRec">
                       <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
                         Thêm mới lễ tân
                       </div>
@@ -133,6 +132,7 @@ function DashboardEmployee(props) {
                             <th scope="col">Số điện thoại</th>
                             <th scope="col">Email</th>
                             <th scope="col">Giới tính</th>
+                            <th scope="col">Nhân viên</th>
                             <th scope="col">Chi nhánh</th>
                             <th scope="col">Chức năng</th>
                           </tr>
@@ -147,6 +147,14 @@ function DashboardEmployee(props) {
                                 <td>{item.user.phoneNumber}</td>
                                 <td>{item.user.account.email}</td>
                                 <td>{item.user.gender}</td>
+                                <td>
+                                  {
+                                    item.type === "1" ? "Da" :
+                                    item.type === "2" ? "Tóc" :
+                                    item.type === "3" ? "Lễ tân" :
+                                    ""
+                                  }
+                                </td>
                                 <td>{item.branch.name}</td>
                                 <td style={{ display: "flex"}}>
                               <DeleteButton url={url} id={item.employeeId} rerender={rerender} />
@@ -182,12 +190,11 @@ function DashboardEmployee(props) {
                 <div style={{ display: "flex" }}>
                   <div className="col-lg-10 ms-10 mb-50"></div>
                   <div className="col-lg-2 ms-10 mb-50">
-                    <a
-                      type="button"
-                      className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                    >
-                      Trở về
-                    </a>
+                  <Link to="/employee">
+                            <div className="button rounded-0 primary-bg w-100 btn_1 boxed-btn">
+                              Trở về
+                            </div>
+                          </Link>
                   </div>
                 </div>
               </div>
