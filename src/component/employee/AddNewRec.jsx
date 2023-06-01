@@ -8,6 +8,7 @@ import { v4 } from "uuid";
 import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
+import Sidebar from "../common/admin/sidebar";
 
 const initFormValue = {
   dateOfBirth: "",
@@ -165,10 +166,10 @@ const handleInputChange = (event) => {
         </div>
         {/* Hero End */}
         {/* Services Area Start */}
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
-            Admin
-          </div>
+        <div className='row'>
+                <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+                <Sidebar />
+                </div>
           <div className="col-lg-10">
             <section className="service-area section-padding300">
               <div className="container">

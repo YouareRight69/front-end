@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { v4 } from "uuid";
 import ImageGallery from "../common/ImageGallery";
 import { storage } from "../firebase/index.js";
-import Sidebar from "../common/admin/sidebar"
+import Sidebar from "../common/admin/sidebar";
 
 function EditBranch() {
   const url = "http://localhost:8080/api/admin/branch";
@@ -168,9 +168,9 @@ function EditBranch() {
         </div>
         {/* Hero End */}
         {/* Services Area Start */}
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2">
-          <Sidebar />
+        <div className="row">
+          <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+            <Sidebar />
           </div>
           <div className="col-lg-10">
             <section className="service-area section-padding300">

@@ -124,8 +124,8 @@ function AddNewBranch(props) {
   };
 
   return (
-    <>
-      <main>
+    <React.Fragment>
+      <main >
         {/* Hero Start */}
         <div className="slider-area2">
           <div className="slider-height2 d-flex align-items-center">
@@ -142,10 +142,10 @@ function AddNewBranch(props) {
         </div>
         {/* Hero End */}
         {/* Services Area Start */}
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2">
-            <Sidebar />
-          </div>
+        <div className='row'>
+                <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+                <Sidebar />
+                </div>
           <div className="col-lg-10">
             <section className="service-area section-padding300">
               <div className="container">
@@ -248,8 +248,7 @@ function AddNewBranch(props) {
         </div>
         {/* Services Area End */}
       </main>
-      ;
-    </>
+    </React.Fragment>
   );
 }
 

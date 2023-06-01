@@ -183,7 +183,7 @@ function Edit() {
                   </div>{" "}
                   <div className="mt-20">
                     <input
-                      type="number"
+                      type="text"
                       name="phoneNumber"
                       className="single-input-namnb6"
                       style={{ border: "1px solid #e5e6e9" }}

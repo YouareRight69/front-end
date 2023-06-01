@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams  } from "react-router-dom";
 import axios from "axios";
+import Sidebar from "../common/admin/sidebar";
 
 function DetailEmployee(props) {
   const url = "http://localhost:8080/api/employee/listAllEmp";
@@ -52,10 +53,10 @@ function DetailEmployee(props) {
         </div>
         {/* Hero End */}
         {/* Services Area Start */}
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
-            Admin
-          </div>
+        <div className='row'>
+                <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+                <Sidebar />
+                </div>
           <div className="col-lg-10">
             <section className="service-area section-padding300">
               <div className="container">
@@ -71,7 +72,7 @@ function DetailEmployee(props) {
                           <div className="gallery-img">
                             <img
                               className="thien_avatar"
-                              src={target.user?.avatar}
+                              src={target.avatar}
                               alt="avatar"
                               // value={target.user?.avatar}
                             />
@@ -88,7 +89,7 @@ function DetailEmployee(props) {
                               <p className="mt-2">EmployeeId</p>
                           </div>
                           <div class="col-lg-9 col-md-4">
-                            <p className="mt-2">{target.employeeId}</p>
+                            <p className="mt-2">{target.employee?.employeeId}</p>
                           </div>
                       </div>
                       <div className="mt-10" style={{display: "flex"}}>
@@ -96,7 +97,7 @@ function DetailEmployee(props) {
                               <p className="mt-2">Họ Tên</p>
                           </div>
                           <div class="col-lg-9 col-md-4">
-                            <p className="mt-2">{target.user?.fullName}</p>
+                            <p className="mt-2">{target.fullName}</p>
                           </div>
                       </div>
                       <div className="mt-10" style={{ display: "flex" }}>
@@ -104,7 +105,7 @@ function DetailEmployee(props) {
                               <p className="mt-2">Ngày sinh</p>
                           </div>
                           <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">{target.user?.dateOfBirth}</p>
+                            <p className="mt-2">{target.dateOfBirth}</p>
                           </div>
                       </div>
                       
@@ -113,7 +114,7 @@ function DetailEmployee(props) {
                               <p className="mt-2">Số điện thoại</p>
                           </div>
                           <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">{target.user?.phoneNumber}</p>
+                            <p className="mt-2">{target.phoneNumber}</p>
                           </div>
                       </div>
                       <div className="mt-10" style= {{display: "flex" }}>
@@ -133,7 +134,7 @@ function DetailEmployee(props) {
                                       </div>
                                   </div>
                                   <div className="col-lg-7">
-                                      <label for="html">{target.user?.gender}</label>
+                                      <label for="html">{target.gender}</label>
                                   </div>
                               </div>
                           </div>
@@ -143,17 +144,10 @@ function DetailEmployee(props) {
                               <p className="mt-2">Email</p>
                           </div>
                           <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">{target.user?.account.email}</p>
+                            <p className="mt-2">{target.account?.email}</p>
                           </div>
                       </div>
-                      <div className="mt-10" style= {{ display: "flex" }}>
-                          <div className="col-lg-3 col-md-4">
-                              <p className="mt-2">Ngày ký HD</p>
-                          </div>
-                          <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">05/10/2015</p>
-                          </div>
-                      </div>
+                    
                       <div className="mt-10" style= {{ display: "flex" }}>
                         <div className="col-lg-3 col-md-4">
                           <p className="mt-2">Kiểu nhân viên</p>
@@ -164,9 +158,9 @@ function DetailEmployee(props) {
                               name="type"
                               defaultValue=""
                               value= {
-                                target.type === "1" ? "Hair dresser" :
-                                target.type === "2" ? "Skinner" :
-                                target.type === "3" ? "Lễ tân" :
+                                target.employee?.type === "1" ? "Hair dresser" :
+                                target.employee?.type === "2" ? "Skinner" :
+                                target.employee?.type === "3" ? "Lễ tân" :
                                 ""
                               }
                               readOnly

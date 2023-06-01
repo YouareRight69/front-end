@@ -64,8 +64,8 @@ function UserList() {
                     </div>
                 </div>
             </div>
-            <div style={{ display: "flex" }}>
-                <div className="col-lg-2" style={{ backgroundColor: "bisque" }}>
+            <div className='row'>
+                <div className="col-lg-2" style={{ backgroundColor: "black" }}>
                 <Sidebar />
                 </div>
 

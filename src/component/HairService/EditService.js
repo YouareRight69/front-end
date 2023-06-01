@@ -178,10 +178,10 @@ function EditService() {
           </div>
         </div>
       </div>
-      <div style={{ display: "flex" }}>
-        <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
-        <Sidebar />
-        </div>
+      <div className='row'>
+                <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+                <Sidebar />
+                </div>
         <div className="col-lg-10">
           <section id="section">
             <div className="container">

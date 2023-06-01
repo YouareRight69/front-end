@@ -73,10 +73,10 @@ function DashboardBranch(props) {
         </div>
         {/* Hero End */}
         {/* Start Align Area */}
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2">
-            <Sidebar />
-          </div>
+        <div className='row'>
+                <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+                <Sidebar />
+                </div>
 
           <div className="col-lg-10">
             <div className="whole-wrap">

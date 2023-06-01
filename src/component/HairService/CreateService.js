@@ -128,8 +128,8 @@ function CreateService() {
                     </div>
                 </div>
             </div>
-            <div style={{ display: "flex" }}>
-                <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
+            <div className='row'>
+                <div className="col-lg-2" style={{ backgroundColor: "black" }}>
                 <Sidebar />
                 </div>
                 <div className="col-lg-10">

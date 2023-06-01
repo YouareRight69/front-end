@@ -101,9 +101,9 @@ function DashboardEmployee(props) {
         </div>
         {/* Hero End */}
         {/* Start Align Area */}
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2" >
-            <Sidebar></Sidebar>
+        <div className="row">
+          <div className="col-lg-2" style={{backgroundColor:"black"}} >
+            <Sidebar/>
           </div>
 
           <div className="col-lg-10">
@@ -164,30 +164,30 @@ function DashboardEmployee(props) {
                         <tbody>
                           {list.data.content.length > 0 &&
                             list.data.content.map((item) =>
-                              <tr style={{ marginTop: "5px" }} key={item.employeeId}>
-                                <th scope="row">{item.employeeId}</th>
-                                <td>{item.user?.fullName}</td>
-                                <td>{item.user?.dateOfBirth}</td>
-                                <td>{item.user?.phoneNumber}</td>
-                                <td>{item.user?.account.email}</td>
-                                <td>{item.user?.gender}</td>
+                              <tr style={{ marginTop: "5px" }} key={item.employee.employeeId}>
+                                <th scope="row">{item.employee.employeeId}</th>
+                                <td>{item.fullName}</td>
+                                <td>{item.dateOfBirth}</td>
+                                <td>{item.phoneNumber}</td>
+                                <td>{item.account.email}</td>
+                                <td>{item.gender}</td>
                                 <td>
                                   {
-                                    item.type === "1" ? "Hair dresser" :
-                                    item.type === "2" ? "Skinner" :
-                                    item.type === "3" ? "Lễ tân" :
+                                    item.employee.type === "1" ? "Hair dresser" :
+                                    item.employee.type === "2" ? "Skinner" :
+                                    item.employee.type === "3" ? "Lễ tân" :
                                     ""
                                   }
                                 </td>
-                                <td>{item.branch?.name}</td>
+                                <td>{item.employee.branch.name}</td>
                                 <td style={{ display: "flex"}}>
-                              <DeleteButton url={url} id={item.employeeId} rerender={rerender} />
+                              <DeleteButton url={url} id={item.employee.employeeId} rerender={rerender} />
 
                               <button
                                 type="button"
                                 className="genric-btn success radius"
                                 style={{ marginLeft: "10px" }}
-                                onClick={() => editEmp(item.employeeId)}
+                                onClick={() => editEmp(item.employee.employeeId)}
                                 // data-bs-toggle="modal"
                                 // data-bs-target="#deleteModal"
                               >
@@ -195,7 +195,7 @@ function DashboardEmployee(props) {
                               </button>
                               {/* <EditButton url={url} id={ item.employeeId } /> */}
 
-                              <DetailButton url={'employee'} id={item.employeeId} />
+                              <DetailButton url={'employee'} id={item.employee.employeeId} />
                             </td>
                               </tr>
                           )}
