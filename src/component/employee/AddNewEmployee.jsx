@@ -5,6 +5,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { storage } from "../firebase/Firebase";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const initFormValue = {
   dateOfBirth: "",
@@ -86,6 +89,7 @@ console.log(formError)
       })
       .then((resp) => {
         nagative("/employee");
+        toast.success("Thêm mới thành công");
       })
       .catch((error) => {
         console.log(error);
@@ -228,7 +232,6 @@ const handleInputChange = (event) => {
                             placeholder="Ngày Sinh"
                             onfocus="this.placeholder = ''"
                             onblur="this.placeholder = 'Ngày Sinh'"
-                            // required
                             className="single-input"
                             onChange={handleChange}
                           />
@@ -248,7 +251,6 @@ const handleInputChange = (event) => {
                             placeholder="Địa chỉ"
                             onfocus="this.placeholder = ''"
                             onblur="this.placeholder = 'Địa chỉ'"
-                            // required
                             className="single-input"
                             onChange={handleChange}
 
@@ -378,8 +380,8 @@ const handleInputChange = (event) => {
                               <option value="" disabled>
                                 Kiểu phục vụ
                               </option>
-                              <option value="1">Tóc</option>
-                              <option value="2">Da</option>
+                              <option value="1">Hair dresser</option>
+                              <option value="2">Skinner</option>
                             </select>
                           </div>
                           <p 

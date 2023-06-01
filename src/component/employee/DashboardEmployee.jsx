@@ -149,8 +149,8 @@ function DashboardEmployee(props) {
                                 <td>{item.user.gender}</td>
                                 <td>
                                   {
-                                    item.type === "1" ? "Da" :
-                                    item.type === "2" ? "Tóc" :
+                                    item.type === "1" ? "Hair dresser" :
+                                    item.type === "2" ? "Skinner" :
                                     item.type === "3" ? "Lễ tân" :
                                     ""
                                   }

@@ -39,19 +39,13 @@ function UpdateInfo() {
       }
     }
   }, [
-<<<<<<< HEAD
-    result?.fullname,
-    result?.email,
-    result?.phoneNumber,
-    result?.dob,
-    result?.address,
-=======
+
     result && result.fullname, // Add null check for `result` and its properties
     result && result.email,
     result && result.phoneNumber,
     result && result.dob,
     result && result.address,
->>>>>>> a9d1224ed02853d598fa5f1ed14bc3ccf05e67ff
+
   ]);
 
   const setParams = (event) => {

@@ -60,7 +60,7 @@ function DetailEmployee(props) {
                   <div className="col-xl-4 col-lg-4 col-md-6">
                     <div
                       className="gallery-area"
-                      style={{ paddingTop: "50px" }}
+                      style={{ paddingTop: "100px" }}
                     >
                       <div className="col-lg-12 col-md-6 col-sm-6">
                         <div className="box snake thien_snake">
@@ -160,8 +160,8 @@ function DetailEmployee(props) {
                               name="type"
                               defaultValue=""
                               value= {
-                                target.type === "1" ? "Da" :
-                                target.type === "2" ? "Tóc" :
+                                target.type === "1" ? "Hair dresser" :
+                                target.type === "2" ? "Skinner" :
                                 target.type === "3" ? "Lễ tân" :
                                 ""
                               }

@@ -110,7 +110,7 @@ function CreateService() {
     
   const handleStatusFromGallery = (data) => {};
 
-    const handleStatusFromGallery = (data) => { };
+    // const handleStatusFromGallery = (data) => { };
 
     return (
         <div>
