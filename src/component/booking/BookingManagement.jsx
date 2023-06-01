@@ -7,6 +7,7 @@ import Page from "../common/Page";
 import SearchForm from "../../Button/SearchForm";
 import DetailInfoButton from "./DetailButton";
 import jwt_decode from "jwt-decode";
+import Sidebar from "../common/admin/sidebar";
 
 export default function BookingManagement() {
   const [list, setList] = useState({ data: { content: [] } });
@@ -43,7 +44,7 @@ export default function BookingManagement() {
 
   const handleEditBooking = (id) => {
     axios
-      .get("http://localhost:8080/api/emp/booking/get-booking?bookingId=" + id,
+      .get("http://localhost:8080/api/emp/booking/get-booking?bookingId=" + id ,
       {
         headers: {
           "Content-Type": "application/json",
@@ -89,12 +90,22 @@ export default function BookingManagement() {
         </div>
         {/* Hero End */}
         {/* Start Align Area */}
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2" style={{ backgroundColor: "bisque" }}>
-            Admin
-          </div>
-
-          <div className="col-lg-10">
+        <div className="row">
+          {jwt_decode(accessToken).roles == "[ROLE_RECEPTIONIST]" &&
+           <div className="col-lg-2" >
+          <nav className="nav flex-column" style={{ color: "white", backgroundColor: "black", height: '100%', alignItems: 'baseline' }}>
+                <a className="nav-link m-3 text-center" >Quản lý khách hàng</a>
+                <a className="nav-link m-3 text-center"> Quản lý nhân viên</a>
+                <a className="nav-link m-3 text-center" >Quản lý dịch vụ</a>
+                <a className="nav-link m-3 text-center" >Quản lý chi nhánh</a>
+                <a className="nav-link m-3 text-center" >Quản lý thông kê</a>
+                <a className="nav-link m-3 text-center" >Quản lý thanh toán</a>
+                <a className="nav-link m-3 text-center" >Quản lý dặt lịch </a>
+            </nav>
+          </div>}
+          
+ 
+          <div className={` ${jwt_decode(accessToken).roles == "[ROLE_RECEPTIONIST]" ? "col-lg-10" : "container" }`}>
             <div className="whole-wrap">
               <div className="container-fluid box_1170">
                 <div className="blog_right_sidebar">

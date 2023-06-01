@@ -29,6 +29,7 @@ export default function Booking() {
   const [formData, setFormData] = useState({ isDelete: 0 });
   const [serviceList, setServiceList] = useState([]);
   const [minDate, setMinDate] = useState("");
+  const [maxDate, setMaxDate] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const [status, setStatus] = useState();
@@ -36,21 +37,18 @@ export default function Booking() {
   const [title, setTitle] = useState("ĐẶT LỊCH HẸN");
   const [oldInfo, setOldInfo] = useState();
   const accessToken = localStorage.getItem("accessToken");
-
+  const [oldFormData, setOldFormData] = useState();
   console.log(id);
   console.log(accessToken);
   //useEffect
   useEffect(() => {
     if (location.state != null && location.state.formData != null) {
-      // if (location.state.formData.serviceList.length == 0) {
       setFormData({ ...location.state.formData, serviceList: serviceList });
-      // } else {
-      //   setFormData({ ...location.state.formData });
-      // }
-
       setSelectStyle(location.state.formData.styleId);
       setSelectDay(location.state.formData.bookingDate);
       setSelectTime(location.state.formData.workTimeId);
+      setSelectSkinner(location.state.formData.skinnerId);
+
       if (id) {
         setOldInfo({
           bookingDate: location.state.formData.bookingDate,
@@ -62,6 +60,7 @@ export default function Booking() {
     setSelectBranch(formData.branch);
   }, [status]);
   console.log(selectTime);
+
   useEffect(() => {
     axios
       .get("http://localhost:8080/api/emp/booking/info/list-branch")
@@ -85,7 +84,6 @@ export default function Booking() {
           setDataSkinner(res.data.filter((item) => item.employee.type === "2"));
         })
         .catch((error) => {
-          // Xử lý lỗi nếu có
           console.error("Lỗi khi gửi yêu cầu:", error);
         });
       axios
@@ -94,13 +92,12 @@ export default function Booking() {
           setWorkingTimeData(res.data);
         })
         .catch((error) => {
-          // Xử lý lỗi nếu có
           console.error("Lỗi khi gửi yêu cầu:", error);
         });
     }
     setBusyTime([]);
   }, [selectBranch]);
-
+  console.log(data);
   useEffect(() => {
     if (selectStyle != null && selectDay != null) {
       axios
@@ -114,7 +111,6 @@ export default function Booking() {
           setBusyTime(res.data);
         })
         .catch((error) => {
-          // Xử lý lỗi nếu có
           console.error("Lỗi khi gửi yêu cầu:", error);
         });
     }
@@ -132,6 +128,7 @@ export default function Booking() {
       location.state.selectService = [];
     }
     setMinDate(getCurrentDate());
+    setMaxDate(getMaxDate());
     setStatus("OK");
     if (id == undefined) {
       setTitle("ĐẶT LỊCH HẸN");
@@ -187,6 +184,14 @@ export default function Booking() {
     const dd = String(today.getDate()).padStart(2, "0");
     return `${yyyy}-${mm}-${dd}`;
   };
+  const getMaxDate = () => {
+    const today = new Date();
+    today.setDate(today.getDate() + 10);
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
 
   //function
   const handleClickTime = (time) => {
@@ -216,12 +221,23 @@ export default function Booking() {
       isDelete: 0,
       serviceList: serviceList,
       branch: e.value,
+      bookingDate: selectDay,
     });
+    setSelectStyle("");
   };
 
   const handleSelectDay = (e) => {
+    var toDay = new Date();
+    var selectDay = new Date(e);
+    toDay.setDate(toDay.getDate() + 10);
     setSelectDay(e);
-    setFormData({ ...formData, bookingDate: e });
+    if (new Date(e) <= toDay && new Date(getCurrentDate()) <= selectDay) {
+      
+      setFormData({ ...formData, bookingDate: e });
+    } else {
+      setFormData({ ...formData, bookingDate: undefined });
+    }
+ 
   };
   const handleSelectSkinner = (e) => {
     setSelectSkinner(e);
@@ -229,21 +245,23 @@ export default function Booking() {
   };
 
   const handleSelectServiceButton = () => {
-    if(id){
+    if (id) {
       navigate("/select-service", {
         state: { selectService: selectservice, formData: formData, id: id },
       });
-    }else {
+    } else {
       navigate("/select-service", {
         state: { selectService: selectservice, formData: formData },
       });
     }
-
-    
   };
 
   const handleInputNote = (e) => {
     setFormData({ ...formData, note: e });
+  };
+
+  const handleInputName = (e) => {
+    setFormData({ ...formData, customerName: e });
   };
 
   const handleSubmitForm = (e) => {
@@ -251,12 +269,14 @@ export default function Booking() {
     if (!("note" in formData)) {
       setFormData({ ...formData, note: null });
     }
+
     if (
       formData.isDelete == 0 &&
       formData.serviceList.length > 0 &&
       formData.branch != "" &&
       formData.userId != "" &&
-      (formData.bookingDate != "") & (formData.workTimeId != "") &&
+      formData.bookingDate != undefined &&
+      formData.workTimeId != "" &&
       formData.styleId != "" &&
       formData.skinnerId != ""
     ) {
@@ -270,13 +290,13 @@ export default function Booking() {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Methods":
                   "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-                "Authorization": "Bearer " + accessToken,
+                Authorization: "Bearer " + accessToken,
               },
             }
           )
           .then((data) => {
             console.log(data.data);
-            toast.success("Đặt lịch hẹn thành công!", {
+            toast.success("Cập nhật lịch hẹn thành công!", {
               position: "top-center",
               autoClose: 1200,
               hideProgressBar: false,
@@ -287,12 +307,27 @@ export default function Booking() {
               theme: "light",
             });
 
-            navigate("/", {
+            navigate("/booking-management", {
               state: null,
             });
           })
           .catch((error) => {
-            console.error("NOOOO");
+            toast.error(
+              "Cập nhật thất bại! Danh sách lịch hẹn vừa được cập nhật",
+              {
+                position: "top-center",
+                autoClose: 1200,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              }
+            );
+            navigate("/booking-management", {
+              state: null,
+            });
           });
       } else {
         axios
@@ -301,7 +336,7 @@ export default function Booking() {
               "Content-Type": "application/json",
               "Access-Control-Allow-Methods":
                 "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-               "Authorization": "Bearer " + accessToken,
+              Authorization: "Bearer " + accessToken,
             },
           })
           .then((data) => {
@@ -317,12 +352,27 @@ export default function Booking() {
               theme: "light",
             });
 
-            navigate("/", {
+            navigate("/main", {
               state: null,
             });
           })
           .catch((error) => {
-            console.error("NOOOO");
+            toast.error(
+              "Đặt lịch thất bại! Danh sách lịch hẹn vừa được cập nhật",
+              {
+                position: "top-center",
+                autoClose: 1200,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              }
+            );
+            navigate("/booking", {
+              state: null,
+            });
           });
       }
     }
@@ -369,17 +419,32 @@ export default function Booking() {
                               value={branch.branchId}
                               selected={true}
                             >
-                              {branch.name}
+                              {branch.name} | {branch.address}
                             </option>
                           ) : (
                             <option key={index} value={branch.branchId}>
-                              {branch.name}
+                              {branch.name} | {branch.address}
                             </option>
                           )
                         )}
                       </select>
                     </div>
                   </div>
+                  {jwt_decode(accessToken).roles.includes(
+                    "ROLE_RECEPTIONIST"
+                  ) && (
+                    <div className="input-group-icon mt-10">
+                      <h1>Tên khách hàng đặt lịch</h1>
+                      <input
+                        onChange={(event) =>
+                          handleInputName(event.target.value)
+                        }
+                        className="single-textarea"
+                        placeholder="Vui lòng nhập tên khách hàng..."
+                        defaultValue={formData.customerName}
+                      />
+                    </div>
+                  )}
                   <div className="input-group-icon mt-10">
                     <h1>Chọn dịch vụ</h1>
                     <div>
@@ -394,7 +459,9 @@ export default function Booking() {
                       </button>
                     </div>
 
-                    <div className="m-3">Dịch vụ đã chọn</div>
+                    {selectservice.length > 0 && (
+                      <div className="m-3">Dịch vụ đã chọn</div>
+                    )}
                     <div>
                       {selectservice?.map((item, index) => (
                         <span
@@ -445,6 +512,7 @@ export default function Booking() {
                         <h2>Chọn ngày</h2>
                         <input
                           min={minDate}
+                          max={maxDate}
                           type="date"
                           defaultValue={selectDay}
                           required

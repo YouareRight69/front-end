@@ -53,8 +53,23 @@ function Edit() {
     result && result.branchId,
   ]);
 
+  // const setParams = (event) => {
+  //   const { name, value } = event.target;
+  //   if (name === "fullname") {
+  //     setFullname(value);
+  //   } else if (name === "email") {
+  //     setEmail(value);
+  //   } else if (name === "phoneNumber") {
+  //     setPhoneNumber(value);
+  //   } else if (name === "dob") {
+  //     setDob(value);
+  //   } else if (name === "address") {
+  //     setAddress(value);
+  //   }
+  // };
+
   const exit = () => {
-    navigate("/employee");
+    navigate("/");
   };
 
   const updateEmp = () => {
@@ -83,7 +98,7 @@ function Edit() {
       })
       .then((result) => {
         alert("Cập nhật thông tin thành công!");
-        navigate("/employee");
+        navigate("/employee2");
       })
       .catch((error) => {
         alert(error);
@@ -92,7 +107,7 @@ function Edit() {
 
   useMemo(() => {
     axios.get("http://localhost:8080/api/admin/branch").then((resp) => {
-      setBranch(resp.data.content);
+      setBranch(resp.data);
     });
   }, []);
 
@@ -150,9 +165,8 @@ function Edit() {
                 </div>
               </div>
               <div className="col-lg-8 col-md-8">
-              <h3 className="mb-30">Chỉnh sửa thông tin nhân viên</h3>
                 <form action="#">
-                  <div className="mt-20">
+                  <div className="mt-10">
                     <input
                       type="text"
                       name="empId"
@@ -162,7 +176,7 @@ function Edit() {
                       readOnly
                     />
                   </div>{" "}
-                  <div className="mt-20">
+                  <div className="mt-10">
                     <input
                       type="text"
                       name="fullname"
@@ -172,7 +186,7 @@ function Edit() {
                       readOnly
                     />
                   </div>{" "}
-                  <div className="mt-20">
+                  <div className="mt-10">
                     <input
                       type="number"
                       name="phoneNumber"
@@ -181,7 +195,7 @@ function Edit() {
                       value={phoneNumber}
                     />
                   </div>{" "}
-                  <div className="mt-20">
+                  <div className="mt-10">
                     <div className="form-select" id="default-select">
                       <select
                         style={{
@@ -196,13 +210,12 @@ function Edit() {
                         <option value="" disabled>
                           Loại Nhân viên
                         </option>
-                        <option value="1">Da</option>
-                        <option value="2">Tóc</option>
-                        <option value="3">Lễ tân</option>
+                        <option value="Hair">Hair dresser</option>
+                        <option value="Skin">Skinner</option>
                       </select>
                     </div>
                   </div>{" "}
-                  <div className="mt-20" style={{ marginTop: "30px" }}>
+                  <div className="mt-10" style={{ marginTop: "25px" }}>
                     <div className="form-select" id="default-select">
                       <select
                         style={{
@@ -225,9 +238,9 @@ function Edit() {
                       </select>
                     </div>
                   </div>
-                  <div className="mt-20" style={{ marginTop: "20px" }}>
+                  <div className="mt-10" style={{ marginTop: "20px" }}>
                     <div className="row">
-                      <div className="col-6 mt-40">
+                      <div className="col-6">
                         <button
                           style={{ width: "100%" }}
                           type="submit"
@@ -235,10 +248,10 @@ function Edit() {
                           onClick={exit}
                         >
                           {" "}
-                          TRỞ VỀ{" "}
+                          Hủy{" "}
                         </button>{" "}
                       </div>
-                      <div className="col-6 mt-40">
+                      <div className="col-6">
                         <button
                           style={{ width: "100%" }}
                           type="button"

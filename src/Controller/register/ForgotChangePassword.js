@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LeftSideNamNB from "../register/common/LeftSideNamNB";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function ForgotChangePassword() {
   const location = useLocation();
@@ -43,11 +44,11 @@ function ForgotChangePassword() {
         throw Error(response.status);
       })
       .then((result) => {
-        alert("Đổi mật khẩu thành công!");
+        toast.success("Đổi mật khẩu thành công!");
         navigate("/login");
       })
       .catch((error) => {
-        alert("Đổi mật khẩu thất bại!");
+        toast.error("Đổi mật khẩu thất bại!");
       });
   };
 
@@ -115,7 +116,7 @@ function ForgotChangePassword() {
                         <button
                           style={{ width: "100%" }}
                           type="button"
-                          className="button boxed-btn"
+                          className="button boxed-btn namnb6_2"
                           onClick={changePassword}
                         >
                           {" "}

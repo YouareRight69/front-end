@@ -1,11 +1,12 @@
 import axios from 'axios'
 import React from 'react'
+import jwt_decode from "jwt-decode";
 
 export default function DeleteButton(props) {
   const accessToken = localStorage.getItem("accessToken");
   const deleteItem = () => {
     if (props.id) {
-      axios.delete(`${props.url}/${props.id}`, {
+      axios.put(`${props.url}/${props.id}`, {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Methods":
@@ -16,7 +17,7 @@ export default function DeleteButton(props) {
       console.log(props.url)
       return;
     }
-    axios.delete(`${props.url}/delete`, props.item, {
+    axios.put(`${props.url}/put`, props.item, {
       headers: {
         'Content-Type': 'application/json',
         "Authorization": "Bearer " + accessToken
@@ -40,7 +41,7 @@ export default function DeleteButton(props) {
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="exampleModalLabel">
-                Xóa dịch vụ
+                Xóa khách hàng
               </h1>
               <div
                 type="button"
@@ -52,7 +53,7 @@ export default function DeleteButton(props) {
               </div>
             </div>
             <div className="modal-body">
-              Bạn có chắc muốn xóa dịch vụ {`${props.id}`}
+              Bạn có chắc muốn xóa khách hàng {`${props.id}`}
             </div>
             <div className="modal-footer">
               <button
