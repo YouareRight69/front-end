@@ -103,12 +103,12 @@ function ChangePassword() {
         <div
           className="container box_1170"
           style={{
-            width: "80%",
+            width: "50%",
             border: "2px solid brown",
             margin: "20px auto",
           }}
         >
-          <div className="section-top-border" style={{ height: "50vh" }}>
+          <div className="section-top-border" style={{ height: "60vh" }}>
             <div
               className="row"
               style={{ display: "flex", height: "100%", alignItems: "center" }}
