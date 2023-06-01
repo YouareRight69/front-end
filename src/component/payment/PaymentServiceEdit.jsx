@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-export default function Selectservice() {
+export default function PaymentServiceEdit() {
   const selectedService = {
     border: "1px gray solid",
     borderRadius: "5px",
@@ -38,7 +38,7 @@ export default function Selectservice() {
       .catch((err) => console.log(err));
   }, []);
 
-  console.log(serviceData);
+  // console.log(serviceData);
 
   const handleSelectButton = (item) => {
     if (idArr.includes(item.serviceId)) {
@@ -52,14 +52,14 @@ export default function Selectservice() {
 
   const handleFinish = () => {
     if (id) {
-      navigate("/booking/" + id, {
+      navigate("/payment-edit/" + id, {
         state: {
           selectService: selectedArr,
           formData: location.state.formData,
         },
       });
     } else {
-      navigate("/booking", {
+      navigate("/payment-edit", {
         state: {
           selectService: selectedArr,
           formData: location.state.formData,
@@ -69,7 +69,7 @@ export default function Selectservice() {
   };
 
   const handleBack = () => {
-    navigate("/booking", {
+    navigate("/payment-edit", {
       state: { selectService: oldSelect, formData: location.state.formData },
     });
   };
@@ -139,12 +139,7 @@ export default function Selectservice() {
                                   className="flaticon-healthcare-and-medical"
                                   src={item.media[0]?.url}
                                   alt="lỗi"
-                                  style={{
-                                    minWidth: "280px",
-                                    maxWidth: "300px",
-                                    minHeight: "170px",
-                                    maxHeight: "200px",
-                                  }}
+                                  style={{ width: "280px" }}
                                 ></img>
                               </div>
                               <div className="service-cap">

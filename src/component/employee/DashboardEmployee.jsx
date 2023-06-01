@@ -55,9 +55,9 @@ function DashboardEmployee(props) {
           console.log(res);
       });
     }, [condition, display])
-    
+
     console.log(list);
-  
+
     const editEmp = (employeeId) => {
       var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -163,7 +163,7 @@ function DashboardEmployee(props) {
                         </thead>
                         <tbody>
                           {list.data.content.length > 0 &&
-                            list.data.content.map((item) => 
+                            list.data.content.map((item) =>
                               <tr style={{ marginTop: "5px" }} key={item.employeeId}>
                                 <th scope="row">{item.employeeId}</th>
                                 <td>{item.user?.fullName}</td>
@@ -199,13 +199,13 @@ function DashboardEmployee(props) {
                             </td>
                               </tr>
                           )}
-                        
+
                         </tbody>
                       </table>
                     </div>
                   </div>
                 </div>
-                <Page 
+                <Page
                   totalPages={list.data.totalPages}
                   number={list.data.number}
                   condition={condition}
