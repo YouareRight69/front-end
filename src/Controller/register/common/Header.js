@@ -128,11 +128,12 @@ function Header() {
                                 className="submenu"
                                 style={{ width: "200px" }}
                               >
-                                <li>
-                                  <a onClick={goToBookingManagement}>
-                                    Quản lý lịch hẹn
-                                  </a>
-                                </li>
+
+                                 {jwt_decode(accessToken).roles == "[ROLE_ADMIN]" ? "" : <li>
+                                  <a onClick={goToBookingManagement}>Quản lý lịch hẹn</a>
+                                </li>}
+
+
                                 <li>
                                   <a onClick={getUpdateInfo}>
                                     Cập nhật thông tin

@@ -187,6 +187,7 @@ function UpdateInfo() {
           backgroundSize: "cover",
         }}
       >
+
         <div
           className="container box_1170 "
           style={{
@@ -196,6 +197,7 @@ function UpdateInfo() {
           }}
         >
           <div className="section-top-border" style={{ height: "80vh" }}>
+
             <div
               className="row"
               style={{ display: "flex", height: "100%", alignItems: "center" }}
