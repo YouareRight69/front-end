@@ -187,8 +187,15 @@ function UpdateInfo() {
           backgroundSize: "cover",
         }}
       >
-        <div className="container box_1170 " style={{ width: "80%", border:"2px solid brown", margin:"20px auto" }}>
-          <div className="section-top-border" style={{ height: "50vh" }}>
+        <div
+          className="container box_1170 "
+          style={{
+            width: "80%",
+            border: "2px solid brown",
+            margin: "20px auto",
+          }}
+        >
+          <div className="section-top-border" style={{ height: "80vh" }}>
             <div
               className="row"
               style={{ display: "flex", height: "100%", alignItems: "center" }}
@@ -224,7 +231,7 @@ function UpdateInfo() {
                   </label>
                 </div>
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                  <p style={{ paddingTop: "5px", paddingRight:"25px" }}>
+                  <p style={{ paddingTop: "5px", paddingRight: "55px" }}>
                     Nhấn vào ảnh để cập nhật Avatar!
                   </p>
                 </div>

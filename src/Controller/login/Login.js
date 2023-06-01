@@ -3,7 +3,7 @@ import LeftSideNamNB from "../register/common/LeftSideNamNB";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 
-import { ToastContainer, toast } from "react-toastify"
+import { ToastContainer, toast } from "react-toastify";
 // import { toast } from "react-toastify";
 
 // import { useCookies } from "react-cookie";
@@ -29,6 +29,10 @@ function Login() {
 
   const forgotPassword = () => {
     navigate("/forgotPassword");
+  };
+
+  const exitLogin = () => {
+    navigate("/");
   };
 
   const login = () => {
@@ -67,24 +71,24 @@ function Login() {
           navigate("/main");
         }
         if (role.roles === "[ROLE_ADMIN]") {
-          navigate("/register");
+          navigate("/chart");
         }
         if (role.roles === "[ROLE_RECEPTIONIST]") {
           navigate("/booking-management");
         }
       })
       .catch((error) => {
-        toast.error("Tên đăng nhập hoặc mật khẩu không đúng!", {
-          position: "top-center",
-          autoClose: 1200,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        // toast.error("Tên đăng nhập hoặc mật khẩu không đúng!");
+        // toast.error("Tên đăng nhập hoặc mật khẩu không đúng!", {
+        //   position: "top-center",
+        //   autoClose: 1200,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        // });
+        toast.error("Tên đăng nhập hoặc mật khẩu không đúng!");
       });
   };
   return (
@@ -101,7 +105,7 @@ function Login() {
               className="row"
               style={{ display: "flex", height: "100%", alignItems: "center" }}
             >
-              <div className="col-lg-7 col-md-7">
+              <div className="col-lg-7 col-md-7" style={{ marginTop: "90px" }}>
                 <h3 className="mb-30" style={{ color: "#d19f68" }}>
                   {" "}
                   Đăng nhập{" "}
@@ -156,6 +160,7 @@ function Login() {
                           style={{ width: "100%" }}
                           type="button"
                           className="button boxed-btn namnb6_1"
+                          onClick={exitLogin}
                         >
                           {" "}
                           Hủy{" "}
