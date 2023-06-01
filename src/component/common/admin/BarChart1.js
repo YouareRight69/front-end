@@ -28,6 +28,7 @@ export default function BarChart1() {
   const navigate = useNavigate();
   const [limit, setLimit] = useState([]);
 
+
   // const navigate = useNavigate();
 
   const toCustomer = () => {
@@ -45,6 +46,7 @@ export default function BarChart1() {
   const toChart = () => {
     navigate("/chart");
   };
+
 
   useEffect(() => {
     const role = jwt_decode(accessToken);
@@ -101,7 +103,7 @@ export default function BarChart1() {
       })
       .then((res) => {
         console.log(res.data[0]);
-        setTotal(res.data[0].total);
+        // setTotal(res.data[0].total);
       });
   };
   console.log(total);
