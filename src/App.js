@@ -1,8 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 
-import Home from "./controller/Home";
-
 
 import Login from "./controller/login/Login.js";
 import ChangePassword from "./controller/register/ChangePassword";
@@ -12,10 +10,8 @@ import ForgotPassword from "./controller/register/ForgotPassword";
 import Register from "./controller/register/Register";
 import UpdateInfo from "./controller/register/UpdateInfo";
 
-
-
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import UserList from "./component//User/UserList";
 import CreateService from "./component/HairService/CreateService";
 import DetailService from "./component/HairService/DetailService";
@@ -29,6 +25,12 @@ import AddNewBranch from "./component/branch/AddNewBranch";
 import Branch from "./component/branch/DashboardBranch";
 import DetailBranch from "./component/branch/DetailBranch";
 import EditBranch from "./component/branch/EditBranch";
+import BarChart1 from "./component/common/admin/BarChart1";
+import About from "./component/common/user/About";
+import Main from "./component/common/user/Main";
+import Services from "./component/common/user/Services";
+import Trend from "./component/common/user/Trend";
+import Footer from "./component/common/user/footer";
 import AddNewEmployee from "./component/employee/AddNewEmployee";
 import DashboardBranch from "./component/employee/DashboardEmployee";
 import DetailEmployee from "./component/employee/DetailEmployee";
@@ -40,17 +42,22 @@ import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
 import PaymentEdit from "./component/payment/PaymentEdit";
 import PaymentServiceEdit from "./component/payment/PaymentServiceEdit";
-
-
+import Header from "./controller/register/common/Header";
 
 function App() {
   return (
     <>
       <BrowserRouter>
+        <Header />
         <Routes>
-          <Route path="/" element={<Home />}>
-            {/* <Route index element={<Home />} />       */}
-          </Route>
+
+          <Route path="/" element={<Main />}>   </Route>
+          <Route exact path='/main' element={<Main />} />
+          <Route exact path='/service' element={<Services />} />
+          <Route exact path='/about' element={<About />} />
+          <Route exact path='/trend' element={<Trend />} />
+          <Route exact path='/chart' element={<BarChart1 />} />
+
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
@@ -62,18 +69,6 @@ function App() {
           <Route path="/changePassword" element={<ChangePassword />}></Route>
           <Route path="/updateInfo" element={<UpdateInfo />}></Route>
 
-          <Route path="/branch" element={<Branch />}></Route>
-          <Route path="/branch-add" element={<AddNewBranch />}></Route>
-          <Route path="/branch-detail/:id" element={<DetailBranch />}></Route>
-          <Route path="/branch-edit/:id" element={<EditBranch />}></Route>
-          <Route path="/invoice-history" element={<InvoiceHistory />}></Route>
-          <Route path="/invoice/:id" element={<Invoice />}></Route>
-          <Route path="/payment" element={<Payment />}>
-            <Route path="/payment/:id" element={<Payment />} />
-          </Route>
-          <Route path="/payment-edit/:id" element={<PaymentEdit />} />
-          <Route path="/payment-service-edit/:id" element={<PaymentServiceEdit />} />
-          <Route path="/payment" element={<Payment />}></Route>
           <Route path="/booking" element={<Booking />}>
             <Route path="/booking/:id" element={<Booking />} />
           </Route>
@@ -83,10 +78,21 @@ function App() {
           <Route path="/listService" element={<HairServiceList />} />
           <Route path="/createService" element={<CreateService />} />
           <Route path="/detailService/:id" element={<DetailService />} />
+
           <Route path='/listService/:id' element={<EditService />} />
+
+          <Route path="/branch" element={<Branch />}></Route>
+          <Route path="/branch-add" element={<AddNewBranch />}></Route>
+          <Route path="/branch-detail/:id" element={<DetailBranch />}></Route>
+          <Route path="/branch-edit/:id" element={<EditBranch />}></Route>
+
+          <Route path="/invoice/:id" element={<Invoice />}></Route>
           <Route path="/invoice-history" element={<InvoiceHistory />}></Route>
-          <Route path="/invoice" element={<Invoice />}></Route>
-          <Route path="/payment" element={<Payment />}></Route>
+
+          <Route path="/payment/:id" element={<Payment />} />
+          <Route path="/payment-edit/:id" element={<PaymentEdit />} />
+          <Route path="/payment-service-edit/:id" element={<PaymentServiceEdit />} />
+
           <Route path="/booking" element={<Booking />}></Route>
           <Route path="/employee" element={<DashboardBranch />}></Route>
           <Route path="/employee-add" element={<AddNewEmployee />}></Route>
@@ -94,13 +100,21 @@ function App() {
           <Route path="/employee-detail" element={<DetailEmployee />}></Route>
           <Route path="/history-admin" element={<HistoryEmployeeA />}></Route>
           <Route path="/history-employee" element={<HistoryEmployee />}></Route>
+
           <Route path="/booking-management" element={<BookingManagement />}></Route>
 
+          <Route
+            path="/booking-management"
+            element={<BookingManagement />}
+          ></Route>
+
         </Routes>
+        <Footer />
       </BrowserRouter>
+
       <ToastContainer
-        position="top-center"
-        autoClose={3}
+        position="top-right"
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

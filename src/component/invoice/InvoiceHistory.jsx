@@ -11,8 +11,7 @@ function InvoiceHistory(props) {
   const [condition, setCondition] = useState("");
   const [list, setList] = useState({ data: { content: [] } });
   const urlInvoiceList = "http://localhost:8080/api/invoice-management";
-  const urlInvoiceSuccess =
-    "http://localhost:8080/api/invoice-management/success";
+  const urlInvoiceSuccess = "http://localhost:8080/api/invoice-management/success";
   const accessToken = localStorage.getItem("accessToken");
   const [dataFirst, setDataFirst] = useState();
   const [status, setStatus] = useState("");
@@ -38,7 +37,7 @@ function InvoiceHistory(props) {
             "Content-Type": "application/json",
             "Access-Control-Allow-Methods":
               "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-            Authorization: "Bearer " + accessToken,
+            // Authorization: "Bearer " + accessToken,
           },
         })
         .then((resp) => {

@@ -23,7 +23,7 @@ function Payment() {
   const [serviceListId, setServiceListId] = useState([]);
   const [status, setStatus] = useState();
   const [statusPay, setStatusPay] = useState(false);
-  const invoiceTime = new Date();
+  // const invoiceTime = new Date();
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
@@ -67,7 +67,7 @@ function Payment() {
         userId: detailInfo.userIdBooking,
         isDelete: 0,
         serviceList: serviceListId,
-        invoiceTime: invoiceTime,
+        invoiceTime: "",
         status: statusInvoice,
         total: detailInfo.total,
         bookingId: id,
@@ -129,7 +129,6 @@ function Payment() {
   };
 
   const handleSaveInvoice = (e) => {
-    setStatusInvice("1");
     axios
       .post(
         "http://localhost:8080/api/receptionist/invoice/create?bookingid",
@@ -190,8 +189,43 @@ function Payment() {
   }, [statusPay, detailInfo]);
 
   const deleteItem = () => {
-    handleSaveInvoice();
-    setStatusPay(true);
+    const newFormData = {
+      ...formData,
+      status: "1",
+    };
+    axios
+      .post(
+        "http://localhost:8080/api/receptionist/invoice/create?bookingid",
+        newFormData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+            Authorization: "Bearer " + accessToken,
+          },
+        }
+      )
+      .then((data) => {
+        console.log(data.data);
+        toast.success("Lưu hoá đơn thành công!", {
+          position: "top-center",
+          autoClose: 1200,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        navigate("/invoice-history", {
+          state: null,
+        });
+      })
+      .catch((error) => {
+        console.error("NOOOO", error);
+      });
   };
 
   return (

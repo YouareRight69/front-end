@@ -15,16 +15,18 @@ function DashboardBranch(props) {
   const accessToken = localStorage.getItem("accessToken");
 
   function handleClick(page) {
-    axios.get(`${url}?p=${page}&c=${condition}`, {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Methods":
-          "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-        Authorization: "Bearer " + accessToken,
-      },
-    }).then((res) => {
-      setList(res);
-    });
+    axios
+      .get(`${url}?p=${page}&c=${condition}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods":
+            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          Authorization: "Bearer " + accessToken,
+        },
+      })
+      .then((res) => {
+        setList(res);
+      });
   }
 
   const onSubmit = (data) => {
@@ -37,16 +39,18 @@ function DashboardBranch(props) {
   };
 
   useEffect(() => {
-    axios.get(`${url}?c=${condition}`, {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Methods":
-          "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-        Authorization: "Bearer " + accessToken,
-      },
-    }).then((res) => {
-      setList(res);
-    });
+    axios
+      .get(`${url}?c=${condition}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods":
+            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          Authorization: "Bearer " + accessToken,
+        },
+      })
+      .then((res) => {
+        setList(res);
+      });
   }, [condition, display]);
 
   return (
@@ -88,8 +92,7 @@ function DashboardBranch(props) {
                     </div>
 
                     <div className="col-lg-1"></div>
-                    <div className="col-lg-3 col-md-4 mt-10">
-                    </div>
+                    <div className="col-lg-3 col-md-4 mt-10"></div>
                     <Link to="/branch-add">
                       <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
                         Thêm mới
@@ -163,8 +166,7 @@ function DashboardBranch(props) {
                 />
                 <div style={{ display: "flex" }}>
                   <div className="col-lg-10 ms-10 mb-50"></div>
-                  <div className="col-lg-2 ms-10 mb-50">
-                  </div>
+                  <div className="col-lg-2 ms-10 mb-50"></div>
                 </div>
               </div>
             </div>

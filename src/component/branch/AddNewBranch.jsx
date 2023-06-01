@@ -2,9 +2,12 @@ import axios from "axios";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { v4 } from "uuid";
 import ImageGallery from "../common/ImageGallery";
 import { storage } from "../firebase/index.js";
+const accessToken = localStorage.getItem("accessToken");
 
 function AddNewBranch(props) {
   const url = "http://localhost:8080/api/admin/branch";
@@ -33,12 +36,23 @@ function AddNewBranch(props) {
         .patch(`${url}/${id}`, data, {
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Methods": "PATCH",
-            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+            Authorization: "Bearer " + accessToken,
           },
         })
         .then((resp) => {
           navigate("/branch");
+          toast.success("Thêm mới chi nhánh thành công!", {
+            position: "top-center",
+            autoClose: 1200,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
         })
         .catch((error) => {
           console.log(error);
@@ -49,7 +63,9 @@ function AddNewBranch(props) {
       .post(url, data, {
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Methods": "POST",
+          "Access-Control-Allow-Methods":
+            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          Authorization: "Bearer " + accessToken,
         },
       })
       .then((resp) => {

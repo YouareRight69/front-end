@@ -47,10 +47,37 @@ function Header() {
     navigate("/login");
   };
 
+  const home = () => {
+    navigate("/");
+  };
+  const service = () => {};
+  const trend = () => {};
+  const contact = () => {};
+
   const logout = () => {
     localStorage.removeItem("accessToken");
     navigate("/login");
   };
+
+  const aboutPage = () => {
+    navigate("/about");
+  };
+  const servicePage = () => {
+    navigate("/service");
+  };
+  const homePage = () => {
+    navigate("/main");
+  };
+  const trendPage = () => {
+    navigate("/trend");
+  };
+  const booking = () => {
+    navigate("/booking");
+  };
+  const goToBookingManagement = () => {
+    navigate("/booking-management")
+  }
+
   return (
     <>
       <header>
@@ -62,9 +89,9 @@ function Header() {
                 {/* <!-- Logo --> */}
                 <div className="col-xl-2 col-lg-2 col-md-1">
                   <div className="logo">
-                    <a href="index.html">
-                      <img src="assets/img/logo/loder.png" alt="" />
-                    </a>
+                    {/* <a onClick={home}> */}
+
+                    <img src="assets/img/logo/loder.png" alt="" />
                   </div>
                 </div>
                 <div className="col-xl-10 col-lg-10 col-md-10">
@@ -73,36 +100,37 @@ function Header() {
                     <div className="main-menu f-right d-none d-lg-block">
                       <nav style={{ marginRight: "15px" }}>
                         <ul id="navigation">
-                          <li className="active">
-                            <a href="index.html">Home</a>
+                          <li>
+                            {/* <li className="active"> */}
+                            <a onClick={homePage}>Trang Chủ</a>
                           </li>
                           <li>
-                            <a href="about.html">About</a>
+                            <a onClick={servicePage}>Dịch Vụ</a>
                           </li>
                           <li>
-                            <a href="services.html">Services</a>
+                            <a onClick={trendPage}>Xu Hướng</a>
                           </li>
+
                           <li>
-                            <a href="blog.html">Blog</a>
-                            <ul className="submenu">
-                              <li>
-                                <a href="blog.html">Blog</a>
-                              </li>
-                              <li>
-                                <a href="blog_details.html">Blog Details</a>
-                              </li>
-                              <li>
-                                <a href="elements.html">Element</a>
-                              </li>
-                            </ul>
+                            <a onClick={aboutPage}>Giới Thiệu</a>
                           </li>
+
+                          <li>
+                            <a onClick={booking}>Đặt lịch hẹn</a>
+                          </li>
+
                           {accessToken != null ? (
                             <li>
-                              <a href="#">{jwt_decode(accessToken).sub}</a>
+                              <a href="#">
+                                Xin chào {jwt_decode(accessToken).sub}
+                              </a>
                               <ul
                                 className="submenu"
                                 style={{ width: "200px" }}
                               >
+                                 <li>
+                                  <a onClick={goToBookingManagement}>Quản lý lịch hẹn</a>
+                                </li>
                                 <li>
                                   <a onClick={getUpdateInfo}>
                                     Cập nhật thông tin
@@ -116,6 +144,7 @@ function Header() {
                                 <li>
                                   <a onClick={logout}>Đăng xuất</a>
                                 </li>
+                                
                               </ul>
                             </li>
                           ) : (
@@ -147,17 +176,7 @@ function Header() {
         </div>
         {/* <!-- Header End --> */}
       </header>
-      <main>
-        {/* <!--? slider Area Start--> */}
-        <div className="slider-area position-relative fix">
-          <div className="slider-active">
-            {/* <!-- Single Slider --> */}
-            <div className="single-slider slider-height d-flex align-items-center"></div>
-          </div>
-        </div>
-      </main>
     </>
   );
 }
-
 export default Header;

@@ -2,12 +2,14 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import ImageGalleryEdit from "../common/ImageGalleryEdit";
+import accounting from "accounting";
 
 function DetailService(props) {
   const url = "http://localhost:8080/api/hairService";
   const { id } = useParams();
   const [target, setTarget] = useState({});
   const [dataView, setDataView] = useState([]);
+  const accessToken = localStorage.getItem("accessToken");
 
   const navigate = useNavigate();
 
@@ -21,6 +23,7 @@ function DetailService(props) {
             "Content-Type": "application/json",
             "Access-Control-Allow-Methods": "GET",
             "Access-Control-Allow-Credentials": "true",
+            "Authorization": "Bearer " + accessToken,
           },
         })
         .then((resp) => {
@@ -31,11 +34,17 @@ function DetailService(props) {
 
   useEffect(() => {
     if (id) {
-      axios.get(`${url}/${id}`).then((resp) => {
+      axios.get(`${url}/${id}`, {
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+        },
+      }).then((resp) => {
+        setTarget(resp.data);
         setTarget(resp.data);
       });
     }
   }, [id]);
+
 
   useEffect(() => {
     if (target && target.media) {
@@ -89,6 +98,14 @@ function DetailService(props) {
                     <form action="#">
                       <div className="mt-80" style={{ display: "flex" }}>
                         <div className="col-lg-3 col-md-4">
+                          <p className="mt-2">Mã Dịch Vụ: </p>
+                        </div>
+                        <div className="col-lg-9 col-md-4">
+                          <p className="mt-2">{target.serviceId}</p>
+                        </div>
+                      </div>
+                      <div className="mt-80" style={{ display: "flex" }}>
+                        <div className="col-lg-3 col-md-4">
                           <p className="mt-2">Tên Dịch Vụ: </p>
                         </div>
                         <div className="col-lg-9 col-md-4">
@@ -100,7 +117,11 @@ function DetailService(props) {
                           <p className="mt-2">Giá: </p>
                         </div>
                         <div className="col-lg-9 col-md-4">
-                          <p className="mt-2">{target.price}</p>
+                          <p className="mt-2">{accounting.formatMoney(target.price, {
+                            symbol: "",
+                            format: "%v vnđ",
+                            precision: 0,
+                          })}</p>
                         </div>
                       </div>
                       <div className="mt-80" style={{ display: "flex" }}>
@@ -111,14 +132,7 @@ function DetailService(props) {
                           <p className="mt-2">{target.description}</p>
                         </div>
                       </div>
-                      <div className="mt-80" style={{ display: "flex" }}>
-                        <div className="col-lg-3 col-md-4">
-                          <p className="mt-2">Loại dịch vụ: </p>
-                        </div>
-                        <div className="col-lg-9 col-md-4">
-                          <p className="mt-2">{target.type}</p>
-                        </div>
-                      </div>
+
                     </form>
                     <div className="mt-110" style={{ display: "flex" }}>
                       <div className="col-lg-4 ms-10">
