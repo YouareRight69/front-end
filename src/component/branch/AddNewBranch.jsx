@@ -140,6 +140,7 @@ function AddNewBranch(props) {
                         <ImageGallery
                           sendDataToParent={handleDataFromImageGallery}
                           sendStatus={handleStatusFromGallery}
+                          
                         />
                       </div>
                     </div>

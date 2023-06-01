@@ -27,7 +27,7 @@ import Branch from "./component/branch/DashboardBranch";
 import DetailBranch from "./component/branch/DetailBranch";
 import EditBranch from "./component/branch/EditBranch";
 import AddNewEmployee from "./component/employee/AddNewEmployee";
-import DashboardBranch from "./component/employee/DashboardEmployee";
+import DashboardEmployee from "./component/employee/DashboardEmployee";
 import DetailEmployee from "./component/employee/DetailEmployee";
 import EditEmployee from "./component/employee/EditEmployee";
 import HistoryEmployeeA from "./component/employee/history/historyAdmin";
@@ -35,6 +35,10 @@ import HistoryEmployee from "./component/employee/history/historyEmployee";
 import Invoice from "./component/invoice/Invoice";
 import InvoiceHistory from "./component/invoice/InvoiceHistory";
 import Payment from "./component/payment/Payment";
+
+import AddNewRec from "./component/employee/AddNewRec";
+
+
 // import BookingManagement from "./component/booking/BookingManagement";
 
 import Footer from "./component/common/user/footer";
@@ -44,6 +48,7 @@ import About from "./component/common/user/About";
 import Trend from "./component/common/user/Trend";
 import BarChart1 from "./component/common/admin/BarChart1";
 import Header from "./controller/register/common/Header";
+
 
 function App() {
   return (
@@ -101,17 +106,22 @@ function App() {
           <Route path="/invoice" element={<Invoice />}></Route>
           <Route path="/payment" element={<Payment />}></Route>
           <Route path="/booking" element={<Booking />}></Route>
-          <Route path="/employee" element={<DashboardBranch />}></Route>
+          <Route path="/employee" element={<DashboardEmployee />}></Route>
           <Route path="/employee-add" element={<AddNewEmployee />}></Route>
-          <Route path="/employee-edit" element={<EditEmployee />}></Route>
-          <Route path="/employee-detail" element={<DetailEmployee />}></Route>
+          <Route path="/emp/edit" element={<EditEmployee />}></Route>
+          <Route path="/employee/:id" element={<DetailEmployee />}></Route>
           <Route path="/history-admin" element={<HistoryEmployeeA />}></Route>
           <Route path="/history-employee" element={<HistoryEmployee />}></Route>
+
+          <Route path="/employee-addRec" element={<AddNewRec />}></Route>
+       
+
 
           <Route
             path="/booking-management"
             element={<BookingManagement />}
           ></Route>
+
         </Routes>
         <Footer />
       </BrowserRouter>
