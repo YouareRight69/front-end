@@ -29,6 +29,7 @@ export default function Booking() {
   const [formData, setFormData] = useState({ isDelete: 0 });
   const [serviceList, setServiceList] = useState([]);
   const [minDate, setMinDate] = useState("");
+  const [maxDate, setMaxDate] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const [status, setStatus] = useState();
@@ -96,7 +97,7 @@ export default function Booking() {
     }
     setBusyTime([]);
   }, [selectBranch]);
-console.log(data)
+  console.log(data);
   useEffect(() => {
     if (selectStyle != null && selectDay != null) {
       axios
@@ -127,6 +128,7 @@ console.log(data)
       location.state.selectService = [];
     }
     setMinDate(getCurrentDate());
+    setMaxDate(getMaxDate());
     setStatus("OK");
     if (id == undefined) {
       setTitle("ĐẶT LỊCH HẸN");
@@ -182,6 +184,14 @@ console.log(data)
     const dd = String(today.getDate()).padStart(2, "0");
     return `${yyyy}-${mm}-${dd}`;
   };
+  const getMaxDate = () => {
+    const today = new Date();
+    today.setDate(today.getDate() + 10);
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
 
   //function
   const handleClickTime = (time) => {
@@ -217,8 +227,17 @@ console.log(data)
   };
 
   const handleSelectDay = (e) => {
+    var toDay = new Date();
+    var selectDay = new Date(e);
+    toDay.setDate(toDay.getDate() + 10);
     setSelectDay(e);
-    setFormData({ ...formData, bookingDate: e });
+    if (new Date(e) <= toDay && new Date(getCurrentDate()) <= selectDay) {
+      
+      setFormData({ ...formData, bookingDate: e });
+    } else {
+      setFormData({ ...formData, bookingDate: undefined });
+    }
+ 
   };
   const handleSelectSkinner = (e) => {
     setSelectSkinner(e);
@@ -245,20 +264,19 @@ console.log(data)
     setFormData({ ...formData, customerName: e });
   };
 
-  
   const handleSubmitForm = (e) => {
     e.preventDefault();
     if (!("note" in formData)) {
       setFormData({ ...formData, note: null });
     }
 
-
     if (
       formData.isDelete == 0 &&
       formData.serviceList.length > 0 &&
       formData.branch != "" &&
       formData.userId != "" &&
-      (formData.bookingDate != "") && (formData.workTimeId != "") &&
+      formData.bookingDate != undefined &&
+      formData.workTimeId != "" &&
       formData.styleId != "" &&
       formData.skinnerId != ""
     ) {
@@ -294,19 +312,22 @@ console.log(data)
             });
           })
           .catch((error) => {
-            toast.error("Cập nhật thất bại! Danh sách lịch hẹn vừa được cập nhật", {
-              position: "top-center",
-              autoClose: 1200,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            })
+            toast.error(
+              "Cập nhật thất bại! Danh sách lịch hẹn vừa được cập nhật",
+              {
+                position: "top-center",
+                autoClose: 1200,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              }
+            );
             navigate("/booking-management", {
               state: null,
-            });;
+            });
           });
       } else {
         axios
@@ -336,19 +357,22 @@ console.log(data)
             });
           })
           .catch((error) => {
-            toast.error("Đặt lịch thất bại! Danh sách lịch hẹn vừa được cập nhật", {
-              position: "top-center",
-              autoClose: 1200,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            })
+            toast.error(
+              "Đặt lịch thất bại! Danh sách lịch hẹn vừa được cập nhật",
+              {
+                position: "top-center",
+                autoClose: 1200,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              }
+            );
             navigate("/booking", {
               state: null,
-            });;
+            });
           });
       }
     }
@@ -395,11 +419,11 @@ console.log(data)
                               value={branch.branchId}
                               selected={true}
                             >
-                              {branch.name } | { branch.address}
+                              {branch.name} | {branch.address}
                             </option>
                           ) : (
                             <option key={index} value={branch.branchId}>
-                              {branch.name } | { branch.address}
+                              {branch.name} | {branch.address}
                             </option>
                           )
                         )}
@@ -435,7 +459,9 @@ console.log(data)
                       </button>
                     </div>
 
-                    { selectservice.length > 0 && <div className="m-3">Dịch vụ đã chọn</div>}
+                    {selectservice.length > 0 && (
+                      <div className="m-3">Dịch vụ đã chọn</div>
+                    )}
                     <div>
                       {selectservice?.map((item, index) => (
                         <span
@@ -486,6 +512,7 @@ console.log(data)
                         <h2>Chọn ngày</h2>
                         <input
                           min={minDate}
+                          max={maxDate}
                           type="date"
                           defaultValue={selectDay}
                           required
