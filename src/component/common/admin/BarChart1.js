@@ -28,6 +28,7 @@ export default function BarChart1() {
   const navigate = useNavigate();
   const [limit, setLimit] = useState([]);
 
+
   // const navigate = useNavigate();
 
   const toCustomer = () => {
@@ -45,6 +46,7 @@ export default function BarChart1() {
   const toChart = () => {
     navigate("/chart");
   };
+
 
   useEffect(() => {
     const role = jwt_decode(accessToken);
@@ -101,10 +103,10 @@ export default function BarChart1() {
       })
       .then((res) => {
         console.log(res.data[0]);
-        setTotal(res.data[0].total);
+        // setTotal(res.data[0].total);
       });
   };
-  console.log(total);
+  // console.log(total);
   const loadLimit = async () => {
     const result = await axios.get(
       "http://localhost:8080/api/admin/chart/limmit",
@@ -332,7 +334,7 @@ export default function BarChart1() {
                       <h4 className="info-box-text">DOANH THU</h4>
                       <div>
                         {" "}
-                        <h1> ${total} </h1>
+                          {total && <h1> ${total} </h1>}
                       </div>
                     </div>
                     <div
@@ -369,7 +371,7 @@ export default function BarChart1() {
                       <h4 className="info-box-text"></h4>
                       <div>
                         {" "}
-                        <h1> ${total} </h1>
+                        {total && <h1> ${total} </h1>}
                       </div>
                     </div>
                     <div

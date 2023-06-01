@@ -9,6 +9,7 @@ import SearchForm from '../../Button/SearchForm';
 import DetailButton from '../../Button/DetailButton';
 import jwt_decode from "jwt-decode";
 import accounting from "accounting";
+import Sidebar from "../common/admin/sidebar";
 
 function UserList() {
 
@@ -70,7 +71,7 @@ function UserList() {
             </div>
             <div style={{ display: "flex" }}>
                 <div className="col-lg-2" style={{ backgroundColor: "bisque" }}>
-                    Admin
+                <Sidebar />
                 </div>
 
                 <div className="col-lg-10">
@@ -98,6 +99,7 @@ function UserList() {
                                 <div className="col-lg-3 ms-10"></div>
                             </div>
                             <div className="section-top-border">
+                                <h3 className="mb-30">Danh sách dịch vụ</h3>
                                 <div>
                                     <div className="progress-table" style={{ 'textAlign': 'center' }}>
                                         <table className="table table-hover" id="table">

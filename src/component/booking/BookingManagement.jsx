@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import SearchForm from "../../Button/SearchForm";
 import Page from "../common/Page";
 import DetailInfoButton from "./DetailButton";
+import Sidebar from "../common/admin/sidebar";
 
 export default function BookingManagement() {
   const [list, setList] = useState({ data: { content: [] } });
@@ -67,16 +68,24 @@ export default function BookingManagement() {
   };
 
   useEffect(() => {
-    axios
-      .get(`${url}?c=${condition}`, {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      })
-      .then((res) => {
-        setList(res);
-        console.log(res);
-      });
+    const role = jwt_decode(accessToken);
+    if (
+      role.roles != "[ROLE_CUSTOMER]" &&
+      role.roles != "[ROLE_RECEPTIONIST]"
+    ) {
+      navigate("/main");
+    } else {
+      axios
+        .get(`${url}?c=${condition}`, {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
+        })
+        .then((res) => {
+          setList(res);
+          console.log(res);
+        });
+    }
   }, [condition, display]);
 
   const handleDeleteModal = () => {};
@@ -109,24 +118,8 @@ export default function BookingManagement() {
         {/* Start Align Area */}
         <div className="row">
           {jwt_decode(accessToken).roles == "[ROLE_RECEPTIONIST]" && (
-            <div className="col-lg-2">
-              <nav
-                className="nav flex-column"
-                style={{
-                  color: "white",
-                  backgroundColor: "black",
-                  height: "100%",
-                  alignItems: "baseline",
-                }}
-              >
-                <a className="nav-link m-3 text-center">Quản lý khách hàng</a>
-                <a className="nav-link m-3 text-center"> Quản lý nhân viên</a>
-                <a className="nav-link m-3 text-center">Quản lý dịch vụ</a>
-                <a className="nav-link m-3 text-center">Quản lý chi nhánh</a>
-                <a className="nav-link m-3 text-center">Quản lý thông kê</a>
-                <a className="nav-link m-3 text-center">Quản lý thanh toán</a>
-                <a className="nav-link m-3 text-center">Quản lý dặt lịch </a>
-              </nav>
+            <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+              <Sidebar />
             </div>
           )}
 
