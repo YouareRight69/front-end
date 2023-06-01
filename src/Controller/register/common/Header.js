@@ -75,8 +75,8 @@ function Header() {
     navigate("/booking");
   };
   const goToBookingManagement = () => {
-    navigate("/booking-management")
-  }
+    navigate("/booking-management");
+  };
 
   return (
     <>
@@ -91,7 +91,7 @@ function Header() {
                   <div className="logo">
                     {/* <a onClick={home}> */}
 
-                    <img src="assets/img/logo/loder.png" alt="" />
+                    <img src="assets/img/logo/logo2_footer.png" alt="" />
                   </div>
                 </div>
                 <div className="col-xl-10 col-lg-10 col-md-10">
@@ -128,8 +128,10 @@ function Header() {
                                 className="submenu"
                                 style={{ width: "200px" }}
                               >
-                                 <li>
-                                  <a onClick={goToBookingManagement}>Quản lý lịch hẹn</a>
+                                <li>
+                                  <a onClick={goToBookingManagement}>
+                                    Quản lý lịch hẹn
+                                  </a>
                                 </li>
                                 <li>
                                   <a onClick={getUpdateInfo}>
@@ -144,7 +146,6 @@ function Header() {
                                 <li>
                                   <a onClick={logout}>Đăng xuất</a>
                                 </li>
-                                
                               </ul>
                             </li>
                           ) : (
