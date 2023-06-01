@@ -7,7 +7,7 @@ import { Bar, Line, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, registerables } from "chart.js";
 import jwt_decode from "jwt-decode";
 import Header from "../../../controller/register/common/Header";
-import Sidebar from "./sidebar";
+// import Sidebar from "./sidebar";
 import {
   Link,
   Navigate,
@@ -15,7 +15,10 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import Sidebar from "./sidebar";
 ChartJS.register(...registerables);
+
+// import { useNavigate } from "react-router-dom";
 
 export default function BarChart1() {
   const accessToken = localStorage.getItem("accessToken");
@@ -24,6 +27,24 @@ export default function BarChart1() {
   const [total, setTotal] = useState(0);
   const navigate = useNavigate();
   const [limit, setLimit] = useState([]);
+
+  // const navigate = useNavigate();
+
+  const toCustomer = () => {
+    navigate("/user");
+  };
+  const toEmployee = () => {
+    navigate("/employee");
+  };
+  const toService = () => {
+    navigate("/listService");
+  };
+  const toBranch = () => {
+    navigate("/branch");
+  };
+  const toChart = () => {
+    navigate("/chart");
+  };
 
   useEffect(() => {
     const role = jwt_decode(accessToken);
@@ -158,7 +179,7 @@ export default function BarChart1() {
       <div className="row">
         <div className="col-2 ">
           {/* <Sidebar /> */}
-          <nav
+          {/* <nav
             className="nav flex-column"
             style={{
               color: "white",
@@ -167,14 +188,26 @@ export default function BarChart1() {
               alignItems: "baseline",
             }}
           >
-            <a className="nav-link m-3 text-center">Quản lý khách hàng</a>
-            <a className="nav-link m-3 text-center"> Quản lý nhân viên</a>
-            <a className="nav-link m-3 text-center">Quản lý dịch vụ</a>
-            <a className="nav-link m-3 text-center">Quản lý chi nhánh</a>
-            <a className="nav-link m-3 text-center">Quản lý thông kê</a>
+            <a onClick={toCustomer} className="nav-link m-3 text-center">
+              Quản lý khách hàng
+            </a>
+            <a onClick={toEmployee} className="nav-link m-3 text-center">
+              {" "}
+              Quản lý nhân viên
+            </a>
+            <a onClick={toService} className="nav-link m-3 text-center">
+              Quản lý dịch vụ
+            </a>
+            <a onClick={toBranch} className="nav-link m-3 text-center">
+              Quản lý chi nhánh
+            </a>
+            <a onClick={toChart} className="nav-link m-3 text-center">
+              Quản lý thông kê
+            </a>
             <a className="nav-link m-3 text-center">Quản lý thanh toán</a>
-            <a className="nav-link m-3 text-center">Quản lý dặt lịch </a>
-          </nav>
+            <a className="nav-link m-3 text-center">Quản lý đặt lịch </a>
+          </nav> */}
+          <Sidebar />
         </div>
         <div className="col-10 pt-5">
           <div>
