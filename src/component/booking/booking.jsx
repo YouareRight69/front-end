@@ -255,6 +255,9 @@ export default function Booking() {
       });
     }
   };
+ const handleBack = () => {
+  navigate("/booking-management")
+ }
 
   const handleInputNote = (e) => {
     setFormData({ ...formData, note: e });
@@ -273,12 +276,12 @@ export default function Booking() {
     if (
       formData.isDelete == 0 &&
       formData.serviceList.length > 0 &&
-      formData.branch != "" &&
-      formData.userId != "" &&
+      formData.branch != ""   &&
+      formData.userId != "" && formData.userId != undefined &&
       formData.bookingDate != undefined &&
-      formData.workTimeId != "" &&
-      formData.styleId != "" &&
-      formData.skinnerId != ""
+      formData.workTimeId != "" &&formData.workTimeId != undefined &&
+      formData.styleId != "" && formData.styleId != undefined &&
+      formData.skinnerId != "" &&  formData.skinnerId != undefined
     ) {
       if (id) {
         axios
@@ -613,7 +616,24 @@ export default function Booking() {
                     ></textarea>
                   </div>
                   <div className="input-group-icon mt-10">
-                    <div>
+                     { id ? <div>
+                    <span
+                      className="btn header-btn px-2 mx-2"
+                      style={{ width: "20%" }}
+                      onClick={handleBack}
+                    >
+                       <i class="fa fa-arrow-left" aria-hidden="true"></i> Quay lại
+                    </span>
+
+                    <button
+                      
+                      className="btn header-btn"
+                      style={{ width: "79%" }}
+                      onClick={(event) => handleSubmitForm(event)}
+                    >
+                      <i className="fas fa-cut fa-rotate-270"></i> Hoàn tất
+                    </button>
+                  </div> :  <div>
                       <button
                         onClick={(event) => handleSubmitForm(event)}
                         className="btn header-btn"
@@ -621,7 +641,8 @@ export default function Booking() {
                       >
                         <i className="fas fa-check"></i>Hoàn tất
                       </button>
-                    </div>
+                    </div>}
+                   
                   </div>
                 </form>
               </div>

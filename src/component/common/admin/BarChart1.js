@@ -25,6 +25,7 @@ export default function BarChart1() {
   const navigate = useNavigate();
   const [limit, setLimit] = useState([]);
 
+  
   useEffect(() => {
     const role = jwt_decode(accessToken);
     if (role.roles != "[ROLE_ADMIN]") {

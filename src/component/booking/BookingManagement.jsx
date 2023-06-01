@@ -61,6 +61,11 @@ export default function BookingManagement() {
   };
 
   useEffect(() => {
+    const role = jwt_decode(accessToken);
+    if (role.roles != "[ROLE_CUSTOMER]" && role.roles != "[ROLE_RECEPTIONIST]") {
+      navigate("/main");
+
+    }else {
     axios.get(`${url}?c=${condition}`,{
       headers: {
         "Authorization": "Bearer " + accessToken,
@@ -69,7 +74,7 @@ export default function BookingManagement() {
       setList(res);
       console.log(res);
     });
-  }, [condition, display]);
+  }}, [condition, display]);
 
   return (
     <div>
