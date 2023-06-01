@@ -9,12 +9,12 @@ import jwt_decode from "jwt-decode";
 import Header from "../../../controller/register/common/Header";
 import Sidebar from "./sidebar";
 import {
-    Link,
-    Navigate,
-    useLocation,
-    useNavigate,
-    useParams,
-  } from "react-router-dom";
+  Link,
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 ChartJS.register(...registerables);
 
 export default function BarChart1() {
@@ -29,14 +29,12 @@ export default function BarChart1() {
     const role = jwt_decode(accessToken);
     if (role.roles != "[ROLE_ADMIN]") {
       navigate("/main");
-
-    }else {
-        loadChart();
-        loadUser();
-        loadTotal();
-        loadLimit();
+    } else {
+      loadChart();
+      loadUser();
+      loadTotal();
+      loadLimit();
     }
-   
   }, []);
 
   const loadChart = async () => {
@@ -81,11 +79,11 @@ export default function BarChart1() {
         },
       })
       .then((res) => {
-        console.log(res.data)
-        setTotal(res.data);
+        console.log(res.data[0]);
+        setTotal(res.data[0].total);
       });
   };
-  console.log(total)
+  console.log(total);
   const loadLimit = async () => {
     const result = await axios.get(
       "http://localhost:8080/api/admin/chart/limmit",
@@ -145,18 +143,18 @@ export default function BarChart1() {
     <div className="">
       <Header />
       <div class="slider-area2">
-                    <div class="slider-height2 d-flex align-items-center">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-xl-12">
-                                    <div class="hero-cap hero-cap2 pt-70 text-center">
-                                    <h2>QUẢN LÝ THỐNG KÊ</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="slider-height2 d-flex align-items-center">
+          <div class="container">
+            <div class="row">
+              <div class="col-xl-12">
+                <div class="hero-cap hero-cap2 pt-70 text-center">
+                  <h2>QUẢN LÝ THỐNG KÊ</h2>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="row">
         <div className="col-2 ">
           {/* <Sidebar /> */}
