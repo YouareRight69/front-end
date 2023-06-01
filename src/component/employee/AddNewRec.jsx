@@ -13,7 +13,6 @@ const initFormValue = {
   dateOfBirth: "",
   address: "",
   gender: "",
-  type: "",
   branchId:"",  
 }
 
@@ -49,9 +48,6 @@ console.log(formValue)
       error["gender"] = "Vui lòng chọn giới tính";
     }
   
-    if (isEmtyValue(formValue.type)) {
-      error["type"] = "Vui lòng chọn kiểu phục vụ";
-    }
   
     if (isEmtyValue(formValue.branchId)) {
       error["branchId"] = "Vui lòng chọn chi nhánh";
@@ -68,6 +64,7 @@ console.log(formValue)
 
   const nagative = useNavigate();
   const [name, setName] = useState("");
+  const accessToken = localStorage.getItem("accessToken");
   function onChange(data) {
     let name = people.find((item) => item.userId == data);
     setName(name.fullName);
@@ -76,11 +73,14 @@ console.log(formValue)
     event.preventDefault();
     const formData = Object.fromEntries(new FormData(event.target));
     formData.avatar = imgUpload;
+    console.log(formData);
     if(ValidateForm()) {
     axios
       .post("http://localhost:8080/api/employee/createRec", formData, {
         headers: {
           "Content-Type": "application/json",
+          'Access-Control-Allow-Methods': 'POST',
+          "Authorization": "Bearer " + accessToken,
         },
       })
       .then((resp) => {
@@ -125,11 +125,19 @@ const handleInputChange = (event) => {
 
 
   useMemo(() => {
-    axios.get("http://localhost:8080/api/admin/branch").then((resp) => {
+    axios.get("http://localhost:8080/api/admin/branch", {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+      }
+  }).then((resp) => {
       setBranch(resp.data.content);
       console.log(resp.data);
     });
-    axios.get("http://localhost:8080/api/user/findAllRec").then((resp) => {
+    axios.get("http://localhost:8080/api/user/findAllRec", {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+      }
+  }).then((resp) => {
       setPeople(resp.data);
       console.log(resp.data);
     });
@@ -396,14 +404,6 @@ const handleInputChange = (event) => {
                             </div>
                           </Link>
                         </div>
-                        {/* <div className="col-lg-4 ms-10">
-                          <button
-                            className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                            type="submit"
-                          >
-                            Làm mới
-                          </button>
-                        </div> */}
                         <div className="col-lg-5">
                           <button
                             className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"

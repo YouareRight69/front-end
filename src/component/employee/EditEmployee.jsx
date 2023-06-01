@@ -63,6 +63,7 @@ function Edit() {
   const updateEmp = () => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", "Bearer " + accessToken);
 
     var raw = JSON.stringify({
       type: type,
@@ -95,7 +96,11 @@ function Edit() {
   };
 
   useMemo(() => {
-    axios.get("http://localhost:8080/api/admin/branch").then((resp) => {
+    axios.get("http://localhost:8080/api/admin/branch", {
+      headers: {
+          "Authorization": "Bearer " + accessToken,
+      },
+  }).then((resp) => {
       setBranch(resp.data.content);
     });
   }, []);

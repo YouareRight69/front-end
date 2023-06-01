@@ -71,6 +71,7 @@ console.log(formError)
 
   const nagative = useNavigate();
   const [name, setName] = useState("");
+  const accessToken = localStorage.getItem("accessToken");
   function onChange(data) {
     let name = people.find((item) => item.userId == data);
     setName(name.fullName);
@@ -85,6 +86,8 @@ console.log(formError)
       .post("http://localhost:8080/api/employee/createEmp", formData, {
         headers: {
           "Content-Type": "application/json",
+          'Access-Control-Allow-Methods': 'POST',
+          "Authorization": "Bearer " + accessToken,
         },
       })
       .then((resp) => {
@@ -132,11 +135,19 @@ const handleInputChange = (event) => {
 
 
   useMemo(() => {
-    axios.get("http://localhost:8080/api/admin/branch").then((resp) => {
+    axios.get("http://localhost:8080/api/admin/branch", {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+      }
+  }).then((resp) => {
       setBranch(resp.data.content);
       console.log(resp.data);
     });
-    axios.get("http://localhost:8080/api/user/findAll").then((resp) => {
+    axios.get("http://localhost:8080/api/user/findAll", {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+      }
+  }).then((resp) => {
       setPeople(resp.data);
       console.log(resp.data);
     });
@@ -437,14 +448,6 @@ const handleInputChange = (event) => {
                             </div>
                           </Link>
                         </div>
-                        {/* <div className="col-lg-4 ms-10">
-                          <button
-                            className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                            type="submit"
-                          >
-                            Làm mới
-                          </button>
-                        </div> */}
                         <div className="col-lg-5">
                           <button
                             className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"

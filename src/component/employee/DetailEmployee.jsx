@@ -7,12 +7,16 @@ function DetailEmployee(props) {
   const { id } = useParams();
   const [target, setTarget] = useState({});
   const [dataView, setDataView] = useState([]); 
-
+  const accessToken = localStorage.getItem("accessToken");
   const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
-      axios.get(`${url}/${id}`).then((resp) => {
+      axios.get(`${url}/${id}`, {
+        headers: {
+            "Authorization": "Bearer " + accessToken,
+        },
+    }).then((resp) => {
         setTarget(resp.data);
       });
     }

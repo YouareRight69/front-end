@@ -13,11 +13,23 @@ function DashboardEmployee(props) {
   const [condition, setCondition] = useState("");
   const [display, setDisplay] = useState(true);
   const navigate = useNavigate();
+  const accessToken = localStorage.getItem("accessToken");
 
   function handleClick(page) {
-    axios.get(`${url}?p=${page}&c=${condition}`).then(res => {
-        setList(res);
-    });
+    axios.get(`${url}?p=${page}&c=${condition}`, {
+      headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          "Authorization": "Bearer " + accessToken,
+      },
+  }).then((res) => {
+      console.log(res);
+      setList(res);
+  });
+    // axios.get(`${url}?p=${page}&c=${condition}`).then(res => {
+    //     setList(res);
+    // });
   }
 
     const onSubmit = (data) => {
@@ -30,15 +42,26 @@ function DashboardEmployee(props) {
     }
 
     useEffect(() => {
-      axios.get(`${url}?c=${condition}`).then(res => {
+      // axios.get(`${url}?c=${condition}`).then(res => {
+      //     setList(res);
+      // })
+      axios.get(`${url}?c=${condition}`, {
+        headers: {
+            "Authorization": "Bearer " + accessToken,
+        },
+      }).then((res) => {
           setList(res);
-      })
+          console.log(res);
+      });
     }, [condition, display])
     
     console.log(list);
   
     const editEmp = (employeeId) => {
-      var requestOptions = { method: "GET", redirect: "follow" };
+      var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", "Bearer " + accessToken);
+      var requestOptions = { method: "GET", redirect: "follow" ,headers: myHeaders};
       fetch(
         `http://localhost:8080/api/employee/edit?employeeId=${employeeId}`,
         requestOptions
