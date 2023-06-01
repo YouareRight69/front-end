@@ -5,6 +5,7 @@ import { Outlet, Link } from "react-router-dom";
 import Page from '../../utils/Page';
 import SearchForm from '../../Button/SearchForm';
 import DeleteUser from '../../Button/DeleteUser';
+import Sidebar from "../common/admin/sidebar";
 
 function UserList() {
 
@@ -65,7 +66,7 @@ function UserList() {
             </div>
             <div style={{ display: "flex" }}>
                 <div className="col-lg-2" style={{ backgroundColor: "bisque" }}>
-                    Admin
+                <Sidebar />
                 </div>
 
                 <div className="col-lg-10">

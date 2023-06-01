@@ -9,6 +9,7 @@ import { storage } from "../firebase/index.js";
 import jwt_decode from "jwt-decode";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Sidebar from "../common/admin/sidebar";
 
 function EditService() {
   const service = "http://localhost:8080/api/hairService"
@@ -179,7 +180,7 @@ function EditService() {
       </div>
       <div style={{ display: "flex" }}>
         <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
-          Admin
+        <Sidebar />
         </div>
         <div className="col-lg-10">
           <section id="section">

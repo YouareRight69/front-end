@@ -9,6 +9,7 @@ import SearchForm from '../../Button/SearchForm';
 import DetailButton from '../../Button/DetailButton';
 import jwt_decode from "jwt-decode";
 import accounting from "accounting";
+import Sidebar from "../common/admin/sidebar";
 
 function UserList() {
 
@@ -70,7 +71,7 @@ function UserList() {
             </div>
             <div style={{ display: "flex" }}>
                 <div className="col-lg-2" style={{ backgroundColor: "bisque" }}>
-                    Admin
+                <Sidebar />
                 </div>
 
                 <div className="col-lg-10">
