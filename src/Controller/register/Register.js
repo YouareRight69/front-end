@@ -22,7 +22,10 @@ function Register() {
       [Yup.ref("password"), null],
       "Xác nhận mật khẩu không khớp"
     ),
-    email: Yup.string().email("Email không hợp lệ"),
+    fullname: Yup.string().required("Vui lòng nhập đầy đủ họ tên"),
+    email: Yup.string()
+      .required("Vui lòng nhập đầy đủ email")
+      .email("Email không hợp lệ"),
     phoneNumber: Yup.string().matches(
       /^[0-9]{10,11}$/,
       "Số điện thoại phải có từ 10 đến 11 ký tự"
@@ -33,6 +36,7 @@ function Register() {
     username: "",
     password: "",
     confirmPassword: "",
+    fullname: "",
     email: "",
     phoneNumber: "",
   });
@@ -159,7 +163,7 @@ function Register() {
               className="row"
               style={{ display: "flex", height: "100%", alignItems: "center" }}
             >
-              <div className="col-lg-7 col-md-7">
+              <div className="col-lg-7 col-md-7" style={{ marginTop: "60px" }}>
                 <h3 className="mb-30" style={{ color: "#d19f68" }}>
                   Đăng ký tài khoản
                 </h3>

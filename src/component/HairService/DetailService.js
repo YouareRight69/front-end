@@ -52,6 +52,7 @@ function DetailService(props) {
       setDataView(urlArray);
     }
   }, [target]);
+  console.log(target);
 
   return (
     <div>
