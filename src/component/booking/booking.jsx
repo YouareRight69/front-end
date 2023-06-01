@@ -233,12 +233,10 @@ export default function Booking() {
     toDay.setDate(toDay.getDate() + 10);
     setSelectDay(e);
     if (new Date(e) <= toDay && new Date(getCurrentDate()) <= selectDay) {
-      
       setFormData({ ...formData, bookingDate: e });
     } else {
       setFormData({ ...formData, bookingDate: undefined });
     }
- 
   };
   const handleSelectSkinner = (e) => {
     setSelectSkinner(e);
@@ -256,9 +254,9 @@ export default function Booking() {
       });
     }
   };
- const handleBack = () => {
-  navigate("/booking-management")
- }
+  const handleBack = () => {
+    navigate("/booking-management");
+  };
 
   const handleInputNote = (e) => {
     setFormData({ ...formData, note: e });
@@ -274,38 +272,42 @@ export default function Booking() {
       setFormData({ ...formData, note: null });
     }
 
-
     const errors = {};
 
     if (!formData.branch) {
-      errors.branch = 'Vui lòng chọn chi nhánh';
+      errors.branch = "Vui lòng chọn chi nhánh";
     }
 
-    if (jwt_decode(accessToken).roles.includes("ROLE_RECEPTIONIST")) {
-      if (formData.customerName.trim() === "") {
+   if (jwt_decode(accessToken).roles.includes("ROLE_RECEPTIONIST")) {
+      if (!formData.customerName || formData.customerName?.trim() == "") {
         errors.customerName = "Vui lòng nhập tên khách hàng";
       }
     }
 
-    if (!formData.serviceList || formData.serviceList.length ==0) {
-      errors.serviceList = 'Vui lòng chọn ít nhất một dịch vụ';
+    if (!formData.serviceList || formData.serviceList.length == 0) {
+      errors.serviceList = "Vui lòng chọn ít nhất một dịch vụ";
     }
     var toDay = new Date();
     var selectDay = new Date(e);
     toDay.setDate(toDay.getDate() + 10);
-    if(!formData.bookingDate || new Date(formData.bookingDate) < new Date(getCurrentDate()) || new Date(formData.bookingDate) > toDay ){
-      errors.bookingDate = 'Vui lòng chọn ngày trong khoảng 10 ngày tính từ ngày hiện tại!';
+    if (
+      !formData.bookingDate ||
+      new Date(formData.bookingDate) < new Date(getCurrentDate()) ||
+      new Date(formData.bookingDate) > toDay
+    ) {
+      errors.bookingDate =
+        "Vui lòng chọn ngày trong khoảng 10 ngày tính từ ngày hiện tại!";
     }
 
     if (!formData.styleId) {
-      errors.styleId = 'Vui lòng chọn stylist';
+      errors.styleId = "Vui lòng chọn stylist";
     }
 
     if (!formData.skinnerId) {
-      errors.skinnerId = 'Vui lòng chọn skinner';
+      errors.skinnerId = "Vui lòng chọn skinner";
     }
-    if(!formData.workTimeId)  {
-      errors.workTimeId = 'Vui lòng chọn giờ';
+    if (!formData.workTimeId) {
+      errors.workTimeId = "Vui lòng chọn giờ";
     }
 
     // If there are errors, set the state and display the error messages
@@ -409,7 +411,6 @@ export default function Booking() {
       }
     }
 
-
     // if (
     //   formData.isDelete == 0 &&
     //   formData.serviceList.length > 0 &&
@@ -473,7 +474,9 @@ export default function Booking() {
                           )
                         )}
                       </select>
-                      {errors.branch && <span className="error-message">{errors.branch}</span>}
+                      {errors.branch && (
+                        <span className="error-message">{errors.branch}</span>
+                      )}
                     </div>
                   </div>
                   {jwt_decode(accessToken).roles.includes(
@@ -489,7 +492,11 @@ export default function Booking() {
                         placeholder="Vui lòng nhập tên khách hàng..."
                         defaultValue={formData.customerName}
                       />
-                      {errors.customerName && <span className="error-message">{errors.customerName}</span>}
+                      {errors.customerName && (
+                        <span className="error-message">
+                          {errors.customerName}
+                        </span>
+                      )}
                     </div>
                   )}
                   <div className="input-group-icon mt-10">
@@ -504,7 +511,11 @@ export default function Booking() {
                         <i className="fas fa-cut fa-rotate-270"></i> Chọn dịch
                         vụ
                       </button>
-                       {errors.serviceList && <span className="error-message">{errors.serviceList}</span>}
+                      {errors.serviceList && (
+                        <span className="error-message">
+                          {errors.serviceList}
+                        </span>
+                      )}
                     </div>
 
                     {selectservice.length > 0 && (
@@ -556,7 +567,11 @@ export default function Booking() {
                               ))}
                             </Carousel>
                           )}
-                       {errors.styleId && <span className="error-message">{errors.styleId}</span>}
+                          {errors.styleId && (
+                            <span className="error-message">
+                              {errors.styleId}
+                            </span>
+                          )}
                         </div>
                         <h2>Chọn ngày</h2>
                         <input
@@ -570,7 +585,11 @@ export default function Booking() {
                             handleSelectDay(event.target.value);
                           }}
                         />
-                         {errors.bookingDate && <span className="error-message">{errors.bookingDate}</span>}
+                        {errors.bookingDate && (
+                          <span className="error-message">
+                            {errors.bookingDate}
+                          </span>
+                        )}
                         <h2>Chọn giờ</h2>
                         <div className="d-flex justify-content-center row m-0">
                           {workingTimeData?.map((time, index) => {
@@ -613,7 +632,11 @@ export default function Booking() {
                             );
                           })}
                         </div>
-                        {errors.workTimeId && <span className="error-message">{errors.workTimeId}</span>}
+                        {errors.workTimeId && (
+                          <span className="error-message">
+                            {errors.workTimeId}
+                          </span>
+                        )}
                       </div>
                     </div>
                   )}
@@ -652,7 +675,11 @@ export default function Booking() {
                             )}
                         </select>
                       </div>
-                      {errors.skinnerId && <span className="error-message">{errors.skinnerId}</span>}
+                      {errors.skinnerId && (
+                        <span className="error-message">
+                          {errors.skinnerId}
+                        </span>
+                      )}
                     </div>
                   )}
                   <div className="mt-10">
@@ -665,33 +692,36 @@ export default function Booking() {
                     ></textarea>
                   </div>
                   <div className="input-group-icon mt-10">
-                     { id ? <div>
-                    <span
-                      className="btn header-btn px-2 mx-2"
-                      style={{ width: "20%" }}
-                      onClick={handleBack}
-                    >
-                       <i class="fa fa-arrow-left" aria-hidden="true"></i> Quay lại
-                    </span>
+                    {id ? (
+                      <div>
+                        <span
+                          className="btn header-btn px-2 mx-2"
+                          style={{ width: "20%" }}
+                          onClick={handleBack}
+                        >
+                          <i class="fa fa-arrow-left" aria-hidden="true"></i>{" "}
+                          Quay lại
+                        </span>
 
-                    <button
-                      
-                      className="btn header-btn"
-                      style={{ width: "79%" }}
-                      onClick={(event) => handleSubmitForm(event)}
-                    >
-                      <i className="fas fa-cut fa-rotate-270"></i> Hoàn tất
-                    </button>
-                  </div> :  <div>
-                      <button
-                        onClick={(event) => handleSubmitForm(event)}
-                        className="btn header-btn"
-                        style={{ width: "100%" }}
-                      >
-                        <i className="fas fa-check"></i>Hoàn tất
-                      </button>
-                    </div>}
-                   
+                        <button
+                          className="btn header-btn"
+                          style={{ width: "79%" }}
+                          onClick={(event) => handleSubmitForm(event)}
+                        >
+                          <i className="fas fa-cut fa-rotate-270"></i> Hoàn tất
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <button
+                          onClick={(event) => handleSubmitForm(event)}
+                          className="btn header-btn"
+                          style={{ width: "100%" }}
+                        >
+                          <i className="fas fa-check"></i>Hoàn tất
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </form>
               </div>

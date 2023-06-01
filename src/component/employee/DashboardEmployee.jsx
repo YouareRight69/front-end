@@ -1,8 +1,84 @@
-import React from "react";
-import { Link } from "react-router-dom";
-// import Modal from "../common/Modal";
+import React, { useEffect, useState} from "react";
+import { Outlet, Link } from "react-router-dom";
+import Page from '../../utils/Page';
+import DeleteButton from '../employee/DeleteButton';
+import SearchForm from '../../Button/SearchForm';
+import DetailButton from '../../Button/DetailButton';
+import axios from 'axios';
+import { useLocation, useNavigate } from "react-router-dom";
 
 function DashboardEmployee(props) {
+  const url = "http://localhost:8080/api/employee/listAllEmp";
+  const [list, setList] = useState({ data: { content: [] } });
+  const [condition, setCondition] = useState("");
+  const [display, setDisplay] = useState(true);
+  const navigate = useNavigate();
+  const accessToken = localStorage.getItem("accessToken");
+
+  function handleClick(page) {
+    axios.get(`${url}?p=${page}&c=${condition}`, {
+      headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          "Authorization": "Bearer " + accessToken,
+      },
+  }).then((res) => {
+      console.log(res);
+      setList(res);
+  });
+    // axios.get(`${url}?p=${page}&c=${condition}`).then(res => {
+    //     setList(res);
+    // });
+  }
+
+    const onSubmit = (data) => {
+      setCondition(data);
+      console.log(setCondition);
+    }
+
+    const rerender = () => {
+      setDisplay(!display);
+    }
+
+    useEffect(() => {
+      // axios.get(`${url}?c=${condition}`).then(res => {
+      //     setList(res);
+      // })
+      axios.get(`${url}?c=${condition}`, {
+        headers: {
+            "Authorization": "Bearer " + accessToken,
+        },
+      }).then((res) => {
+          setList(res);
+          console.log(res);
+      });
+    }, [condition, display])
+    
+    console.log(list);
+  
+    const editEmp = (employeeId) => {
+      var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", "Bearer " + accessToken);
+      var requestOptions = { method: "GET", redirect: "follow" ,headers: myHeaders};
+      fetch(
+        `http://localhost:8080/api/employee/edit?employeeId=${employeeId}`,
+        requestOptions
+      )
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw Error(response.status);
+        })
+        .then((result) => {
+          navigate("/emp/edit", { state: { result } });
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    };
   return (
     <div>
       {/* <PreLoader /> */}
@@ -35,58 +111,33 @@ function DashboardEmployee(props) {
                 <div className="blog_right_sidebar">
                   <aside
                     className="single_sidebar_widget search_widget col-lg-12"
-                    style={{ display: "flex" }}
+                    style={{ display: "flex"}}
                   >
-                    <div className="col-lg-1"></div>
-                    <form action="#" className="col-lg-6">
-                      <div className="form-group">
-                        <div className="input-group mb-3">
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Nhập từ khoá cần tìm"
-                            onfocus="this.placeholder = ''"
-                            onblur="this.placeholder = 'Nhập từ khoá cần tìm'"
-                          />
-                          <div className="input-group-append">
-                            <button className="btns" type="button">
-                              <i className="ti-search"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
-                    <div className="col-lg-1"></div>
-                    <div className="col-lg-3 col-md-4 mt-10">
-                      <div className="input-group-icon">
-                        <div>
-                          <select className="form-select" id="default-select">
-                            <option value=" 1">Sắp xếp</option>
-                            <option value="1">Bangladesh</option>
-                            <option value="1">India</option>
-                            <option value="1">England</option>
-                            <option value="1">Srilanka</option>
-                          </select>
-                        </div>
-                      </div>
+                    <div className="col-lg-2"></div>
+                    <div className="form-group col-8">
+                      {/* <div className="input-group mb-3"> */}
+                        <SearchForm
+                            onSubmit={onSubmit}
+                        />
+                      {/* </div> */}
                     </div>
                   </aside>
                 </div>
-                <div class="mt-10" style={{display: "flex" }}>
-                  <div class="col-lg-3 ms-10">
-                    <Link to="/employee-add">
+                <div class="mt-10 col-lg-10" style={{ display: "flex"}}>
+                  <div class="mt-10 col-lg-4">
+                  <Link to="/employee-add">
                       <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
-                        Thêm mới
+                        Thêm mới nhân viên
                       </div>
                     </Link>
                   </div>
-                  <div class="col-lg-3 ms-10">
-                    <Link to="/history-admin"> 
+                  <div class="mt-10 col-lg-4">
+                    <Link to="/employee-addRec">
                       <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
-                        Lịch sử làm việc
+                        Thêm mới lễ tân
                       </div>
                     </Link>
-                  </div>
+                    </div>
                 </div>
                 <div className="section-top-border">
                   <h3 className="mb-30">Danh sách nhân viên</h3>
@@ -104,141 +155,69 @@ function DashboardEmployee(props) {
                             <th scope="col">Số điện thoại</th>
                             <th scope="col">Email</th>
                             <th scope="col">Giới tính</th>
+                            <th scope="col">Nhân viên</th>
                             <th scope="col">Chi nhánh</th>
                             <th scope="col">Chức năng</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr style={{ marginTop: "5px" }}>
-                          <th scope="row">01</th>
-                            <td>Nguyễn Văn A</td>
-                            <td>12/12/2000</td>
-                            <td>0245321014</td>
-                            <td>nguyenvana@gmail.com</td>
-                            <td>Nam</td>
-                            <td>Nguyễn Văn Linh</td>
-                            <td>
+                          {list.data.content.length > 0 &&
+                            list.data.content.map((item) => 
+                              <tr style={{ marginTop: "5px" }} key={item.employeeId}>
+                                <th scope="row">{item.employeeId}</th>
+                                <td>{item.user.fullName}</td>
+                                <td>{item.user.dateOfBirth}</td>
+                                <td>{item.user.phoneNumber}</td>
+                                <td>{item.user.account.email}</td>
+                                <td>{item.user.gender}</td>
+                                <td>
+                                  {
+                                    item.type === "1" ? "Hair dresser" :
+                                    item.type === "2" ? "Skinner" :
+                                    item.type === "3" ? "Lễ tân" :
+                                    ""
+                                  }
+                                </td>
+                                <td>{item.branch.name}</td>
+                                <td style={{ display: "flex"}}>
+                              <DeleteButton url={url} id={item.employeeId} rerender={rerender} />
+
                               <button
                                 type="button"
-                                className="genric-btn danger radius"
-                                style={{ marginRight: "10px" }}
-                                data-bs-toggle="modal"
-                                data-bs-target="#deleteModal"
+                                className="genric-btn success radius"
+                                style={{ marginLeft: "10px" }}
+                                onClick={() => editEmp(item.employeeId)}
+                                // data-bs-toggle="modal"
+                                // data-bs-target="#deleteModal"
                               >
-                                <i className="far fa-trash-alt"></i>
+                                <i className="fas fa-pencil-alt"></i>
                               </button>
+                              {/* <EditButton url={url} id={ item.employeeId } /> */}
 
-                              <Link
-                                to="/employee-edit"
-                                style={{ marginRight: "10px" }}
-                              >
-                                <div className="genric-btn success radius">
-                                  <i className="fas fa-pencil-alt"></i>
-                                </div>
-                              </Link>
-
-                              <Link to="/employee-detail">
-                                <div className="genric-btn primary radius">
-                                  <i
-                                    className="fa fa-eye"
-                                    aria-hidden="true"
-                                  ></i>
-                                </div>
-                              </Link>
+                              <DetailButton url={'employee'} id={item.employeeId} />
                             </td>
-                          </tr>
-                          <tr style={{ marginTop: "5px" }}>
-                            <th scope="row">01</th>
-                            <td>Nguyễn Văn A</td>
-                            <td>12/12/2000</td>
-                            <td>0245321014</td>
-                            <td>nguyenvana@gmail.com</td>
-                            <td>Nam</td>
-                            <td>Nguyễn Văn Linh</td>
-                            <td>
-                              <button
-                                type="button"
-                                className="genric-btn danger radius"
-                                style={{ marginRight: "10px" }}
-                                data-bs-toggle="modal"
-                                data-bs-target="#deleteModal"
-                              >
-                                <i className="far fa-trash-alt"></i>
-                              </button>
-
-                              <Link
-                                to="/employee-edit"
-                                style={{ marginRight: "10px" }}
-                              >
-                                <div className="genric-btn success radius">
-                                  <i className="fas fa-pencil-alt"></i>
-                                </div>
-                              </Link>
-
-                              <Link to="/employee-detail">
-                                <div className="genric-btn primary radius">
-                                  <i
-                                    className="fa fa-eye"
-                                    aria-hidden="true"
-                                  ></i>
-                                </div>
-                              </Link>
-                            </td>
-                          </tr>
+                              </tr>
+                          )}
+                        
                         </tbody>
                       </table>
                     </div>
                   </div>
                 </div>
-                <section
-                  className="blog_area"
-                  style={{ paddingBottom: "80px" }}
-                >
-                  <div className="col-lg-12 mb-5 mb-lg-0">
-                    <nav className="blog-pagination1 justify-content-center d-flex">
-                      <ul className="pagination">
-                        <li className="page-item">
-                          <a
-                            href="#"
-                            className="page-link"
-                            aria-label="Previous"
-                          >
-                            <i className="ti-angle-left"></i>
-                          </a>
-                        </li>
-                        <li className="page-item">
-                          <a href="#" className="page-link">
-                            1
-                          </a>
-                        </li>
-                        <li className="page-item active">
-                          <a href="#" className="page-link">
-                            2
-                          </a>
-                        </li>
-                        <li className="page-item active">
-                          <a href="#" className="page-link">
-                            3
-                          </a>
-                        </li>
-                        <li className="page-item">
-                          <a href="#" className="page-link" aria-label="Next">
-                            <i className="ti-angle-right"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
-                </section>
+                <Page 
+                  totalPages={list.data.totalPages}
+                  number={list.data.number}
+                  condition={condition}
+                  handleClick={handleClick}
+                />
                 <div style={{ display: "flex" }}>
                   <div className="col-lg-10 ms-10 mb-50"></div>
                   <div className="col-lg-2 ms-10 mb-50">
-                    <a
-                      type="button"
-                      className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
-                    >
-                      Trở về
-                    </a>
+                  <Link to="/employee">
+                            <div className="button rounded-0 primary-bg w-100 btn_1 boxed-btn">
+                              Trở về
+                            </div>
+                          </Link>
                   </div>
                 </div>
               </div>

@@ -1,7 +1,38 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams  } from "react-router-dom";
+import axios from "axios";
 
 function DetailEmployee(props) {
+  const url = "http://localhost:8080/api/employee/listAllEmp";
+  const { id } = useParams();
+  const [target, setTarget] = useState({});
+  const [dataView, setDataView] = useState([]); 
+  const accessToken = localStorage.getItem("accessToken");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (id) {
+      axios.get(`${url}/${id}`, {
+        headers: {
+            "Authorization": "Bearer " + accessToken,
+        },
+    }).then((resp) => {
+        setTarget(resp.data);
+      });
+    }
+  }, [id]);
+  console.log(target);
+  useEffect(() => {
+    if (target && target.media) {
+      const urlArray = target.media.map((item) => item.url);
+      setDataView(urlArray);
+    }
+  }, [target]);
+  
+
+  console.log(target);
+  console.log(target.type);
+
   return (
     <div>
       <main>
@@ -33,15 +64,16 @@ function DetailEmployee(props) {
                   <div className="col-xl-4 col-lg-4 col-md-6">
                     <div
                       className="gallery-area"
-                      style={{ paddingTop: "50px" }}
+                      style={{ paddingTop: "100px" }}
                     >
                       <div className="col-lg-12 col-md-6 col-sm-6">
                         <div className="box snake thien_snake">
                           <div className="gallery-img">
                             <img
                               className="thien_avatar"
-                              src="./assets/img/avatar/hinh-avatar-cute-nu.jpg"
+                              src={target.user?.avatar}
                               alt="avatar"
+                              // value={target.user?.avatar}
                             />
                           </div>
                           <div className="overlay"></div>
@@ -51,13 +83,20 @@ function DetailEmployee(props) {
                   </div>
                   <div className="col-lg-8 col-md-8">
                     <h3 className="mb-30">Xem thông tin nhân viên</h3>
-                    <form action="#">
+                    <div className="mt-10" style={{display: "flex"}}>
+                          <div className="col-lg-3 col-md-4">
+                              <p className="mt-2">EmployeeId</p>
+                          </div>
+                          <div class="col-lg-9 col-md-4">
+                            <p className="mt-2">{target.employeeId}</p>
+                          </div>
+                      </div>
                       <div className="mt-10" style={{display: "flex"}}>
                           <div className="col-lg-3 col-md-4">
                               <p className="mt-2">Họ Tên</p>
                           </div>
                           <div class="col-lg-9 col-md-4">
-                            <p className="mt-2">Vỏ Thị Hoạ My</p>
+                            <p className="mt-2">{target.user?.fullName}</p>
                           </div>
                       </div>
                       <div className="mt-10" style={{ display: "flex" }}>
@@ -65,15 +104,16 @@ function DetailEmployee(props) {
                               <p className="mt-2">Ngày sinh</p>
                           </div>
                           <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">15/02/2000</p>
+                            <p className="mt-2">{target.user?.dateOfBirth}</p>
                           </div>
                       </div>
+                      
                       <div className="mt-10" style={{ display: "flex" }}>
                           <div className="col-lg-3 col-md-4">
                               <p className="mt-2">Số điện thoại</p>
                           </div>
                           <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">0823976563</p>
+                            <p className="mt-2">{target.user?.phoneNumber}</p>
                           </div>
                       </div>
                       <div className="mt-10" style= {{display: "flex" }}>
@@ -93,7 +133,7 @@ function DetailEmployee(props) {
                                       </div>
                                   </div>
                                   <div className="col-lg-7">
-                                      <label for="html">Nữ</label>
+                                      <label for="html">{target.user?.gender}</label>
                                   </div>
                               </div>
                           </div>
@@ -103,7 +143,7 @@ function DetailEmployee(props) {
                               <p className="mt-2">Email</p>
                           </div>
                           <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">vohoamy1502@gmail.com</p>
+                            <p className="mt-2">{target.user?.account.email}</p>
                           </div>
                       </div>
                       <div className="mt-10" style= {{ display: "flex" }}>
@@ -115,12 +155,25 @@ function DetailEmployee(props) {
                           </div>
                       </div>
                       <div className="mt-10" style= {{ display: "flex" }}>
-                          <div className="col-lg-3 col-md-4">
-                              <p className="mt-2">Ngày hết hạn HD</p>
-                          </div>
-                          <div className="col-lg-9 col-md-4">
-                            <p className="mt-2">05/10/2024</p>
-                          </div>
+                        <div className="col-lg-3 col-md-4">
+                          <p className="mt-2">Kiểu nhân viên</p>
+                        </div>
+                        <div className="col-lg-9 col-md-4">
+                          <input
+                              style={{ width: "100%", height: "80%", border: "none" }}
+                              name="type"
+                              defaultValue=""
+                              value= {
+                                target.type === "1" ? "Hair dresser" :
+                                target.type === "2" ? "Skinner" :
+                                target.type === "3" ? "Lễ tân" :
+                                ""
+                              }
+                              readOnly
+                            />
+                  
+                        </div>
+                          
                       </div>
                       <div className="input-group-icon mt-10" style= {{ display: "flex" }}>
                           <div className="col-lg-3 col-md-4">
@@ -130,7 +183,7 @@ function DetailEmployee(props) {
                             <p className="mt-2">Nguyễn Văn Linh</p>
                           </div>
                       </div>
-                    </form>
+                   
                     <div className="mt-110" style={{ display: "flex" }}>
                       <div className="col-lg-3 ms-10">
                         <Link to="/employee">
