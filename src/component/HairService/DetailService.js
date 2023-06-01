@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import ImageGalleryEdit from "../common/ImageGalleryEdit";
 import accounting from "accounting";
+import Sidebar from "../common/admin/sidebar";
 
 function DetailService(props) {
   const url = "http://localhost:8080/api/hairService";
@@ -76,7 +77,7 @@ function DetailService(props) {
         {/* Services Area Start */}
         <div style={{ display: "flex" }}>
           <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
-            Admin
+          <Sidebar />
           </div>
           <div className="col-lg-10">
             <section className="service-area section-padding300">
