@@ -187,17 +187,6 @@ function Login() {
                   className="button-group-area mt-10"
                   style={{ display: "flex", justifyContent: "center" }}
                 >
-                  <a href="#" className="genric-btn link-border circle namnb6">
-                    <i className="fab fa-google" style={{ color: "#d19f68" }}>
-                      {" "}
-                    </i>{" "}
-                    Đăng nhập bằng tài khoản Google{" "}
-                  </a>{" "}
-                </div>{" "}
-                <div
-                  className="button-group-area mt-10"
-                  style={{ display: "flex", justifyContent: "center" }}
-                >
                   <span
                     style={{
                       fontSize: ".8em",

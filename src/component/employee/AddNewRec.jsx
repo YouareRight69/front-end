@@ -1,42 +1,51 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { storage } from "../firebase/Firebase";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { ToastContainer, toast } from 'react-toastify';
-
+import jwt_decode from "jwt-decode";
 import 'react-toastify/dist/ReactToastify.css';
+import Sidebar from "../common/admin/sidebar";
 
 const initFormValue = {
   dateOfBirth: "",
   address: "",
   gender: "",
-  branchId:"",  
+  branchId: "",
 }
 
-const isEmtyValue = (value) =>{
+const isEmtyValue = (value) => {
   return !value || value.trim().length < 1;
 }
 
 function AddNewEmployee(props) {
   const [formValue, setFormValue] = useState(initFormValue);
   const [formError, setFormError] = useState([]);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+    } else if (!["[ROLE_ADMIN]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+    }
+  }, []);
 
   const handleChange = (event) => {
     event.preventDefault();
-    const {value, name} = event.target;
+    const { value, name } = event.target;
     setFormValue({
       ...formValue,
       [name]: value,
     })
   }
-console.log(formValue)
-  const ValidateForm = () =>{
+  console.log(formValue)
+  const ValidateForm = () => {
     const error = {};
 
-    if(isEmtyValue(formValue.address)){
+    if (isEmtyValue(formValue.address)) {
       error["address"] = "Trường này không được trống"
     }
 
@@ -47,8 +56,8 @@ console.log(formValue)
     if (isEmtyValue(formValue.gender)) {
       error["gender"] = "Vui lòng chọn giới tính";
     }
-  
-  
+
+
     if (isEmtyValue(formValue.branchId)) {
       error["branchId"] = "Vui lòng chọn chi nhánh";
     }
@@ -74,54 +83,56 @@ console.log(formValue)
     const formData = Object.fromEntries(new FormData(event.target));
     formData.avatar = imgUpload;
     console.log(formData);
-    if(ValidateForm()) {
-    axios
-      .post("http://localhost:8080/api/employee/createRec", formData, {
-        headers: {
-          "Content-Type": "application/json",
-          'Access-Control-Allow-Methods': 'POST',
-          "Authorization": "Bearer " + accessToken,
-        },
-      })
-      .then((resp) => {
-        nagative("/employee");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (ValidateForm()) {
+      axios
+        .post("http://localhost:8080/api/employee/createRec", formData, {
+          headers: {
+            "Content-Type": "application/json",
+            'Access-Control-Allow-Methods': 'POST',
+            "Authorization": "Bearer " + accessToken,
+          },
+        })
+        .then((resp) => {
+          nagative("/employee");
+          toast.success("Thêm mới thành công");
+
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
       console.log("form invalue", formValue);
     }
   };
 
-const handleInputChange = (event) => {
-  const file = event.target.files[0];
-  const reader = new FileReader();
-  
-  reader.onload = () => {
-    const imgDataUrl = reader.result;
-    const img = new Image();
-    img.src = imgDataUrl;
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
-      canvas.toBlob((blob) => {
-        const imgRef = ref(storage, `avatars/"myAddnew"+${v4()}`);
-        uploadBytes(imgRef, blob).then((snapshot) => {
-          getDownloadURL(snapshot.ref).then((url) => {
-            setImgUpload(url);
-            setImageSrc(url); // Cập nhật đường dẫn mới
+  const handleInputChange = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const imgDataUrl = reader.result;
+      const img = new Image();
+      img.src = imgDataUrl;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob((blob) => {
+          const imgRef = ref(storage, `avatars/"myAddnew"+${v4()}`);
+          uploadBytes(imgRef, blob).then((snapshot) => {
+            getDownloadURL(snapshot.ref).then((url) => {
+              setImgUpload(url);
+              setImageSrc(url); // Cập nhật đường dẫn mới
+            });
           });
-        });
-      }, "image/jpeg", 0.9);
+        }, "image/jpeg", 0.9);
+      };
     };
+
+    reader.readAsDataURL(file);
   };
-  
-  reader.readAsDataURL(file);
-};
 
 
   useMemo(() => {
@@ -129,7 +140,7 @@ const handleInputChange = (event) => {
       headers: {
         "Authorization": "Bearer " + accessToken,
       }
-  }).then((resp) => {
+    }).then((resp) => {
       setBranch(resp.data.content);
       console.log(resp.data);
     });
@@ -137,11 +148,11 @@ const handleInputChange = (event) => {
       headers: {
         "Authorization": "Bearer " + accessToken,
       }
-  }).then((resp) => {
+    }).then((resp) => {
       setPeople(resp.data);
       console.log(resp.data);
     });
-  }, []); 
+  }, []);
 
 
   return (
@@ -163,9 +174,9 @@ const handleInputChange = (event) => {
         </div>
         {/* Hero End */}
         {/* Services Area Start */}
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
-            Admin
+        <div className='row'>
+          <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+            <Sidebar />
           </div>
           <div className="col-lg-10">
             <section className="service-area section-padding300">
@@ -236,7 +247,7 @@ const handleInputChange = (event) => {
                             className="single-input"
                             onChange={handleChange}
                           />
-                           <p style={{ margin: "0px 5px", color: 'red', fontSize: "14px", height:"0px" }} className="error-feedback">
+                          <p style={{ margin: "0px 5px", color: 'red', fontSize: "14px", height: "0px" }} className="error-feedback">
                             &nbsp; {formError.dateOfBirth}
                           </p>
                         </div>
@@ -255,82 +266,82 @@ const handleInputChange = (event) => {
                             className="single-input"
                             onChange={handleChange}
                           />
-                           <p 
-                            style= {{ 
-                              margin: "0px 5px", color: 'red', fontSize: "14px", height:"0px" 
-                            }} 
+                          <p
+                            style={{
+                              margin: "0px 5px", color: 'red', fontSize: "14px", height: "0px"
+                            }}
                             className="error-feedback"
-                          > 
+                          >
                             &nbsp; {formError.address}
                           </p>
                         </div>
                       </div>
                       <div className="mt-5" style={{ display: "flex" }}>
-                        
+
                         <div className="col-lg-3 col-md-4">
                           <p className="mt-2">Giới tính</p>
                         </div>
-                       <div>
-                        
-                       <div
-                          className="col-lg-9 col-md-4"
-                          style={{ display: "flex" }}
-                        >
-                          
-                          <div className="col-lg-3" style={{ display: "flex" }}>
-                            <div className="col-lg-3 mt-1">
-                              <div className="confirm-radio">
-                                <input
-                                  type="radio"
-                                  id="confirm-radio"
-                                  name="gender"
-                                  value="Nam"
-                                  checked={formValue.gender === "Nam"} 
-                                  onChange={handleChange} 
+                        <div>
+
+                          <div
+                            className="col-lg-9 col-md-4"
+                            style={{ display: "flex" }}
+                          >
+
+                            <div className="col-lg-3" style={{ display: "flex" }}>
+                              <div className="col-lg-3 mt-1">
+                                <div className="confirm-radio">
+                                  <input
+                                    type="radio"
+                                    id="confirm-radio"
+                                    name="gender"
+                                    value="Nam"
+                                    checked={formValue.gender === "Nam"}
+                                    onChange={handleChange}
                                   // checked
-                                />
-                                <label for="confirm-radio"></label>
+                                  />
+                                  <label for="confirm-radio"></label>
+                                </div>
+
                               </div>
-                              
-                            </div>
-                            <div className="col-lg-7">
-                              <label for="html">Nam</label>
-                            </div>
-                          </div>
-                          <div className="col-lg-3"></div>
-                          <div className="col-lg-3" style={{ display: "flex" }}>
-                            <div className="col-lg-3 mt-1">
-                              <div className="primary-radio">
-                                <input
-                                  type="radio"
-                                  id="primary-radio"
-                                  name="gender"
-                                  value="Nữ"
-                                  checked={formValue.gender === "Nữ"} // Add this line
-                                  onChange={handleChange}
-                                  // checked
-                                />
-                                <label for="primary-radio"></label>
+                              <div className="col-lg-7">
+                                <label for="html">Nam</label>
                               </div>
                             </div>
-                            <div class="col-lg-7">
-                              <label for="html">Nữ</label>
+                            <div className="col-lg-3"></div>
+                            <div className="col-lg-3" style={{ display: "flex" }}>
+                              <div className="col-lg-3 mt-1">
+                                <div className="primary-radio">
+                                  <input
+                                    type="radio"
+                                    id="primary-radio"
+                                    name="gender"
+                                    value="Nữ"
+                                    checked={formValue.gender === "Nữ"} // Add this line
+                                    onChange={handleChange}
+                                  // checked
+                                  />
+                                  <label for="primary-radio"></label>
+                                </div>
+                              </div>
+                              <div class="col-lg-7">
+                                <label for="html">Nữ</label>
+                              </div>
                             </div>
+
                           </div>
-                          
+                          <div >
+                            <p
+                              style=
+                              {{
+                                margin: "0px 20px", color: 'red', fontSize: "14px", height: "0px"
+                              }}
+                              className="error-feedback">
+                              &nbsp; {formError.gender}
+                            </p>
+                          </div>
                         </div>
-                        <div >
-                        <p 
-                          style=
-                            {{ 
-                              margin: "0px 20px", color: 'red', fontSize: "14px", height:"0px" 
-                            }} 
-                          className="error-feedback">
-                          &nbsp; {formError.gender}
-                        </p>
-                        </div>
-                       </div>
-                        
+
                       </div>
                       <div
                         className="input-group-icon mt-5"
@@ -386,14 +397,14 @@ const handleInputChange = (event) => {
                               ))}
                             </select>
                           </div>
-                          <p 
-                              style=
-                                {{ 
-                                  margin: "0px 5px", color: 'red', fontSize: "14px", height:"0px" 
-                                }} 
-                              className="error-feedback">
-                              &nbsp; {formError.branchId}
-                            </p>
+                          <p
+                            style=
+                            {{
+                              margin: "0px 5px", color: 'red', fontSize: "14px", height: "0px"
+                            }}
+                            className="error-feedback">
+                            &nbsp; {formError.branchId}
+                          </p>
                         </div>
                       </div>
                       <div className="mt-110" style={{ display: "flex" }}>

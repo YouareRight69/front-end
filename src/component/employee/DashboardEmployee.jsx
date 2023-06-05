@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, Link } from "react-router-dom";
 import Page from '../../utils/Page';
 import DeleteButton from '../employee/DeleteButton';
@@ -6,7 +6,8 @@ import SearchForm from '../../Button/SearchForm';
 import DetailButton from '../../Button/DetailButton';
 import axios from 'axios';
 import { useLocation, useNavigate } from "react-router-dom";
-
+import Sidebar from "../common/admin/sidebar";
+import jwt_decode from "jwt-decode";
 function DashboardEmployee(props) {
   const url = "http://localhost:8080/api/employee/listAllEmp";
   const [list, setList] = useState({ data: { content: [] } });
@@ -15,70 +16,78 @@ function DashboardEmployee(props) {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
 
+  useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+    } else if (!["[ROLE_ADMIN]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+    }
+  }, []);
+
   function handleClick(page) {
     axios.get(`${url}?p=${page}&c=${condition}`, {
       headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Methods":
-              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-          "Authorization": "Bearer " + accessToken,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Methods":
+          "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+        "Authorization": "Bearer " + accessToken,
       },
-  }).then((res) => {
+    }).then((res) => {
       console.log(res);
       setList(res);
-  });
+    });
     // axios.get(`${url}?p=${page}&c=${condition}`).then(res => {
     //     setList(res);
     // });
   }
 
-    const onSubmit = (data) => {
-      setCondition(data);
-      console.log(setCondition);
-    }
+  const onSubmit = (data) => {
+    setCondition(data);
+    console.log(setCondition);
+  }
 
-    const rerender = () => {
-      setDisplay(!display);
-    }
+  const rerender = () => {
+    setDisplay(!display);
+  }
 
-    useEffect(() => {
-      // axios.get(`${url}?c=${condition}`).then(res => {
-      //     setList(res);
-      // })
-      axios.get(`${url}?c=${condition}`, {
-        headers: {
-            "Authorization": "Bearer " + accessToken,
-        },
-      }).then((res) => {
-          setList(res);
-          console.log(res);
-      });
-    }, [condition, display])
-    
-    console.log(list);
-  
-    const editEmp = (employeeId) => {
-      var myHeaders = new Headers();
+  useEffect(() => {
+    // axios.get(`${url}?c=${condition}`).then(res => {
+    //     setList(res);
+    // })
+    axios.get(`${url}?c=${condition}`, {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+      },
+    }).then((res) => {
+      setList(res);
+      console.log(res);
+    });
+  }, [condition, display])
+
+  console.log(list);
+
+  const editEmp = (employeeId) => {
+    var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", "Bearer " + accessToken);
-      var requestOptions = { method: "GET", redirect: "follow" ,headers: myHeaders};
-      fetch(
-        `http://localhost:8080/api/employee/edit?employeeId=${employeeId}`,
-        requestOptions
-      )
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw Error(response.status);
-        })
-        .then((result) => {
-          navigate("/emp/edit", { state: { result } });
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    };
+    var requestOptions = { method: "GET", redirect: "follow", headers: myHeaders };
+    fetch(
+      `http://localhost:8080/api/employee/edit?employeeId=${employeeId}`,
+      requestOptions
+    )
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw Error(response.status);
+      })
+      .then((result) => {
+        navigate("/emp/edit", { state: { result } });
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
   return (
     <div>
       {/* <PreLoader /> */}
@@ -100,9 +109,9 @@ function DashboardEmployee(props) {
         </div>
         {/* Hero End */}
         {/* Start Align Area */}
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2" style={{ backgroundColor: "bisque" }}>
-            Admin
+        <div className="row">
+          <div className="col-lg-2" style={{ backgroundColor: "black" }} >
+            <Sidebar />
           </div>
 
           <div className="col-lg-10">
@@ -111,21 +120,21 @@ function DashboardEmployee(props) {
                 <div className="blog_right_sidebar">
                   <aside
                     className="single_sidebar_widget search_widget col-lg-12"
-                    style={{ display: "flex"}}
+                    style={{ display: "flex" }}
                   >
                     <div className="col-lg-2"></div>
                     <div className="form-group col-8">
                       {/* <div className="input-group mb-3"> */}
-                        <SearchForm
-                            onSubmit={onSubmit}
-                        />
+                      <SearchForm
+                        onSubmit={onSubmit}
+                      />
                       {/* </div> */}
                     </div>
                   </aside>
                 </div>
-                <div class="mt-10 col-lg-10" style={{ display: "flex"}}>
+                <div class="mt-10 col-lg-10" style={{ display: "flex" }}>
                   <div class="mt-10 col-lg-4">
-                  <Link to="/employee-add">
+                    <Link to="/employee-add">
                       <div className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
                         Thêm mới nhân viên
                       </div>
@@ -137,7 +146,7 @@ function DashboardEmployee(props) {
                         Thêm mới lễ tân
                       </div>
                     </Link>
-                    </div>
+                  </div>
                 </div>
                 <div className="section-top-border">
                   <h3 className="mb-30">Danh sách nhân viên</h3>
@@ -162,64 +171,54 @@ function DashboardEmployee(props) {
                         </thead>
                         <tbody>
                           {list.data.content.length > 0 &&
-                            list.data.content.map((item) => 
-                              <tr style={{ marginTop: "5px" }} key={item.employeeId}>
-                                <th scope="row">{item.employeeId}</th>
-                                <td>{item.user.fullName}</td>
-                                <td>{item.user.dateOfBirth}</td>
-                                <td>{item.user.phoneNumber}</td>
-                                <td>{item.user.account.email}</td>
-                                <td>{item.user.gender}</td>
+                            list.data.content.map((item) =>
+                              <tr style={{ marginTop: "5px" }} key={item.employee.employeeId}>
+                                <th scope="row">{item.employee.employeeId}</th>
+                                <td>{item.fullName}</td>
+                                <td>{item.dateOfBirth}</td>
+                                <td>{item.phoneNumber}</td>
+                                <td>{item.account.email}</td>
+                                <td>{item.gender}</td>
                                 <td>
                                   {
-                                    item.type === "1" ? "Hair dresser" :
-                                    item.type === "2" ? "Skinner" :
-                                    item.type === "3" ? "Lễ tân" :
-                                    ""
+                                    item.employee.type === "1" ? "Hair dresser" :
+                                      item.employee.type === "2" ? "Skinner" :
+                                        item.employee.type === "3" ? "Lễ tân" :
+                                          ""
                                   }
                                 </td>
-                                <td>{item.branch.name}</td>
-                                <td style={{ display: "flex"}}>
-                              <DeleteButton url={url} id={item.employeeId} rerender={rerender} />
+                                <td>{item.employee.branch.name}</td>
+                                <td style={{ display: "flex" }}>
+                                  <DeleteButton url={url} id={item.employee.employeeId} rerender={rerender} />
 
-                              <button
-                                type="button"
-                                className="genric-btn success radius"
-                                style={{ marginLeft: "10px" }}
-                                onClick={() => editEmp(item.employeeId)}
-                                // data-bs-toggle="modal"
-                                // data-bs-target="#deleteModal"
-                              >
-                                <i className="fas fa-pencil-alt"></i>
-                              </button>
-                              {/* <EditButton url={url} id={ item.employeeId } /> */}
+                                  <button
+                                    type="button"
+                                    className="genric-btn success radius"
+                                    style={{ marginLeft: "10px" }}
+                                    onClick={() => editEmp(item.employee.employeeId)}
+                                  // data-bs-toggle="modal"
+                                  // data-bs-target="#deleteModal"
+                                  >
+                                    <i className="fas fa-pencil-alt"></i>
+                                  </button>
+                                  {/* <EditButton url={url} id={ item.employeeId } /> */}
 
-                              <DetailButton url={'employee'} id={item.employeeId} />
-                            </td>
+                                  <DetailButton url={'employee'} id={item.employee.employeeId} />
+                                </td>
                               </tr>
-                          )}
-                        
+                            )}
+
                         </tbody>
                       </table>
                     </div>
                   </div>
                 </div>
-                <Page 
+                <Page
                   totalPages={list.data.totalPages}
                   number={list.data.number}
                   condition={condition}
                   handleClick={handleClick}
                 />
-                <div style={{ display: "flex" }}>
-                  <div className="col-lg-10 ms-10 mb-50"></div>
-                  <div className="col-lg-2 ms-10 mb-50">
-                  <Link to="/employee">
-                            <div className="button rounded-0 primary-bg w-100 btn_1 boxed-btn">
-                              Trở về
-                            </div>
-                          </Link>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

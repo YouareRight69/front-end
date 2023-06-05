@@ -1,15 +1,14 @@
 import axios from "axios";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
-import { storage } from "../firebase/index.js";
 import ImageGallery from "../common/ImageGallery";
-
-const url = "http://localhost:8080/api/admin/branch";
-
+import { storage } from "../firebase/index.js";
+import Sidebar from "../common/admin/sidebar";
+import jwt_decode from "jwt-decode";
 function EditBranch() {
-  // const url = "http://localhost:8080/api/admin/branch";
+  const url = "http://localhost:8080/api/admin/branch";
   const { id } = useParams();
   const [target, setTarget] = useState({});
   const [dataUpdate, setDataUpdate] = useState({});
@@ -17,14 +16,31 @@ function EditBranch() {
   const [statusFromGallery, setStatusFromGallery] = useState();
   const [imagesArray, setImagesArray] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const accessToken = localStorage.getItem("accessToken");
 
+  useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+    } else if (!["[ROLE_ADMIN]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+    }
+  }, []);
   //Get data vào target
   useEffect(() => {
     if (id) {
-      axios.get(`${url}/${id}`).then((resp) => {
-        setTarget(resp.data);
-        setDataUpdate(resp.data);
-      });
+      axios
+        .get(`${url}/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+            Authorization: "Bearer " + accessToken,
+          },
+        })
+        .then((resp) => {
+          setTarget(resp.data);
+          setDataUpdate(resp.data);
+        });
     }
   }, [id]);
 
@@ -40,7 +56,10 @@ function EditBranch() {
   // Lấy đữ liệu được thay đổi trong gallery ( Bao gồm dữ liệu hiện tại, hoặc dữ liệu mới)
   useEffect(() => {
     if (imagesArray !== dataView) {
-      const updatedTarget = { ...dataUpdate, media: imagesArray.map((url) => url) };
+      const updatedTarget = {
+        ...dataUpdate,
+        media: imagesArray.map((url) => url),
+      };
       setDataUpdate(updatedTarget);
     }
   }, [imagesArray]);
@@ -71,8 +90,9 @@ function EditBranch() {
         .patch(`${url}/${id}`, requestData, {
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Methods": "PATCH",
-            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+            Authorization: "Bearer " + accessToken,
           },
         })
         .then((resp) => {
@@ -100,7 +120,10 @@ function EditBranch() {
 
   // Refresh
   const handleReset = () => {
-    setDataUpdate({});
+    setDataUpdate({
+      name: "",
+      address: "",
+    });
   };
 
   const handleUploadMultiImage = async () => {
@@ -152,9 +175,9 @@ function EditBranch() {
         </div>
         {/* Hero End */}
         {/* Services Area Start */}
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
-            Admin
+        <div className="row">
+          <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+            <Sidebar />
           </div>
           <div className="col-lg-10">
             <section className="service-area section-padding300">
@@ -234,13 +257,13 @@ function EditBranch() {
                         </Link>
                       </div>
                       <div className="col-lg-4 ms-10">
-                        {/* <button
+                        <button
                           className="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
                           type="reset"
                           onClick={handleReset}
                         >
                           Làm mới
-                        </button> */}
+                        </button>
                       </div>
                       <div className="col-lg-4">
                         <button

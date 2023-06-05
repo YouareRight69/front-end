@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect } from 'react'
 import { useState } from 'react';
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import Page from '../../utils/Page';
 import EditButton from '../../Button/EditButton';
 import DeleteButton from '../../Button/DeleteButton';
@@ -9,16 +9,20 @@ import SearchForm from '../../Button/SearchForm';
 import DetailButton from '../../Button/DetailButton';
 import jwt_decode from "jwt-decode";
 import accounting from "accounting";
+import Sidebar from "../common/admin/sidebar";
 
 function UserList() {
-
+    const navigate = useNavigate();
     const url = "http://localhost:8080/api/hairService";
     const [list, setList] = useState({ data: { content: [] } });
     const [condition, setCondition] = useState("");
     const [display, setDisplay] = useState(true);
     const accessToken = localStorage.getItem("accessToken");
 
+
+
     function handleClick(page) {
+
         axios.get(`${url}?p=${page}&c=${condition}`, {
             headers: {
                 "Content-Type": "application/json",
@@ -42,6 +46,12 @@ function UserList() {
     }
 
     useEffect(() => {
+        if (accessToken == null) {
+            navigate("/login");
+        } else if (!["[ROLE_ADMIN]"].includes(jwt_decode(accessToken).roles)) {
+            navigate("/main")
+            return
+        }
         axios.get(`${url}?c=${condition}`, {
             headers: {
                 "Authorization": "Bearer " + accessToken,
@@ -68,9 +78,9 @@ function UserList() {
                     </div>
                 </div>
             </div>
-            <div style={{ display: "flex" }}>
-                <div className="col-lg-2" style={{ backgroundColor: "bisque" }}>
-                    Admin
+            <div className='row'>
+                <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+                    <Sidebar />
                 </div>
 
                 <div className="col-lg-10">
@@ -98,6 +108,7 @@ function UserList() {
                                 <div className="col-lg-3 ms-10"></div>
                             </div>
                             <div className="section-top-border">
+                                <h3 className="mb-30">Danh sách dịch vụ</h3>
                                 <div>
                                     <div className="progress-table" style={{ 'textAlign': 'center' }}>
                                         <table className="table table-hover" id="table">

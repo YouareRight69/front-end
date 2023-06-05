@@ -1,15 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import jwt_decode from "jwt-decode";
-export default function Selectservice() {
+
+export default function PaymentServiceEdit() {
   const selectedService = {
     border: "1px gray solid",
     borderRadius: "5px",
     display: "inline-block",
     whiteSpace: "break-word",
   };
-  const accessToken = localStorage.getItem("accessToken");
+
   const [selectedArr, setSelectedArr] = useState([]);
   const [serviceData, setServiceData] = useState();
   const [oldSelect, setOldSelect] = useState([]);
@@ -19,13 +19,6 @@ export default function Selectservice() {
   const location = useLocation();
 
   useEffect(() => {
-    if (accessToken == null) {
-      navigate("/login");
-    } else if (!["[ROLE_CUSTOMER]", "[ROLE_RECEPTIONIST]"].includes(jwt_decode(accessToken).roles)) {
-      navigate("/main")
-      return
-    }
-
     const data = location.state.selectService;
     setOldSelect(location.state.selectService);
     setId(location.state.id);
@@ -59,14 +52,14 @@ export default function Selectservice() {
 
   const handleFinish = () => {
     if (id) {
-      navigate("/booking/" + id, {
+      navigate("/payment-edit/" + id, {
         state: {
           selectService: selectedArr,
           formData: location.state.formData,
         },
       });
     } else {
-      navigate("/booking", {
+      navigate("/payment-edit", {
         state: {
           selectService: selectedArr,
           formData: location.state.formData,
@@ -76,7 +69,7 @@ export default function Selectservice() {
   };
 
   const handleBack = () => {
-    navigate("/booking", {
+    navigate("/payment-edit", {
       state: { selectService: oldSelect, formData: location.state.formData },
     });
   };
@@ -84,19 +77,6 @@ export default function Selectservice() {
 
   return (
     <>
-      <div class="slider-area2">
-        <div class="slider-height2 d-flex align-items-center">
-          <div class="container">
-            <div class="row">
-              <div class="col-xl-12">
-                <div class="hero-cap hero-cap2 pt-70 text-center">
-                  <h2>Chọn dịch vụ</h2>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <section className="service-area p-3">
         <div className="container">
           <div className="row">
@@ -159,12 +139,7 @@ export default function Selectservice() {
                                   className="flaticon-healthcare-and-medical"
                                   src={item.media[0]?.url}
                                   alt="lỗi"
-                                  style={{
-                                    width: "280px",
-                                    maxWidth: "300px",
-                                    minHeight: "170px",
-                                    maxHeight: "200px",
-                                  }}
+                                  style={{ width: "280px" }}
                                 ></img>
                               </div>
                               <div className="service-cap">

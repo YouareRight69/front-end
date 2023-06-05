@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
-
+import jwt_decode from "jwt-decode";
 import 'react-toastify/dist/ReactToastify.css';
 
 function Edit() {
@@ -25,6 +25,8 @@ function Edit() {
   useEffect(() => {
     if (accessToken == null) {
       navigate("/login");
+    } else if (!["[ROLE_ADMIN]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
     }
   }, []);
 
@@ -98,9 +100,9 @@ function Edit() {
   useMemo(() => {
     axios.get("http://localhost:8080/api/admin/branch", {
       headers: {
-          "Authorization": "Bearer " + accessToken,
+        "Authorization": "Bearer " + accessToken,
       },
-  }).then((resp) => {
+    }).then((resp) => {
       setBranch(resp.data.content);
     });
   }, []);
@@ -159,7 +161,7 @@ function Edit() {
                 </div>
               </div>
               <div className="col-lg-8 col-md-8">
-              <h3 className="mb-30">Chỉnh sửa thông tin nhân viên</h3>
+                <h3 className="mb-30">Chỉnh sửa thông tin nhân viên</h3>
                 <form action="#">
                   <div className="mt-20">
                     <input
@@ -183,7 +185,7 @@ function Edit() {
                   </div>{" "}
                   <div className="mt-20">
                     <input
-                      type="number"
+                      type="text"
                       name="phoneNumber"
                       className="single-input-namnb6"
                       style={{ border: "1px solid #e5e6e9" }}
