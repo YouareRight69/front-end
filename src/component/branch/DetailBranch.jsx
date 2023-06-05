@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import ImageGalleryEdit from "../common/ImageGalleryEdit";
 import Sidebar from "../common/admin/sidebar";
-
+import jwt_decode from "jwt-decode";
 function DetailBranch(props) {
   const url = "http://localhost:8080/api/admin/branch";
   const accessToken = localStorage.getItem("accessToken");
@@ -12,7 +12,13 @@ function DetailBranch(props) {
   const [dataView, setDataView] = useState([]);
 
   const navigate = useNavigate();
-
+  useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+    } else if (!["[ROLE_ADMIN]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+    }
+  }, []);
   useEffect(() => {
     if (id) {
       console.log(accessToken);
@@ -57,8 +63,8 @@ function DetailBranch(props) {
         </div>
         {/* Hero End */}
         {/* Services Area Start */}
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2">
+        <div className='row'>
+          <div className="col-lg-2" style={{ backgroundColor: "black" }}>
             <Sidebar />
           </div>
           <div className="col-lg-10">

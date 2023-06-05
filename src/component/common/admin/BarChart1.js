@@ -15,7 +15,9 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+
 import Sidebar from "./sidebar";
+
 ChartJS.register(...registerables);
 
 // import { useNavigate } from "react-router-dom";
@@ -23,10 +25,27 @@ ChartJS.register(...registerables);
 export default function BarChart1() {
   const accessToken = localStorage.getItem("accessToken");
   const [chart, setChart] = useState([]);
+  const [bychart, setByChart] = useState([]);
+  const [month, setMonth] = useState(["1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",])
   const [user, setUser] = useState([]);
   const [total, setTotal] = useState(0);
   const navigate = useNavigate();
+  const [selectedValue, setSelectedValue] = useState('BRA001');
   const [limit, setLimit] = useState([]);
+
+  const [branch, setBranch] = useState([]);
+
 
 
   // const navigate = useNavigate();
@@ -49,9 +68,13 @@ export default function BarChart1() {
 
 
   useEffect(() => {
-    const role = jwt_decode(accessToken);
-    if (role.roles != "[ROLE_ADMIN]") {
-      navigate("/main");
+
+    if (accessToken == null) {
+      navigate("/login");
+      return
+    } else if (!["[ROLE_ADMIN]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+      return
     } else {
       loadChart();
       loadUser();
@@ -59,6 +82,7 @@ export default function BarChart1() {
       loadLimit();
     }
   }, []);
+
 
   const loadChart = async () => {
     const result = await axios.get(
@@ -88,9 +112,9 @@ export default function BarChart1() {
       }
     );
     setUser(result.data[0].totalUser);
-    console.log(result.data);
-  };
 
+  };
+  console.log(bychart)
   const loadTotal = async () => {
     await axios
       .get("http://localhost:8080/api/admin/chart/total", {
@@ -102,11 +126,39 @@ export default function BarChart1() {
         },
       })
       .then((res) => {
-        console.log(res.data[0]);
-        // setTotal(res.data[0].total);
+
+        setTotal(res.data[0]?.total);
       });
   };
-  // console.log(total);
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    const formData = Object.fromEntries(new FormData(event.target));
+    const result = await axios.get(
+      `http://localhost:8080/api/admin/chart/checkDay?sd=${formData.startDay}&ed=${formData.endDay}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods":
+            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          Authorization: "Bearer " + accessToken,
+        },
+      }
+    );
+    let array = [];
+
+    for (let i = +formData.startDay; i <= +formData.endDay; i++) {
+      console.log("i now : ", i);
+      array.push(i);
+    }
+    setChart(result.data);
+    console.log(array);
+    setMonth(array);
+  }
+
+
+
+
   const loadLimit = async () => {
     const result = await axios.get(
       "http://localhost:8080/api/admin/chart/limmit",
@@ -122,6 +174,44 @@ export default function BarChart1() {
     setLimit(result.data);
   };
 
+
+  const loadBranch = async () => {
+    const result = await axios.get(
+      "http://localhost:8080/api/admin/chart/branch",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods":
+            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          Authorization: "Bearer " + accessToken,
+        },
+      }
+
+    );
+    setBranch(result.data);
+  };
+
+  const loadFindByChart = async () => {
+    const result = await axios.get(
+      `http://localhost:8080/api/admin/chart/FindBychart?branch=${selectedValue}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods":
+            "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          Authorization: "Bearer " + accessToken,
+        },
+      }
+    );
+    setByChart(result.data);
+
+  };
+
+  const handleSelectvalue = (event) => {
+    setSelectedValue(event.target.value);
+  };
+
+
   const [selectedOption, setSelectedOption] = useState("");
 
   const handleSelectChange = (event) => {
@@ -130,31 +220,24 @@ export default function BarChart1() {
 
   const getThongKe = () => {
     return {
-      labels: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
-
+      labels: month,
       datasets: [
         {
-          label: "User Gained",
+          label: "Doanh thu theo tháng",
           data: chart.map((data) => data.quantity),
           backgroundColor: [
+            "#FFA500",
+            "#FFFFFF",
             "rgba(75,192,192,1)",
-            "#ecf0f1",
-            "#50AF95",
-            "#f3ba2f",
-            "#2a71d10",
+            "#800080",
+            "#FFFF00",
+            "#000000",
+            "#FFFFFF",
+            "#964B00",
+            "#0000FF",
+            "#00FFFF",
+            "#FFA500",
+            "#FFC0CB",
           ],
           borderColor: "black",
           borderWidth: 2,
@@ -162,6 +245,60 @@ export default function BarChart1() {
       ],
     };
   };
+
+  const getThongKeBychart = () => {
+    return {
+      labels: bychart.map(item => item.month),
+
+      datasets: [
+        {
+          label: "Chart Month",
+          data: bychart.map((data) => data.quantity),
+          backgroundColor: [
+            "#FFFFFF",
+            "rgba(75,192,192,1)",
+            "#800080",
+            "#FFFF00",
+            "#FFFFFF",
+            "#964B00",
+            "#0000FF",
+            "#00FFFF",
+            "#FFA500",
+            "#FFC0CB",
+            "#81f32f",
+            "rgba(75,192,192,1)"
+          ],
+          borderColor: "black",
+          borderWidth: 2,
+        },
+      ],
+    };
+  };
+
+  useEffect(() => {
+    loadChart();
+    loadUser();
+    loadTotal();
+    loadLimit();
+    loadBranch();
+    loadFindByChart();
+  }, []);
+
+
+  useEffect(() => {
+    loadFindByChart();
+  }, [selectedValue]);
+
+
+
+  useEffect(() => {
+    const role = jwt_decode(accessToken);
+    if (role.roles !== "[ROLE_ADMIN]") {
+      navigate("/main");
+    }
+
+  }, [selectedValue, chart, month]);
+
   return (
     <div className="">
       <Header />
@@ -179,36 +316,7 @@ export default function BarChart1() {
         </div>
       </div>
       <div className="row">
-        <div className="col-2 ">
-          {/* <Sidebar /> */}
-          {/* <nav
-            className="nav flex-column"
-            style={{
-              color: "white",
-              backgroundColor: "black",
-              height: "100%",
-              alignItems: "baseline",
-            }}
-          >
-            <a onClick={toCustomer} className="nav-link m-3 text-center">
-              Quản lý khách hàng
-            </a>
-            <a onClick={toEmployee} className="nav-link m-3 text-center">
-              {" "}
-              Quản lý nhân viên
-            </a>
-            <a onClick={toService} className="nav-link m-3 text-center">
-              Quản lý dịch vụ
-            </a>
-            <a onClick={toBranch} className="nav-link m-3 text-center">
-              Quản lý chi nhánh
-            </a>
-            <a onClick={toChart} className="nav-link m-3 text-center">
-              Quản lý thông kê
-            </a>
-            <a className="nav-link m-3 text-center">Quản lý thanh toán</a>
-            <a className="nav-link m-3 text-center">Quản lý đặt lịch </a>
-          </nav> */}
+        <div className="col-lg-2" style={{ backgroundColor: "black" }}>
           <Sidebar />
         </div>
         <div className="col-10 pt-5">
@@ -217,19 +325,28 @@ export default function BarChart1() {
               <div class="col">
                 <p class="form-label">Loại thời gian</p>
                 <select class="form-select">
-                  <option value="">Báo cáo theo tuần</option>
                   <option value="">Báo cáo theo tháng</option>
-                  <option value="">Báo cáo theo năm</option>
+
+
                 </select>
               </div>
               <div class="col">
                 <p class="form-label">Chi nhánh</p>
-                <select class="form-select">
-                  <option value="">Chi nhánh Hòa Khánh</option>
-                  <option value="">Chi nhánh Thanh Khê</option>
-                  <option value="">Chi nhánh Sơn Trà</option>
+                <select class="form-select" onChange={handleSelectvalue}
+                >
+                  {branch.map((branch1) => (
+                    <option
+                      value={branch1.branchId}
+                    >
+                      {branch1.address}
+                    </option>
+                  ))}
                 </select>
+
               </div>
+
+
+
               <div class="col">
                 <p class="form-label">Loại biểu đồ</p>
                 <select
@@ -242,33 +359,61 @@ export default function BarChart1() {
                 </select>
               </div>
             </div>
+            <form onSubmit={onSubmit}>
+              <div className="row pt-5">
+                <div class="col d-flex justify-content-between" style={{ height: "35px" }}>
 
-            <div className="row pt-5">
-              <div class="col d-flex justify-content-between">
-                <p class="form-label">Ngày bắt đầu</p>
-                <input type="date" style={{ width: "54%" }} />
-              </div>
-              <div class="col d-flex justify-content-between">
-                <p class="form-label">Ngày kết thúc</p>
-                <input type="date" style={{ width: "54%" }} />
-              </div>
-              <div class="col ">
-                <div class="position-relative ">
-                  <div class="position-absolute top-50 start-50 translate-middle d-flex justify-content-center">
-                    <button
-                      type="button"
-                      class="btn btn-success"
-                      data-bs-toggle="modal"
-                      data-bs-target="#exampleModal"
-                      style={{ height: "45px" }}
-                    >
-                      Phân Tích
-                    </button>
+                  <select class="custom-select" name="startDay" style={{ height: "30px" }}>
+                    <option selected>Vui lòng chọn</option>
+                    <option value="1">Tháng 1</option>
+                    <option value="2">Tháng 2</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="4">Tháng 4</option>
+                    <option value="5">Tháng 5</option>
+                    <option value="6">Tháng 6</option>
+                    <option value="7">Tháng 7</option>
+                    <option value="8">Tháng 8</option>
+                    <option value="9">Tháng 9</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12">Tháng 12</option>
+                  </select>
+                </div>
+                <div class="col d-flex justify-content-between" style={{ height: "35px" }}>
+                  <select class="custom-select" name="endDay" style={{ height: "30px" }}>
+                    <option selected>Vui lòng chọn</option>
+                    <option value="1">Tháng 1</option>
+                    <option value="2">Tháng 2</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="4">Tháng 4</option>
+                    <option value="5">Tháng 5</option>
+                    <option value="6">Tháng 6</option>
+                    <option value="7">Tháng 7</option>
+                    <option value="8">Tháng 8</option>
+                    <option value="9">Tháng 9</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12">Tháng 12</option>
+                  </select>
+                </div>
+                <div class="col ">
+                  <div class="position-relative ">
+                    <div class="position-absolute top-50 start-50 translate-middle d-flex justify-content-center">
+                      <button
+                        type="submit"
+                        class="btn btn-success"
+                        style={{ height: "45px" }}
+                      >
+                        Phân Tích
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </form>
+
           </div>
+
 
           <div className="d-flex pt-5">
             <div className="col-4">
@@ -305,15 +450,15 @@ export default function BarChart1() {
                       <FontAwesomeIcon icon={faUser} size="xl" />
                     </div>
                   </div>
-                  <div className="progress " style={{ marginTop: "20px" }}>
-                    <div
+                  <div className="" style={{ marginTop: "20px" }}>
+                    {/* <div
                       className="progress-bar progress-bar-striped bg-info"
                       role="progressbar"
                       style={{ width: `${user}%` }}
                       aria-valuenow="50"
                       aria-valuemin="0"
                       aria-valuemax="1000"
-                    ></div>
+                    ></div> */}
                   </div>
                 </div>
               </div>
@@ -334,7 +479,7 @@ export default function BarChart1() {
                       <h4 className="info-box-text">DOANH THU</h4>
                       <div>
                         {" "}
-                          {total && <h1> ${total} </h1>}
+                        {total && <h1> ${total} </h1>}
                       </div>
                     </div>
                     <div
@@ -402,39 +547,31 @@ export default function BarChart1() {
                 </div>
               </div>
             </div>
-            {/* <div className='col-3'>
-                            <div>
-                                <div className="info-box shadow-lg primary" style={{ borderRadius: "10px", padding: '20px', width: '250px', height: '127.98px' }} >
-                                    <div className='' style={{ display: 'flex' }}>
-                                        <div className="info-box-content">
-                                            <h4 className="info-box-text">TOTAL PROFIT</h4>
-                                            <div> <h1> ${total} </h1></div>
-                                        </div>
-                                        <div className="info-box-icon " style={{ marginLeft: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#6366f1', borderRadius: '50%', width: '60px' }} >
-                                            <FontAwesomeIcon icon={faDollar} size="xl" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> */}
+
           </div>
 
+          {/* <div className="container-fluid" style={{ height: '250px' }}>
+            <Bar data={getThongKe()} />
+          </div> */}
           <div className="pt-5">
             <div className="d-flex">
-              <div className="col-6 Regular shadow p-5">
-                <Pie data={getThongKe()} />
+              <div className="col-1"></div>
+              <div className="col-4 Regular shadow p-5">
+
+                {/* {selectedValue ===  && <Pie data={getThongKeBychart()} />} */}
+                <Pie data={getThongKeBychart()} />
               </div>
+              <div className="col-1"></div>
               <div className="col-5 shadow">
                 <div>
                   {selectedOption === "1" && <Line data={getThongKe()} />}
                   {selectedOption === "2" && <Bar data={getThongKe()} />}
-
+                  <h3 style={{ textAlign: 'center', marginTop: "20px" }}>Khách hàng thân thiết</h3>
                   <table class="table">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Ho Tên</th>
-                        <th scope="col">SĐT</th>
+                        <th scope="col">Họ Tên</th>
                         <th scope="col">Số tiền</th>
                       </tr>
                     </thead>
@@ -444,9 +581,7 @@ export default function BarChart1() {
                           <th scope="row" key={index}>
                             {staff.user_id}
                           </th>
-
                           <td>{staff.full_name}</td>
-                          <td>{staff.phone_number}</td>
                           <td>{staff.total}</td>
                         </tr>
                       ))}
@@ -454,10 +589,11 @@ export default function BarChart1() {
                   </table>
                 </div>
               </div>
+              <div className="col-1"></div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }

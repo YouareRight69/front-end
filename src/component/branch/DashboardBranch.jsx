@@ -1,20 +1,27 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SearchForm from "../../Button/SearchForm";
 import DeleteButton from "../button/DeleteButton";
 import DetailButton from "../button/DetailButton";
 import EditButton from "../button/EditButton";
 import Page from "../common/Page";
 import Sidebar from "../common/admin/sidebar";
-
+import jwt_decode from "jwt-decode";
 function DashboardBranch(props) {
+  const navigate = useNavigate()
   const [list, setList] = useState({ data: { content: [] } });
   const url = "http://localhost:8080/api/admin/branch";
   const [condition, setCondition] = useState("");
   const [display, setDisplay] = useState(true);
   const accessToken = localStorage.getItem("accessToken");
-
+  useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+    } else if (!["[ROLE_ADMIN]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+    }
+  }, []);
   function handleClick(page) {
     axios
       .get(`${url}?p=${page}&c=${condition}`, {
@@ -73,8 +80,8 @@ function DashboardBranch(props) {
         </div>
         {/* Hero End */}
         {/* Start Align Area */}
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2">
+        <div className='row'>
+          <div className="col-lg-2" style={{ backgroundColor: "black" }}>
             <Sidebar />
           </div>
 

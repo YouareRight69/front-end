@@ -7,6 +7,8 @@ import DetailButton from "../button/DetailButton";
 import EditButton from "../button/EditButton";
 import Page from "../common/Page";
 import jwt_decode from "jwt-decode";
+import Sidebar from "../common/admin/sidebar";
+import { useNavigate } from "react-router-dom";
 
 function InvoiceHistory(props) {
   const [condition, setCondition] = useState("");
@@ -15,7 +17,7 @@ function InvoiceHistory(props) {
   const urlInvoiceSuccess = "http://localhost:8080/api/invoice-management/success";
   const accessToken = localStorage.getItem("accessToken");
   // accesToken phai ton tai
-  const roles=jwt_decode(accessToken).roles;
+  const roles = jwt_decode(accessToken).roles;
   const [dataFirst, setDataFirst] = useState();
   const [status, setStatus] = useState("");
   const [display, setDisplay] = useState(true);
@@ -23,7 +25,7 @@ function InvoiceHistory(props) {
   const searchParams = new URLSearchParams(pay.search);
   const vnpResponseCode = searchParams.get("vnp_ResponseCode");
   const vnp_TxnRef = searchParams.get("vnp_TxnRef");
-
+  const navigate = useNavigate()
   const onSubmit = (data) => {
     setCondition(data);
   };
@@ -32,6 +34,13 @@ function InvoiceHistory(props) {
     setDisplay(!display);
   };
 
+  useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+    } else if (!["[ROLE_CUSTOMER]", "[ROLE_RECEPTIONIST]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+    }
+  })
   useEffect(() => {
     if (vnpResponseCode === "00") {
       axios
@@ -76,6 +85,8 @@ function InvoiceHistory(props) {
       .then((res) => {
         setList(res);
         setDataFirst(res.data.content);
+      }).catch((err) => {
+        console.log(err);
       });
   }
 
@@ -97,9 +108,9 @@ function InvoiceHistory(props) {
             </div>
           </div>
         </div>
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2">
-            Admin
+        <div className='row'>
+          <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+            <Sidebar />
           </div>
 
           <div className="col-lg-10">
@@ -171,7 +182,7 @@ function InvoiceHistory(props) {
                                     type={"mã hoá đơn"}
                                     rerender={rerender}
                                   />
-                                {item.status === "0" && <EditButton
+                                  {item.status === "0" && <EditButton
                                     url={"payment"}
                                     id={item.booking.bookingId}
                                   />}

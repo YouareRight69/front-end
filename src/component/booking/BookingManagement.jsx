@@ -12,6 +12,14 @@ import DetailInfoButton from "./DetailButton";
 import Sidebar from "../common/admin/sidebar";
 
 export default function BookingManagement() {
+  useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+      return;
+    } else if (accessToken != null && !["[ROLE_CUSTOMER]", "[ROLE_RECEPTIONIST]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+    }
+  }, []);
   const [list, setList] = useState({ data: { content: [] } });
   const url = "http://localhost:8080/api/booking-management";
   const [condition, setCondition] = useState("");
@@ -21,6 +29,9 @@ export default function BookingManagement() {
   const searchParams = new URLSearchParams(pay.search);
   const vnpResponseCode = searchParams.get("vnp_ResponseCode");
   const accessToken = localStorage.getItem("accessToken");
+  console.log(accessToken);
+
+
 
   function handleClick(page) {
     axios
@@ -88,7 +99,7 @@ export default function BookingManagement() {
     }
   }, [condition, display]);
 
-  const handleDeleteModal = () => {};
+  const handleDeleteModal = () => { };
 
   useEffect(() => {
     if (vnpResponseCode === "00") {
@@ -124,11 +135,10 @@ export default function BookingManagement() {
           )}
 
           <div
-            className={` ${
-              jwt_decode(accessToken).roles == "[ROLE_RECEPTIONIST]"
-                ? "col-lg-10"
-                : "container"
-            }`}
+            className={` ${jwt_decode(accessToken).roles == "[ROLE_RECEPTIONIST]"
+              ? "col-lg-10"
+              : "container"
+              }`}
           >
             <div className="whole-wrap">
               <div className="container-fluid box_1170">

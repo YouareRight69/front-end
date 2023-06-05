@@ -8,9 +8,18 @@ import { v4 } from "uuid";
 import ImageGallery from "../common/ImageGallery";
 import Sidebar from "../common/admin/sidebar";
 import { storage } from "../firebase/index.js";
+import jwt_decode from "jwt-decode";
 const accessToken = localStorage.getItem("accessToken");
 
 function AddNewBranch(props) {
+
+  useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+    } else if (!["[ROLE_ADMIN]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+    }
+  }, []);
   const url = "http://localhost:8080/api/admin/branch";
   const { id } = useParams();
   const [target, setTarget] = useState({
@@ -79,7 +88,7 @@ function AddNewBranch(props) {
       });
   };
 
-  const handleStatusFromGallery = (data) => {};
+  const handleStatusFromGallery = (data) => { };
 
   // Refresh
   const handleReset = () => {
@@ -124,8 +133,8 @@ function AddNewBranch(props) {
   };
 
   return (
-    <>
-      <main>
+    <React.Fragment>
+      <main >
         {/* Hero Start */}
         <div className="slider-area2">
           <div className="slider-height2 d-flex align-items-center">
@@ -142,8 +151,8 @@ function AddNewBranch(props) {
         </div>
         {/* Hero End */}
         {/* Services Area Start */}
-        <div style={{ display: "flex" }}>
-          <div className="col-lg-2">
+        <div className='row'>
+          <div className="col-lg-2" style={{ backgroundColor: "black" }}>
             <Sidebar />
           </div>
           <div className="col-lg-10">
@@ -248,8 +257,7 @@ function AddNewBranch(props) {
         </div>
         {/* Services Area End */}
       </main>
-      ;
-    </>
+    </React.Fragment>
   );
 }
 

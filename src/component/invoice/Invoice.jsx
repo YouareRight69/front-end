@@ -3,7 +3,7 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 function Payment() {
   const user = "http://localhost:8080/api/user/detail";
@@ -18,8 +18,15 @@ function Payment() {
   const [timeInvoice, setTimeInvoice] = useState();
   const params = useParams();
   const { id } = params;
-
+  const navigate = useNavigate();
   useEffect(() => {
+
+    if (accessToken == null) {
+      navigate("/login");
+    } else if (!["[ROLE_CUSTOMER]", "[ROLE_RECEPTIONIST]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+    }
+
     axios
       .get(`${test}?id=${id}`, {
         headers: {

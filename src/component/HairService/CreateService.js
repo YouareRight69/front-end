@@ -27,6 +27,15 @@ function CreateService() {
     const navigate = useNavigate();
     const accessToken = localStorage.getItem("accessToken");
 
+
+    useEffect(() => {
+        if (accessToken == null) {
+            navigate("/login");
+        } else if (!["[ROLE_ADMIN]"].includes(jwt_decode(accessToken).roles)) {
+            navigate("/main")
+        }
+    }, []);
+
     const onSubmit = () => {
         console.log(target)
         // e.preventDefault();
@@ -38,7 +47,7 @@ function CreateService() {
             }
         }).then(resp => {
             navigate("/listService");
-            toast.success("Thêm mới thành công"); 
+            toast.success("Thêm mới thành công");
         }).catch(error => {
             if (error.response) {
                 // Xử lý lỗi phản hồi từ API
@@ -108,8 +117,8 @@ function CreateService() {
         setUploading(false);
         onSubmit();
     };
-    
-  const handleStatusFromGallery = (data) => {};
+
+    const handleStatusFromGallery = (data) => { };
 
     // const handleStatusFromGallery = (data) => { };
 
@@ -128,9 +137,9 @@ function CreateService() {
                     </div>
                 </div>
             </div>
-            <div style={{ display: "flex" }}>
-                <div className="col-lg-2" style={{ backgroundColor: "antiquewhite" }}>
-                <Sidebar />
+            <div className='row'>
+                <div className="col-lg-2" style={{ backgroundColor: "black" }}>
+                    <Sidebar />
                 </div>
                 <div className="col-lg-10">
                     <section id="section">
@@ -198,7 +207,7 @@ function CreateService() {
                                                 {valid.description && <span className="span-huyentn">{valid.description}</span>}
                                             </div>
                                         </div>
-                                        
+
                                         <div className="mt-10-huyentn" style={{ display: 'flex' }}>
                                             <div className="col-lg-3 col-md-4">
                                                 <label htmlFor="type" className="form-label">Loại dịch vụ</label>

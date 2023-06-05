@@ -35,7 +35,18 @@ export default function Booking() {
   const [errors, setErrors] = useState({});
   console.log(id);
   console.log(accessToken);
+
+
   //useEffect
+  useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+    } else if (!["[ROLE_CUSTOMER]", "[ROLE_RECEPTIONIST]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+    }
+  }, []);
+
+
   useEffect(() => {
     if (location.state != null && location.state.formData != null) {
       setFormData({ ...location.state.formData, serviceList: serviceList });
@@ -68,7 +79,7 @@ export default function Booking() {
       axios
         .get(
           "http://localhost:8080/api/emp/booking/info/list-employee-of-branch?branchId=" +
-            formData.branch
+          formData.branch
         )
         .then((res) => {
           console.log(res);
@@ -95,9 +106,9 @@ export default function Booking() {
       axios
         .get(
           "http://localhost:8080/api/emp/booking/info/busy-list?employeeId=" +
-            selectStyle +
-            "&day=" +
-            selectDay
+          selectStyle +
+          "&day=" +
+          selectDay
         )
         .then((res) => {
           setBusyTime(res.data);
@@ -270,7 +281,7 @@ export default function Booking() {
       errors.branch = "Vui lòng chọn chi nhánh";
     }
 
-   if (jwt_decode(accessToken).roles.includes("ROLE_RECEPTIONIST")) {
+    if (jwt_decode(accessToken).roles.includes("ROLE_RECEPTIONIST")) {
       if (!formData.customerName || formData.customerName?.trim() == "") {
         errors.customerName = "Vui lòng nhập tên khách hàng";
       }
@@ -302,7 +313,6 @@ export default function Booking() {
       errors.workTimeId = "Vui lòng chọn giờ";
     }
 
-    // If there are errors, set the state and display the error messages
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
     } else {
@@ -474,23 +484,23 @@ export default function Booking() {
                   {jwt_decode(accessToken).roles.includes(
                     "ROLE_RECEPTIONIST"
                   ) && (
-                    <div className="input-group-icon mt-10">
-                      <h1>Tên khách hàng đặt lịch</h1>
-                      <input
-                        onChange={(event) =>
-                          handleInputName(event.target.value)
-                        }
-                        className="single-textarea"
-                        placeholder="Vui lòng nhập tên khách hàng..."
-                        defaultValue={formData.customerName}
-                      />
-                      {errors.customerName && (
-                        <span className="error-message">
-                          {errors.customerName}
-                        </span>
-                      )}
-                    </div>
-                  )}
+                      <div className="input-group-icon mt-10">
+                        <h1>Tên khách hàng đặt lịch</h1>
+                        <input
+                          onChange={(event) =>
+                            handleInputName(event.target.value)
+                          }
+                          className="single-textarea"
+                          placeholder="Vui lòng nhập tên khách hàng..."
+                          defaultValue={formData.customerName}
+                        />
+                        {errors.customerName && (
+                          <span className="error-message">
+                            {errors.customerName}
+                          </span>
+                        )}
+                      </div>
+                    )}
                   <div className="input-group-icon mt-10">
                     <h1>Chọn dịch vụ</h1>
                     <div>
@@ -587,14 +597,14 @@ export default function Booking() {
                           {workingTimeData?.map((time, index) => {
                             const isBusy =
                               formData.styleId == oldInfo?.styleId &&
-                              formData.bookingDate == oldInfo?.bookingDate
+                                formData.bookingDate == oldInfo?.bookingDate
                                 ? time.workingTimeId != oldInfo?.workTimeId &&
-                                  busyTime.includes(
-                                    time.timeZone.substring(0, 5)
-                                  )
+                                busyTime.includes(
+                                  time.timeZone.substring(0, 5)
+                                )
                                 : busyTime.includes(
-                                    time.timeZone.substring(0, 5)
-                                  );
+                                  time.timeZone.substring(0, 5)
+                                );
                             const isSelected =
                               formData.workTimeId === time.workingTimeId;
 
@@ -604,17 +614,16 @@ export default function Booking() {
                               backgroundColor: isSelected
                                 ? "#d19f68"
                                 : isBusy
-                                ? "#888888"
-                                : null,
+                                  ? "#888888"
+                                  : null,
                             };
 
                             return (
                               <button
                                 key={index}
                                 type="button"
-                                className={`genric-btn col-2 time-select ${
-                                  isSelected ? "" : "success-border"
-                                }`}
+                                className={`genric-btn col-2 time-select ${isSelected ? "" : "success-border"
+                                  }`}
                                 style={buttonStyle}
                                 onClick={() => handleClickTime(time)}
                                 disabled={isBusy}
@@ -648,7 +657,7 @@ export default function Booking() {
                           {selectBranch != "" &&
                             dataSkinner?.map((skinner, index) =>
                               skinner.employee.employeeId ==
-                              formData.skinnerId ? (
+                                formData.skinnerId ? (
                                 <option
                                   selected={true}
                                   key={index}

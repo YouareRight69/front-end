@@ -71,7 +71,7 @@ export default function PaymentEdit() {
       axios
         .get(
           "http://localhost:8080/api/emp/booking/info/list-employee-of-branch?branchId=" +
-            formData.branch
+          formData.branch
         )
         .then((res) => {
           console.log(res);
@@ -100,9 +100,9 @@ export default function PaymentEdit() {
       axios
         .get(
           "http://localhost:8080/api/emp/booking/info/busy-list?employeeId=" +
-            selectStyle +
-            "&day=" +
-            selectDay
+          selectStyle +
+          "&day=" +
+          selectDay
         )
         .then((res) => {
           setBusyTime(res.data);
@@ -280,7 +280,7 @@ export default function PaymentEdit() {
             });
 
             navigate("/payment/" + id, {
-              state: {formData: location.state.formData}
+              state: { formData: location.state.formData }
             });
           })
           .catch((error) => {
@@ -450,14 +450,14 @@ export default function PaymentEdit() {
                           {workingTimeData?.map((time, index) => {
                             const isBusy =
                               formData.styleId == oldInfo?.styleId &&
-                              formData.bookingDate == oldInfo?.bookingDate
+                                formData.bookingDate == oldInfo?.bookingDate
                                 ? time.workingTimeId != oldInfo?.workTimeId &&
-                                  busyTime.includes(
-                                    time.timeZone.substring(0, 5)
-                                  )
+                                busyTime.includes(
+                                  time.timeZone.substring(0, 5)
+                                )
                                 : busyTime.includes(
-                                    time.timeZone.substring(0, 5)
-                                  );
+                                  time.timeZone.substring(0, 5)
+                                );
                             const isSelected =
                               formData.workTimeId === time.workingTimeId;
 
@@ -467,17 +467,16 @@ export default function PaymentEdit() {
                               backgroundColor: isSelected
                                 ? "#d19f68"
                                 : isBusy
-                                ? "#888888"
-                                : null,
+                                  ? "#888888"
+                                  : null,
                             };
 
                             return (
                               <button
                                 key={index}
                                 type="button"
-                                className={`genric-btn col-2 time-select ${
-                                  isSelected ? "" : "success-border"
-                                }`}
+                                className={`genric-btn col-2 time-select ${isSelected ? "" : "success-border"
+                                  }`}
                                 style={buttonStyle}
                                 onClick={() => handleClickTime(time)}
                                 disabled={isBusy}
@@ -506,7 +505,7 @@ export default function PaymentEdit() {
                           {selectBranch != "" &&
                             dataSkinner?.map((skinner, index) =>
                               skinner.employee.employeeId ==
-                              formData.skinnerId ? (
+                                formData.skinnerId ? (
                                 <option
                                   selected={true}
                                   key={index}

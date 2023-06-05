@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import jwt_decode from "jwt-decode";
 export default function Selectservice() {
   const selectedService = {
     border: "1px gray solid",
@@ -9,7 +9,7 @@ export default function Selectservice() {
     display: "inline-block",
     whiteSpace: "break-word",
   };
-
+  const accessToken = localStorage.getItem("accessToken");
   const [selectedArr, setSelectedArr] = useState([]);
   const [serviceData, setServiceData] = useState();
   const [oldSelect, setOldSelect] = useState([]);
@@ -19,6 +19,13 @@ export default function Selectservice() {
   const location = useLocation();
 
   useEffect(() => {
+    if (accessToken == null) {
+      navigate("/login");
+    } else if (!["[ROLE_CUSTOMER]", "[ROLE_RECEPTIONIST]"].includes(jwt_decode(accessToken).roles)) {
+      navigate("/main")
+      return
+    }
+
     const data = location.state.selectService;
     setOldSelect(location.state.selectService);
     setId(location.state.id);

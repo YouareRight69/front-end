@@ -50,9 +50,9 @@ function Header() {
   const home = () => {
     navigate("/");
   };
-  const service = () => {};
-  const trend = () => {};
-  const contact = () => {};
+  const service = () => { };
+  const trend = () => { };
+  const contact = () => { };
 
   const logout = () => {
     localStorage.removeItem("accessToken");
@@ -77,6 +77,15 @@ function Header() {
   const goToBookingManagement = () => {
     navigate("/booking-management");
   };
+  const goToInvoiceHistory = () => {
+    navigate("/invoice-history")
+  }
+  const management = () => {
+    navigate("/chart")
+  }
+  const recManagement = () => {
+    navigate("/booking-management")
+  }
 
   return (
     <>
@@ -115,10 +124,15 @@ function Header() {
                             <a onClick={aboutPage}>Giới Thiệu</a>
                           </li>
 
-                          <li>
+                          {accessToken && jwt_decode(accessToken).roles == "[ROLE_ADMIN]" && <li>
+                            <a onClick={management}>Quản lý</a>
+                          </li>}
+                          {accessToken && jwt_decode(accessToken).roles == "[ROLE_RECEPTIONIST]" && <li>
+                            <a onClick={recManagement}>Quản lý</a>
+                          </li>}
+                          {accessToken && !["[ROLE_ADMIN]", "[ROLE_EMPLOYEE]", "[ROLE_RECEPTIONIST]"].includes(jwt_decode(accessToken).roles) && <li>
                             <a onClick={booking}>Đặt lịch hẹn</a>
-                          </li>
-
+                          </li>}
                           {accessToken != null ? (
                             <li>
                               <a href="#">
@@ -129,10 +143,12 @@ function Header() {
                                 style={{ width: "200px" }}
                               >
 
-                                 {jwt_decode(accessToken).roles == "[ROLE_ADMIN]" ? "" : <li>
+                                {jwt_decode(accessToken).roles != "[ROLE_CUSTOMER]" ? "" : <li>
                                   <a onClick={goToBookingManagement}>Quản lý lịch hẹn</a>
                                 </li>}
-
+                                {jwt_decode(accessToken).roles == "[ROLE_CUSTOMER]" ? <li>
+                                  <a onClick={goToInvoiceHistory}>Lịch sử thanh toán</a>
+                                </li> : ""}
 
                                 <li>
                                   <a onClick={getUpdateInfo}>
