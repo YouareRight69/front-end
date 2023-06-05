@@ -77,19 +77,19 @@ export default function Selectservice() {
 
   return (
     <>
-    <div class="slider-area2">
-                    <div class="slider-height2 d-flex align-items-center">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-xl-12">
-                                    <div class="hero-cap hero-cap2 pt-70 text-center">
-                                    <h2>Chọn dịch vụ</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+      <div class="slider-area2">
+        <div class="slider-height2 d-flex align-items-center">
+          <div class="container">
+            <div class="row">
+              <div class="col-xl-12">
+                <div class="hero-cap hero-cap2 pt-70 text-center">
+                  <h2>Chọn dịch vụ</h2>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <section className="service-area p-3">
         <div className="container">
           <div className="row">
@@ -152,8 +152,12 @@ export default function Selectservice() {
                                   className="flaticon-healthcare-and-medical"
                                   src={item.media[0]?.url}
                                   alt="lỗi"
-                                  style={{ width: "280px",maxWidth:"300px", minHeight: "170px", maxHeight: "200px"}}
-
+                                  style={{
+                                    width: "280px",
+                                    maxWidth: "300px",
+                                    minHeight: "170px",
+                                    maxHeight: "200px",
+                                  }}
                                 ></img>
                               </div>
                               <div className="service-cap">
