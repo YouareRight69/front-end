@@ -313,7 +313,6 @@ export default function Booking() {
       errors.workTimeId = "Vui lòng chọn giờ";
     }
 
-    // If there are errors, set the state and display the error messages
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
     } else {

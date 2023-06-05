@@ -352,25 +352,15 @@ function Payment() {
                               className="btn btn-secondary w-100"
                               onClick={() => handleEditBooking()}
                             >
-                              Sửa dịch vụ +
+                              Kiểm tra & thanh toán +
                             </div>
                           </div>
                         </td>
                       </tr>
-                      <tr>
-                        <th colSpan="2">Thành Tiền</th>
-                        <td colSpan="2">
-                          {accounting.formatMoney(detailInfo.total, {
-                            symbol: "",
-                            format: "%v vnđ",
-                            precision: 0,
-                          })}
-                        </td>
-                      </tr>
-                      <tr>
+                      {location.state && location.state.formData && <tr>
                         <th colSpan="2">Thanh Toán</th>
                         <td colSpan="1">
-                          <div className="text-center">
+                          {accessToken && jwt_decode(accessToken).roles == "[ROLE_RECEPTIONIST]" && <div className="text-center">
                             <button
                               className="button rounded-0 primary-bg text-white boxed-btn"
                               data-bs-toggle="modal"
@@ -384,7 +374,7 @@ function Payment() {
                               message={`Bạn có chắc muốn thanh toán hoá đơn ${detailInfo.id}`}
                               deleteItem={deleteItem}
                             />
-                          </div>
+                          </div>}
                         </td>
                         <td>
                           <div className="text-center">
@@ -396,7 +386,7 @@ function Payment() {
                             </div>
                           </div>
                         </td>
-                      </tr>
+                      </tr>}
                     </tbody>
                   </table>
                   <div className="text-right mt-5">
